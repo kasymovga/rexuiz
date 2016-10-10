@@ -1,0 +1,6 @@
+[submodule "1vs1"]
+	path = 1vs1
+	url = git://github.com/kasymovga/1vs1
+[submodule "DarkPlacesRM"]
+	path = DarkPlacesRM
+	url = git://github.com/kasymovga/DarkPlacesRM

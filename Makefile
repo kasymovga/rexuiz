@@ -278,7 +278,7 @@ ifeq ($(DPTARGET_MAC),y)
 	install -m 755 scripts/Rexuiz.app/Contents/Resources/English.lproj/InfoPlist.strings Rexuiz/Rexuiz.app/Contents/Resources/English.lproj/
 	install -m 755 scripts/Rexuiz.app/Contents/Resources/Rexuiz.icns Rexuiz/Rexuiz.app/Contents/Resources/
 	install -m 755 scripts/Rexuiz.app/Contents/Info.plist Rexuiz/Rexuiz.app/Contents/
-	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl Rexuiz/Rexuiz.app/Contents/MacOS/nexuiz-dprm-sdl-bin
+	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl Rexuiz/Rexuiz.app/Contents/MacOS/rexuiz-dprm-sdl-bin
 	install -m 755 $(EXTRALIBS) Rexuiz/Rexuiz.app/Contents/MacOS/
 endif
 

@@ -280,6 +280,7 @@ ifeq ($(DPTARGET_MAC),y)
 	install -m 755 scripts/Rexuiz.app/Contents/Info.plist Rexuiz/Rexuiz.app/Contents/
 	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl Rexuiz/Rexuiz.app/Contents/MacOS/rexuiz-dprm-sdl-bin
 	install -m 755 $(EXTRALIBS) Rexuiz/Rexuiz.app/Contents/MacOS/
+	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) Rexuiz/sources/
 endif
 
 stand-alone: stand-alone-engine stand-alone-data

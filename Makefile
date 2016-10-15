@@ -241,10 +241,13 @@ stand-alone: stand-alone-data stand-alone-engine
 
 stand-alone-data:
 	mkdir -m 755 -p Rexuiz/sources
+	mkdir -m 755 -p Rexuiz/data/dlcache
 	cd rexuiz.pk3 && zip -r ../Rexuiz/data/rexuiz.pk3 *
 	unzip -j nexuiz-252.zip Nexuiz/data/common-spog.pk3 Nexuiz/data/data20091001.pk3 -d Rexuiz/data
 	unzip -j nexuiz-252.zip Nexuiz/gpl.txt -d Rexuiz
 	unzip -j nexuiz-252.zip Nexuiz/sources/fteqcc-binaries-and-source-rev1253299209-bb8ceb9870af06104b67ae4cc2ec29552dce705b.zip Nexuiz/sources/gamesource20091001.zip -d Rexuiz/sources
+	unzip -j Rexuiz/data/data20091001.pk3 csprogs.dat
+	mv csprogs.dat Rexuiz/data/dlcache/csprogs.dat.408476.61283
 	cd 1vs1 && git archive --format=zip --prefix=rexuiz-qcsrc/ HEAD -o ../Rexuiz/sources/rexuiz-qcsrc.zip
 
 stand-alone-engine: engine $(EXTRALIBS)

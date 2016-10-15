@@ -8,6 +8,7 @@ then
 	for F in $SDL_CHECK
 	do
 		test -f "$F" || continue
+		chmod 755 ./linux-bins/@@ARCH@@/rexuiz-dprm-sdl1
 		exec ./linux-bins/@@ARCH@@/rexuiz-dprm-sdl1 -basedir . "$@"
 	done
 fi

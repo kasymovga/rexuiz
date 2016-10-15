@@ -5,7 +5,11 @@ SDL_CHECK="`ldd linux-bins/@@ARCH@@/rexuiz-dprm-sdl1|grep libSDL-1.2.so`"
 export LD_LIBRARY_PATH="`pwd`/linux-bins/@@ARCH@@"
 if test -n "$SDL_CHECK"
 then
-	exec ./linux-bins/@@ARCH@@/rexuiz-dprm-sdl1 -basedir . "$@"
+	for F in $SDL_CHECK
+	do
+		test -f "$F" || continue
+		exec ./linux-bins/@@ARCH@@/rexuiz-dprm-sdl1 -basedir . "$@"
+	done
 fi
 export SDL_DYNAMIC_API=libSDL2.so
 chmod 755 ./linux-bins/@@ARCH@@/@@BINARY_NAME@@

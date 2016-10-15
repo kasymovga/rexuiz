@@ -31,6 +31,9 @@ JPEGFILES=$(LIBDIR)/lib/libjpeg.a
 SDLDIR=SDL2-2.0.4
 SDLTARGZ=$(SDLDIR).tar.gz
 SDLFILES=$(LIBDIR)/bin/sdl2-config
+SDL1DIR=SDL-1.2.15
+SDL1TARGZ=$(SDL1DIR).tar.gz
+SDL1FILES=$(LIBDIR)/bin/sdl-config
 FREETYPEDIR=freetype-2.7
 FREETYPETARGZ=$(FREETYPEDIR).tar.gz
 CURLDIR=curl-7.50.3
@@ -64,6 +67,7 @@ endif
 endif
 endif
 DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl2-config'
+DPMAKEOPTS_SDL1=CC='$(CC) -I$(LIBDIR)/include/SDL -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl-config'
 
 ifeq ($(DPTARGET),linux32)
 ARCHSUFFIX=i686
@@ -115,6 +119,7 @@ LIBOGGFILES=$(LIBDIR)/lib/libogg.so
 LIBVORBISFILES=$(LIBDIR)/lib/libvorbis.so $(LIBDIR)/lib/libvorbisenc.so $(LIBDIR)/lib/libvorbisfile.so
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.so
 EXTRALIBS=$(LIBOGGFILES) $(LIBVORBISFILES)
+EXTRALIBS_LINKONLY=$(SDL1FILES)
 endif
 endif
 
@@ -146,6 +151,10 @@ $(FREETYPETARGZ):
 	mv temp_$@ $@
 
 $(SDLTARGZ):
+	wget -O temp_$@ https://www.libsdl.org/release/$@
+	mv temp_$@ $@
+
+$(SDL1TARGZ):
 	wget -O temp_$@ https://www.libsdl.org/release/$@
 	mv temp_$@ $@
 
@@ -209,7 +218,6 @@ endif
 
 $(SDLFILES): $(SDLTARGZ)
 	tar xzf $(SDLTARGZ)
-	echo sed -i s/-fpascal-strings// $(SDLDIR)/configure
 ifeq ($(DPTARGET_WIN),y)
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" host_os=mingw ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR)
 	cd $(SDLDIR) && make || cp build/.libs/*.o build/
@@ -224,15 +232,28 @@ else
 endif
 endif
 
+$(SDL1FILES): $(SDL1TARGZ)
+	tar xzf $(SDL1TARGZ)
+	cd $(SDL1DIR) && CC="$(CC)" CXX="$(CXX)" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --disable-static --enable-shared --prefix=$(LIBDIR)
+	cd $(SDL1DIR) && make
+	cd $(SDL1DIR) && make install
+
 clean:
 	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR)
 	cd DarkPlacesRM && make clean
 
-engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES)
+engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES) $(EXTRALIBS_LINKONLY)
 ifeq ($(DPTARGET_MAC),y)
 	cd DarkPlacesRM && make sdl-nexuiz $(DPMAKEOPTS)
 else
-	cd DarkPlacesRM && make sdl-nexuiz cl-nexuiz sv-nexuiz $(DPMAKEOPTS)
+ifeq ($(DPTARGET_LINUX),y)
+	cd DarkPlacesRM && make clean
+	cd DarkPlacesRM && make sdl-nexuiz $(DPMAKEOPTS_SDL1)
+	mv DarkPlacesRM/nexuiz-dprm-sdl DarkPlacesRM/nexuiz-dprm-sdl1
+	cd DarkPlacesRM && make clean
+	cd DarkPlacesRM && make clean
+endif
+	cd DarkPlacesRM && make sdl-nexuiz sv-nexuiz $(DPMAKEOPTS)
 endif
 
 fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ)
@@ -256,7 +277,6 @@ stand-alone-engine: engine $(EXTRALIBS)
 	install -m644 $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET_WIN),y)
 	install -m644 DarkPlacesRM/nexuiz-dprm-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
-	install -m644 DarkPlacesRM/nexuiz-dprm-$(ARCHSUFFIX).exe Rexuiz/rexuiz-$(ARCHSUFFIX).exe
 	install -m644 DarkPlacesRM/nexuiz-dprm-dedicated-$(ARCHSUFFIX).exe Rexuiz/rexuiz-dedicated-$(ARCHSUFFIX).exe
 	install -m644 $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET),win32)
@@ -271,14 +291,12 @@ endif
 ifeq ($(DPTARGET_LINUX),y)
 	mkdir -p Rexuiz/linux-bins/$(ARCHSUFFIX)
 	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl
-	install -m 755 DarkPlacesRM/nexuiz-dprm-glx Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-glx
+	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl1 Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl1
 	install -m644 $(EXTRALIBS) Rexuiz/linux-bins/$(ARCHSUFFIX)/
 	install -m 755 DarkPlacesRM/nexuiz-dprm-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-dedicated
-	cat scripts/run_script_template | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-sdl/g' > Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
+	cat scripts/run_client | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-sdl/g' > Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
 	chmod 755 Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
-	cat scripts/run_script_template | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-glx/g' > Rexuiz/rexuiz-linux-glx-$(ARCHSUFFIX)
-	chmod 755 Rexuiz/rexuiz-linux-glx-$(ARCHSUFFIX)
-	cat scripts/run_script_template | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-dedicated/g' > Rexuiz/rexuiz-linux-dedicated-$(ARCHSUFFIX)
+	cat scripts/run_server | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-dedicated/g' > Rexuiz/rexuiz-linux-dedicated-$(ARCHSUFFIX)
 	chmod 755 Rexuiz/rexuiz-linux-dedicated-$(ARCHSUFFIX)
 endif
 ifeq ($(DPTARGET_MAC),y)

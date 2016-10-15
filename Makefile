@@ -77,24 +77,20 @@ ifeq ($(DPTARGET),win32)
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw DP_FS_FORCE_NOHOME=y SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`"
 DPTARGET_WIN=y
 ARCHSUFFIX=i686
-EXTRALIBS=$(FREETYPEFILES) $(CURLFILES) $(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
 endif
 ifeq ($(DPTARGET),win64)
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw DP_FS_FORCE_NOHOME=y MINGWARCH=x86_64 SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`"
 DPTARGET_WIN=y
 ARCHSUFFIX=x86_64
-EXTRALIBS=$(FREETYPEFILES) $(CURLFILES) $(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
 endif
 ifeq ($(DPTARGET),mac32)
 ARCHSUFFIX=i686
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`"
-EXTRALIBS=$(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
 DPTARGET_MAC=y
 endif
 ifeq ($(DPTARGET),mac64)
 ARCHSUFFIX=x86_64
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`"
-EXTRALIBS=$(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
 DPTARGET_MAC=y
 endif
 ifeq ($(DPTARGET_WIN),y)
@@ -103,6 +99,7 @@ CURLFILES=$(LIBDIR)/bin/libcurl-4.dll
 LIBOGGFILES=$(LIBDIR)/bin/libogg-0.dll
 LIBVORBISFILES=$(LIBDIR)/bin/libvorbis-0.dll $(LIBDIR)/bin/libvorbisenc-2.dll $(LIBDIR)/bin/libvorbisfile-3.dll
 LIBTHEORAFILES=$(LIBDIR)/bin/libtheora-0.dll
+EXTRALIBS=$(FREETYPEFILES) $(CURLFILES) $(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
 else
 ifeq ($(DPTARGET_MAC),y)
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.dylib
@@ -110,12 +107,14 @@ CURLFILES=$(LIBDIR)/lib/libcurl.dylib
 LIBOGGFILES=$(LIBDIR)/lib/libogg.dylib
 LIBVORBISFILES=$(LIBDIR)/lib/libvorbis.dylib $(LIBDIR)/lib/libvorbisenc.dylib $(LIBDIR)/lib/libvorbisfile.dylib
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.dylib
+EXTRALIBS=$(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
 else
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.so
 CURLFILES=$(LIBDIR)/lib/libcurl.so
 LIBOGGFILES=$(LIBDIR)/lib/libogg.so
 LIBVORBISFILES=$(LIBDIR)/lib/libvorbis.so $(LIBDIR)/lib/libvorbisenc.so $(LIBDIR)/lib/libvorbisfile.so
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.so
+EXTRALIBS=$(LIBOGGFILES) $(LIBVORBISFILES)
 endif
 endif
 
@@ -270,6 +269,7 @@ ifeq ($(DPTARGET_LINUX),y)
 	mkdir -p Rexuiz/linux-bins/$(ARCHSUFFIX)
 	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl
 	install -m 755 DarkPlacesRM/nexuiz-dprm-glx Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-glx
+	install -m644 $(EXTRALIBS) Rexuiz/linux-bins/$(ARCHSUFFIX)/
 	install -m 755 DarkPlacesRM/nexuiz-dprm-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-dedicated
 	cat scripts/run_script_template | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-sdl/g' > Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
 	chmod 755 Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)

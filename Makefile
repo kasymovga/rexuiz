@@ -234,6 +234,8 @@ endif
 
 $(SDL1FILES): $(SDL1TARGZ)
 	tar xzf $(SDL1TARGZ)
+	cd $(SDL1DIR) && patch -p1 < ../patches/sdl-1.2.patch
+	cd $(SDL1DIR) && ./autogen.sh
 	cd $(SDL1DIR) && CC="$(CC)" CXX="$(CXX)" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --disable-static --enable-shared --prefix=$(LIBDIR)
 	cd $(SDL1DIR) && make
 	cd $(SDL1DIR) && make install

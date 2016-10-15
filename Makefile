@@ -296,6 +296,8 @@ ifeq ($(DPTARGET_LINUX),y)
 	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl1 Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl1
 	install -m644 $(EXTRALIBS) Rexuiz/linux-bins/$(ARCHSUFFIX)/
 	install -m 755 DarkPlacesRM/nexuiz-dprm-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-dedicated
+	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(SDL1TARGZ) Rexuiz/sources/
+	install -m644 patches/sdl-1.2.patch Rexuiz/sources/
 	cat scripts/run_client | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-sdl/g' > Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
 	chmod 755 Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
 	cat scripts/run_server | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-dedicated/g' > Rexuiz/rexuiz-linux-dedicated-$(ARCHSUFFIX)

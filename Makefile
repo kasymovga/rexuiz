@@ -67,7 +67,7 @@ endif
 endif
 endif
 DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl2-config'
-DPMAKEOPTS_SDL1=CC='$(CC) -I$(LIBDIR)/include/SDL -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl-config'
+DPMAKEOPTS_CC='$(CC) -I$(LIBDIR)/include/SDL -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl-config'
 
 ifeq ($(DPTARGET),linux32)
 ARCHSUFFIX=i686
@@ -119,7 +119,9 @@ LIBOGGFILES=$(LIBDIR)/lib/libogg.so
 LIBVORBISFILES=$(LIBDIR)/lib/libvorbis.so $(LIBDIR)/lib/libvorbisenc.so $(LIBDIR)/lib/libvorbisfile.so
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.so
 EXTRALIBS=$(LIBOGGFILES) $(LIBVORBISFILES)
+ifeq ($(SDL1ENABLE),y)
 EXTRALIBS_LINKONLY=$(SDL1FILES)
+endif
 endif
 endif
 
@@ -249,16 +251,17 @@ ifeq ($(DPTARGET_MAC),y)
 	cd DarkPlacesRM && make sdl-nexuiz $(DPMAKEOPTS)
 else
 ifeq ($(DPTARGET_LINUX),y)
+ifeq ($(SDL1ENABLE),y)
 	cd DarkPlacesRM && make clean
 	cd DarkPlacesRM && make sdl-nexuiz $(DPMAKEOPTS_SDL1)
 	mv DarkPlacesRM/nexuiz-dprm-sdl DarkPlacesRM/nexuiz-dprm-sdl1
 	cd DarkPlacesRM && make clean
-	cd DarkPlacesRM && make clean
+endif
 endif
 	cd DarkPlacesRM && make sdl-nexuiz sv-nexuiz $(DPMAKEOPTS)
 endif
 
-fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ)
+fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(SDL1TARGZ)
 
 stand-alone: stand-alone-data stand-alone-engine
 

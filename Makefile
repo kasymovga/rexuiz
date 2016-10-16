@@ -1,4 +1,4 @@
-.PHONY: all clean engine fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc
+.PHONY: all clean engine fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc linux-package
 PWD=$(shell pwd)
 LIBDIR=$(PWD)/libs
 
@@ -113,6 +113,7 @@ LIBVORBISFILES=$(LIBDIR)/lib/libvorbis.dylib $(LIBDIR)/lib/libvorbisenc.dylib $(
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.dylib
 EXTRALIBS=$(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
 else
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_FS_BASEDIR=/usr/share/rexuiz/
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.so
 CURLFILES=$(LIBDIR)/lib/libcurl.so
 LIBOGGFILES=$(LIBDIR)/lib/libogg.so
@@ -243,7 +244,7 @@ $(SDL1FILES): $(SDL1TARGZ)
 	cd $(SDL1DIR) && make install
 
 clean:
-	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR)
+	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) package
 	cd DarkPlacesRM && make clean
 
 engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES) $(EXTRALIBS_LINKONLY)
@@ -320,6 +321,24 @@ ifeq ($(DPTARGET_MAC),y)
 endif
 
 stand-alone: stand-alone-engine stand-alone-data
+
+linux-package: engine
+	mkdir -m 755 -p package/usr/bin
+	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl package/usr/bin/rexuiz
+	install -m 755 DarkPlacesRM/nexuiz-dprm-dedicated package/usr/bin/rexuiz-dedicated
+	mkdir -m 755 -p package/usr/share/applications
+	install -m 644 scripts/rexuiz.desktop "package/usr/share/applications/rexuiz.desktop"
+	cd DarkPlacesRM && install -TDm644 nexuiz.xpm "../package/usr/share/pixmaps/rexuiz.xpm"
+	cd DarkPlacesRM && install -TDm644 nexuiz16x16.png "../package/usr/share/icons/hicolor/16x16/apps/rexuiz.png"
+	cd DarkPlacesRM && install -TDm644 nexuiz24x24.png "../package/usr/share/icons/hicolor/24x24/apps/rexuiz.png"
+	cd DarkPlacesRM && install -TDm644 nexuiz32x32.png "../package/usr/share/icons/hicolor/32x32/apps/rexuiz.png"
+	cd DarkPlacesRM && install -TDm644 nexuiz48x48.png "../package/usr/share/icons/hicolor/48x48/apps/rexuiz.png"
+	cd DarkPlacesRM && install -TDm644 nexuiz256x256.png "../package/usr/share/icons/hicolor/256x256/apps/rexuiz.png"
+	mkdir -m 755 -p package/usr/share/rexuiz/data/dlcache
+	cd rexuiz.pk3 && zip -r ../package/usr/share/rexuiz/data/rexuiz.pk3 *
+	unzip -j nexuiz-252.zip Nexuiz/data/common-spog.pk3 Nexuiz/data/data20091001.pk3 -d package/usr/share/rexuiz/data
+	unzip -j package/usr/share/rexuiz/data/data20091001.pk3 csprogs.dat
+	mv csprogs.dat package/usr/share/rexuiz/data/dlcache/csprogs.dat.408476.61283
 
 update-qc:
 	cd 1vs1 && make SV_PROGNAME=progs.dat CL_PROGNAME=csprogs.dat CFG_NAME=rexuiz-extra.cfg SET_CURL_PACKAGE=no

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Rexuiz (SDL-1.2 build)
+Comment=A multiplayer fast-paced First-Person Shooter (DarkPlacesRM engine)
+Exec=/usr/bin/rexuiz-sdl1
+Icon=rexuiz
+Terminal=false
+Type=Application
+Categories=Game;ActionGame;

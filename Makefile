@@ -327,9 +327,15 @@ stand-alone: stand-alone-engine stand-alone-data
 linux-package: engine
 	mkdir -m 755 -p package/usr/bin
 	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl package/usr/bin/rexuiz
+ifeq ($(SDL1ENABLE),y)
+	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl1 package/usr/bin/rexuiz-sdl1
+endif
 	install -m 755 DarkPlacesRM/nexuiz-dprm-dedicated package/usr/bin/rexuiz-dedicated
 	mkdir -m 755 -p package/usr/share/applications
 	install -m 644 scripts/rexuiz.desktop "package/usr/share/applications/rexuiz.desktop"
+ifeq ($(SDL1ENABLE),y)
+	install -m 644 scripts/rexuiz-sdl1.desktop "package/usr/share/applications/rexuiz.desktop"
+endif
 	cd DarkPlacesRM && install -TDm644 nexuiz.xpm "../package/usr/share/pixmaps/rexuiz.xpm"
 	cd DarkPlacesRM && install -TDm644 nexuiz16x16.png "../package/usr/share/icons/hicolor/16x16/apps/rexuiz.png"
 	cd DarkPlacesRM && install -TDm644 nexuiz24x24.png "../package/usr/share/icons/hicolor/24x24/apps/rexuiz.png"

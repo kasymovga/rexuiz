@@ -324,7 +324,7 @@ endif
 
 stand-alone: stand-alone-engine stand-alone-data
 
-linux-package: engine
+linux-package: engine nexuiz-252.zip
 	mkdir -m 755 -p package/usr/bin
 	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl package/usr/bin/rexuiz
 ifeq ($(SDL1ENABLE),y)

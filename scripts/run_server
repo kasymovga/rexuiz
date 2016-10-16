@@ -1,5 +1,6 @@
 #!/bin/sh
 
 cd "`dirname "$0"`"
+cd ..
 chmod 755 ./linux-bins/@@ARCH@@/@@BINARY_NAME@@
-../linux-bins/@@ARCH@@/@@BINARY_NAME@@ -basedir . "$@"
+./linux-bins/@@ARCH@@/@@BINARY_NAME@@ -basedir . "$@"

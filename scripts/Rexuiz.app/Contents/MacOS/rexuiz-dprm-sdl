@@ -3,4 +3,5 @@
 export DYLD_LIBRARY_PATH="${0%/*}"
 	# same dir as the executable
 
+chmod 755 "$0"-bin
 exec "$0"-bin "$@" -notexturenonpoweroftwo +"gl_lockarrays 0"

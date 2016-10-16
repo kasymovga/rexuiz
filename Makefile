@@ -258,8 +258,10 @@ ifeq ($(SDL1ENABLE),y)
 	mv DarkPlacesRM/nexuiz-dprm-sdl DarkPlacesRM/nexuiz-dprm-sdl1
 	cd DarkPlacesRM && make clean
 endif
-endif
 	cd DarkPlacesRM && make sdl-nexuiz sv-nexuiz $(DPMAKEOPTS)
+else
+	cd DarkPlacesRM && make sdl-nexuiz $(DPMAKEOPTS)
+endif
 endif
 
 fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(SDL1TARGZ)
@@ -283,7 +285,6 @@ stand-alone-engine: engine $(EXTRALIBS)
 	install -m644 $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET_WIN),y)
 	install -m644 DarkPlacesRM/nexuiz-dprm-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
-	install -m644 DarkPlacesRM/nexuiz-dprm-dedicated-$(ARCHSUFFIX).exe Rexuiz/rexuiz-dedicated-$(ARCHSUFFIX).exe
 	install -m644 $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET),win32)
 	mkdir -m755 -p Rexuiz/bin32
@@ -296,6 +297,7 @@ endif
 endif
 ifeq ($(DPTARGET_LINUX),y)
 	mkdir -p Rexuiz/linux-bins/$(ARCHSUFFIX)
+	mkdir -p Rexuiz/server
 	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl
 	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl1 Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl1
 	install -m644 $(EXTRALIBS) Rexuiz/linux-bins/$(ARCHSUFFIX)/
@@ -304,8 +306,8 @@ ifeq ($(DPTARGET_LINUX),y)
 	install -m644 patches/sdl-1.2.patch Rexuiz/sources/
 	cat scripts/run_client | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-sdl/g' > Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
 	chmod 755 Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
-	cat scripts/run_server | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-dedicated/g' > Rexuiz/rexuiz-linux-dedicated-$(ARCHSUFFIX)
-	chmod 755 Rexuiz/rexuiz-linux-dedicated-$(ARCHSUFFIX)
+	cat scripts/run_server | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-dedicated/g' > Rexuiz/server/rexuiz-linux-dedicated-$(ARCHSUFFIX)
+	chmod 755 Rexuiz/server/rexuiz-linux-dedicated-$(ARCHSUFFIX)
 endif
 ifeq ($(DPTARGET_MAC),y)
 	mkdir -m755 -p Rexuiz/Rexuiz.app/Contents/MacOS

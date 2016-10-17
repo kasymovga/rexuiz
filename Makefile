@@ -78,7 +78,7 @@ ARCHSUFFIX=x86_64
 DPTARGET_LINUX=y
 endif
 ifeq ($(DPTARGET),win32)
-DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw DP_FS_FORCE_NOHOME=y SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`"
+DPMAKEOPTS:=$(DPMAKEOPTS_SDL1) DP_MAKE_TARGET=mingw DP_FS_FORCE_NOHOME=y SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl-config --libs`"
 DPTARGET_WIN=y
 ARCHSUFFIX=i686
 endif
@@ -124,6 +124,12 @@ ifeq ($(SDL1ENABLE),y)
 EXTRALIBS_LINKONLY=$(SDL1FILES)
 endif
 endif
+endif
+
+ifeq ($(DPTARGET),win32)
+SDLFILES_FORDP=$(SDL1FILES)
+else
+SDLFILES_FORDP=$(SDLFILES)
 endif
 
 
@@ -239,7 +245,11 @@ $(SDL1FILES): $(SDL1TARGZ)
 	tar xzf $(SDL1TARGZ)
 	cd $(SDL1DIR) && patch -p1 < ../patches/sdl-1.2.patch
 	cd $(SDL1DIR) && ./autogen.sh
+ifeq ($(DPTARGET_WIN),y)
+	cd $(SDL1DIR) && CC="$(CC)" CXX="$(CXX)" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR)
+else
 	cd $(SDL1DIR) && CC="$(CC)" CXX="$(CXX)" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --disable-static --enable-shared --prefix=$(LIBDIR)
+endif
 	cd $(SDL1DIR) && make
 	cd $(SDL1DIR) && make install
 
@@ -247,7 +257,7 @@ clean:
 	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) package
 	cd DarkPlacesRM && make clean
 
-engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES) $(EXTRALIBS_LINKONLY)
+engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY)
 ifeq ($(DPTARGET_MAC),y)
 	cd DarkPlacesRM && make sdl-nexuiz $(DPMAKEOPTS)
 else

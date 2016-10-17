@@ -2,7 +2,12 @@
 
 cd "`dirname "$0"`"
 SDL_CHECK="`ldd linux-bins/@@ARCH@@/rexuiz-dprm-sdl1|grep libSDL-1.2.so`"
-export LD_LIBRARY_PATH="`pwd`/linux-bins/@@ARCH@@"
+if test -z "$LD_LIBRARY_PATH"
+then
+	export LD_LIBRARY_PATH="`pwd`/linux-bins/@@ARCH@@"
+else
+	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:`pwd`/linux-bins/@@ARCH@@"
+fi
 if test -n "$SDL_CHECK"
 then
 	for F in $SDL_CHECK

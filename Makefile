@@ -89,12 +89,12 @@ ARCHSUFFIX=x86_64
 endif
 ifeq ($(DPTARGET),mac32)
 ARCHSUFFIX=i686
-DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`"
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" DP_LINK_OGGVORBIS=shared LIB_OGGVORBIS="`pkg-config --libs --static vorbis vorbisfile`"
 DPTARGET_MAC=y
 endif
 ifeq ($(DPTARGET),mac64)
 ARCHSUFFIX=x86_64
-DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`"
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" DP_LINK_OGGVORBIS=shared LIB_OGGVORBIS="`pkg-config --libs --static vorbis vorbisfile`"
 DPTARGET_MAC=y
 endif
 ifeq ($(DPTARGET_WIN),y)
@@ -108,10 +108,11 @@ else
 ifeq ($(DPTARGET_MAC),y)
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.dylib
 CURLFILES=$(LIBDIR)/lib/libcurl.dylib
-LIBOGGFILES=$(LIBDIR)/lib/libogg.dylib
-LIBVORBISFILES=$(LIBDIR)/lib/libvorbis.dylib $(LIBDIR)/lib/libvorbisenc.dylib $(LIBDIR)/lib/libvorbisfile.dylib
+LIBOGGFILES=$(LIBDIR)/lib/libogg.a
+LIBVORBISFILES=$(LIBDIR)/lib/libvorbis.a $(LIBDIR)/lib/libvorbisenc.a $(LIBDIR)/lib/libvorbisfile.a
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.dylib
-EXTRALIBS=$(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
+EXTRALIBS=
+EXTRALIBS_LINKONLY=$(LIBOGGFILES) $(LIBVORBISFILES)
 else
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_FS_BASEDIR=/usr/share/rexuiz/
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.so
@@ -207,11 +208,19 @@ endif
 
 $(LIBOGGFILES): $(LIBOGGTARGZ)
 	tar xzf $(LIBOGGTARGZ)
+ifeq ($(DPTARGET_MAC),y)
+	cd $(LIBOGGDIR) && CC="$(CC)" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
+else
 	cd $(LIBOGGDIR) && CC="$(CC)" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
+endif
 
 $(LIBVORBISFILES): $(LIBVORBISTARGZ) $(LIBOGGFILES)
 	tar xzf $(LIBVORBISTARGZ)
+ifeq ($(DPTARGET_MAC),y)
+	cd $(LIBVORBISDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
+else
 	cd $(LIBVORBISDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
+endif
 
 $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
 	tar xzf $(LIBTHEORATARGZ)
@@ -258,9 +267,6 @@ clean:
 	cd DarkPlacesRM && make clean
 
 engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY)
-ifeq ($(DPTARGET_MAC),y)
-	cd DarkPlacesRM && make sdl-nexuiz $(DPMAKEOPTS)
-else
 ifeq ($(DPTARGET_LINUX),y)
 ifeq ($(SDL1ENABLE),y)
 	cd DarkPlacesRM && make clean
@@ -270,8 +276,7 @@ ifeq ($(SDL1ENABLE),y)
 endif
 	cd DarkPlacesRM && make sdl-nexuiz sv-nexuiz $(DPMAKEOPTS)
 else
-	cd DarkPlacesRM && make sdl-nexuiz $(DPMAKEOPTS)
-endif
+	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-nexuiz $(DPMAKEOPTS)
 endif
 
 fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(SDL1TARGZ)
@@ -328,7 +333,6 @@ ifeq ($(DPTARGET_MAC),y)
 	install -m 755 scripts/Rexuiz.app/Contents/Resources/Rexuiz.icns Rexuiz/Rexuiz.app/Contents/Resources/
 	install -m 755 scripts/Rexuiz.app/Contents/Info.plist Rexuiz/Rexuiz.app/Contents/
 	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl Rexuiz/Rexuiz.app/Contents/MacOS/rexuiz-dprm-sdl-bin
-	install -m 755 $(EXTRALIBS) Rexuiz/Rexuiz.app/Contents/MacOS/
 	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) Rexuiz/sources/
 endif
 

@@ -286,6 +286,7 @@ stand-alone: stand-alone-data stand-alone-engine
 stand-alone-data:
 	mkdir -m 755 -p Rexuiz/sources
 	mkdir -m 755 -p Rexuiz/data/dlcache
+	rm -f Rexuiz/data/rexuiz.pk3
 	cd rexuiz.pk3 && zip -r ../Rexuiz/data/rexuiz.pk3 *
 	unzip -j nexuiz-252.zip Nexuiz/data/common-spog.pk3 Nexuiz/data/data20091001.pk3 -d Rexuiz/data
 	unzip -j nexuiz-252.zip Nexuiz/gpl.txt -d Rexuiz
@@ -296,6 +297,7 @@ stand-alone-data:
 
 stand-alone-engine: engine $(EXTRALIBS)
 	mkdir -m 755 -p Rexuiz/sources
+	rm -f Rexuiz/sources/DarkPlacesRM.zip
 	cd DarkPlacesRM && git archive --format=zip --prefix=DarkPlacesRM/ HEAD -o ../Rexuiz/sources/DarkPlacesRM.zip
 	install -m644 $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET_WIN),y)

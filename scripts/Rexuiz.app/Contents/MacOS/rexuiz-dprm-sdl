@@ -1,7 +1,4 @@
 #!/bin/sh
-
-export DYLD_LIBRARY_PATH="${0%/*}"
-	# same dir as the executable
-
 chmod 755 "$0"-bin
-exec "$0"-bin "$@" -notexturenonpoweroftwo +"gl_lockarrays 0"
+cd "`dirname "$0"`"
+exec ./rexuiz-dprm-sdl-bin -notexturenonpoweroftwo + gl_lockarrays 0 -basedir ../../../ "$@"

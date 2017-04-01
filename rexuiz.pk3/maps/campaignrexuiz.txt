@@ -11,7 +11,7 @@
 "tdm","aggressor",3,8,20,,"TDM: Aggressor","Now that you are getting the hang of team deathmatch, let's increase the skill of the bots.\n\nTry to keep them from fragging you!"
 "tdm","downer",5,9,30,,"TDM: Downer","A relatively small map, and more bots, may make this interesting.\n\nWill the adrenaline make you stronger or weaker?"
 "tdm","warfare",3,10,30,,"TDM: Warfare","Greetings to Orbb, who was on this map before you!\n\nFor some contrast, you're now facing only few bots on a larger map. You should know what to do now.\n\nOf course, always avoid hitting team mates, as that damage reflects back to you.\n\nThis is the final TDM match; if you win, you may be interested in joining the Nexuiz Ladder to compare your strength with the one of other players."
-"dm","strength",4,11,20,"g_weaponarena most","SPECIAL: Strength","Most Weapons: in this mutator, you are given almost all weapons, and infinite ammo. Have fun with your bots..."
+"dm","strength",4,11,20,"g_weaponarena fireball","SPECIAL: Strength","Time to Burn"
 "kh","stormkeep2",5,12,500,"g_keyhunt_teams_override 2","KH: Stormkeep 2","In Key Hunt, your goal is to collect the keys from the other teams. You must bring all keys together to get 100 points, and the game will end at 500."
 "kh","aneurysm",5,13,600,"g_keyhunt_teams_override 3","KH: Aneurysm","On this industrial arena, you are fighting two other teams. As before, you must bring all keys together, for 200 points this time. The total you have to reach is 600."
 "kh","bleach",8,14,1000,"g_keyhunt_teams_override 3","KH: Bleach","Three Teams Eight Bots.\n\nDo your best.\n\nOver."

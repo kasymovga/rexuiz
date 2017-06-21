@@ -310,7 +310,7 @@ stand-alone-engine: engine $(EXTRALIBS)
 	mkdir -m 755 -p Rexuiz/sources
 	rm -f Rexuiz/sources/DarkPlacesRM.zip
 	cd DarkPlacesRM && git archive --format=zip --prefix=DarkPlacesRM/ HEAD -o ../Rexuiz/sources/DarkPlacesRM.zip
-	install -m644 $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) Rexuiz/sources/
+	install -m644 $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(LIBMICROHTTPDTARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET_WIN),y)
 	install -m644 DarkPlacesRM/nexuiz-dprm-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
 ifeq ($(ARCHSUFFIX,x86_64)
@@ -321,7 +321,7 @@ ifeq ($(ARCHSUFFIX,i686)
 	install -m644 DarkPlacesRM/nexuiz-dprm-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin32/rexuiz-dedicated.exe
 	install -m644 scripts/run_server_win32.cmd Rexuiz/server/
 endif
-	install -m644 $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(LIBMICROHTTPDTARGZ) Rexuiz/sources/
+	install -m644 $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET),win32)
 	mkdir -m755 -p Rexuiz/bin32
 	install -m644 $(EXTRALIBS) Rexuiz/bin32/

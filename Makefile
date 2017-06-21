@@ -34,6 +34,7 @@ SDLFILES=$(LIBDIR)/bin/sdl2-config
 SDL1DIR=SDL-1.2.15
 SDL1TARGZ=$(SDL1DIR).tar.gz
 SDL1FILES=$(LIBDIR)/bin/sdl-config
+LIBMICROHTTPDFILES=$(LIBDIR)/lib/libmicrohttpd.a
 FREETYPEDIR=freetype-2.7
 FREETYPETARGZ=$(FREETYPEDIR).tar.gz
 CURLDIR=curl-7.50.3
@@ -44,6 +45,8 @@ LIBVORBISDIR=libvorbis-1.3.5
 LIBVORBISTARGZ=$(LIBVORBISDIR).tar.gz
 LIBTHEORADIR=libtheora-1.1.1
 LIBTHEORATARGZ=$(LIBTHEORADIR).tar.gz
+LIBMICROHTTPDDIR=libmicrohttpd-0.9.55
+LIBMICROHTTPDTARGZ=$(LIBMICROHTTPDDIR).tar.gz
 
 ifeq ($(shell uname -s),Linux)
 ifeq ($(shell uname -m),x86_64)
@@ -66,8 +69,8 @@ DPTARGET=win32
 endif
 endif
 endif
-DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl2-config'
-DPMAKEOPTS_SDL1=CC='$(CC) -I$(LIBDIR)/include/SDL -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl-config'
+DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_LIBMICROHTTPD=yes
+DPMAKEOPTS_SDL1=CC='$(CC) -I$(LIBDIR)/include/SDL -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl-config' DP_LIBMICROHTTPD=yes
 
 ifeq ($(DPTARGET),linux32)
 ARCHSUFFIX=i686
@@ -180,6 +183,10 @@ $(LIBPNGTARGZ):
 	wget -O temp_$@ ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/$@
 	mv temp_$@ $@
 
+$(LIBMICROHTTPDTARGZ):
+	wget -O temp_$@ http://ftp.gnu.org/gnu/libmicrohttpd/$@
+	mv temp_$@ $@
+
 $(LIBPNGFILES): $(LIBPNGTARGZ) $(ZLIBFILES)
 	tar xzf $(LIBPNGTARGZ)
 	cd $(LIBPNGDIR) && CC="$(CC) -I$(LIBDIR)/include -L$(LIBDIR)/lib" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
@@ -234,6 +241,10 @@ else
 	cd $(LIBTHEORADIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 endif
 
+$(LIBMICROHTTPDFILES): $(LIBMICROHTTPDTARGZ)
+	tar xzf $(LIBMICROHTTPDTARGZ)
+	cd $(LIBMICROHTTPDDIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --disable-https --prefix=$(LIBDIR) && make && make install
+
 $(SDLFILES): $(SDLTARGZ)
 	tar xzf $(SDLTARGZ)
 ifeq ($(DPTARGET_WIN),y)
@@ -266,7 +277,7 @@ clean:
 	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) package
 	cd DarkPlacesRM && make clean
 
-engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY)
+engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY) $(LIBMICROHTTPDFILES)
 ifeq ($(DPTARGET_LINUX),y)
 ifeq ($(SDL1ENABLE),y)
 	cd DarkPlacesRM && make clean
@@ -276,7 +287,7 @@ ifeq ($(SDL1ENABLE),y)
 endif
 	cd DarkPlacesRM && make sdl-nexuiz sv-nexuiz $(DPMAKEOPTS)
 else
-	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-nexuiz $(DPMAKEOPTS)
+	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-nexuiz sv-nexuiz $(DPMAKEOPTS)
 endif
 
 fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(SDL1TARGZ)
@@ -302,7 +313,15 @@ stand-alone-engine: engine $(EXTRALIBS)
 	install -m644 $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET_WIN),y)
 	install -m644 DarkPlacesRM/nexuiz-dprm-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
-	install -m644 $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) Rexuiz/sources/
+ifeq ($(ARCHSUFFIX,x86_64)
+	install -m644 DarkPlacesRM/nexuiz-dprm-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin64/rexuiz-dedicated.exe
+	install -m644 scripts/run_server_win64.cmd Rexuiz/server/
+endif
+ifeq ($(ARCHSUFFIX,i686)
+	install -m644 DarkPlacesRM/nexuiz-dprm-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin32/rexuiz-dedicated.exe
+	install -m644 scripts/run_server_win32.cmd Rexuiz/server/
+endif
+	install -m644 $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(LIBMICROHTTPDTARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET),win32)
 	mkdir -m755 -p Rexuiz/bin32
 	install -m644 $(EXTRALIBS) Rexuiz/bin32/

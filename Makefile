@@ -81,12 +81,12 @@ ARCHSUFFIX=x86_64
 DPTARGET_LINUX=y
 endif
 ifeq ($(DPTARGET),win32)
-DPMAKEOPTS:=$(DPMAKEOPTS_SDL1) DP_MAKE_TARGET=mingw DP_FS_FORCE_NOHOME=y SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl-config --libs`"
+DPMAKEOPTS:=$(DPMAKEOPTS_SDL1) DP_MAKE_TARGET=mingw DP_FS_FORCE_NOHOME=y SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl-config --libs`" LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32'
 DPTARGET_WIN=y
 ARCHSUFFIX=i686
 endif
 ifeq ($(DPTARGET),win64)
-DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw DP_FS_FORCE_NOHOME=y MINGWARCH=x86_64 SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`"
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw DP_FS_FORCE_NOHOME=y MINGWARCH=x86_64 SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32'
 DPTARGET_WIN=y
 ARCHSUFFIX=x86_64
 endif
@@ -208,9 +208,9 @@ $(FREETYPEFILES): $(FREETYPETARGZ)
 $(CURLFILES): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)
 ifeq ($(DPTARGET_WIN),y)
-	cd $(CURLDIR) && CC="$(CC) -static-libgcc" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
+	cd $(CURLDIR) && CC="$(CC) -static-libgcc" ./configure --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 else
-	cd $(CURLDIR) && CC="$(CC)" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
+	cd $(CURLDIR) && CC="$(CC)" ./configure --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 endif
 
 $(LIBOGGFILES): $(LIBOGGTARGZ)
@@ -274,21 +274,17 @@ endif
 	cd $(SDL1DIR) && make install
 
 clean:
-	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) package
+	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) $(LIBMICROHTTPDDIR) package
 	cd DarkPlacesRM && make clean
 
 engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY) $(LIBMICROHTTPDFILES)
-ifeq ($(DPTARGET_LINUX),y)
 ifeq ($(SDL1ENABLE),y)
 	cd DarkPlacesRM && make clean
-	cd DarkPlacesRM && make sdl-nexuiz $(DPMAKEOPTS_SDL1)
+	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-nexuiz $(DPMAKEOPTS_SDL1)
 	mv DarkPlacesRM/nexuiz-dprm-sdl DarkPlacesRM/nexuiz-dprm-sdl1
 	cd DarkPlacesRM && make clean
 endif
-	cd DarkPlacesRM && make sdl-nexuiz sv-nexuiz $(DPMAKEOPTS)
-else
 	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-nexuiz sv-nexuiz $(DPMAKEOPTS)
-endif
 
 fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(SDL1TARGZ)
 
@@ -310,18 +306,18 @@ stand-alone-engine: engine $(EXTRALIBS)
 	mkdir -m 755 -p Rexuiz/sources
 	rm -f Rexuiz/sources/DarkPlacesRM.zip
 	cd DarkPlacesRM && git archive --format=zip --prefix=DarkPlacesRM/ HEAD -o ../Rexuiz/sources/DarkPlacesRM.zip
-	install -m644 $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(LIBMICROHTTPDTARGZ) Rexuiz/sources/
+	install -m644 $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET_WIN),y)
 	install -m644 DarkPlacesRM/nexuiz-dprm-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
-ifeq ($(ARCHSUFFIX,x86_64)
+ifeq ($(ARCHSUFFIX), x86_64)
 	install -m644 DarkPlacesRM/nexuiz-dprm-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin64/rexuiz-dedicated.exe
 	install -m644 scripts/run_server_win64.cmd Rexuiz/server/
 endif
-ifeq ($(ARCHSUFFIX,i686)
+ifeq ($(ARCHSUFFIX),i686)
 	install -m644 DarkPlacesRM/nexuiz-dprm-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin32/rexuiz-dedicated.exe
 	install -m644 scripts/run_server_win32.cmd Rexuiz/server/
 endif
-	install -m644 $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) Rexuiz/sources/
+	install -m644 $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(LIBMICROHTTPDTARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET),win32)
 	mkdir -m755 -p Rexuiz/bin32
 	install -m644 $(EXTRALIBS) Rexuiz/bin32/

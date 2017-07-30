@@ -4,3 +4,6 @@
 [submodule "DarkPlacesRM"]
 	path = DarkPlacesRM
 	url = git://github.com/kasymovga/DarkPlacesRM
+[submodule "rexdlc"]
+	path = rexdlc
+	url = git://github.com/kasymovga/rexdlc

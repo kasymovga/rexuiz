@@ -92,12 +92,12 @@ ARCHSUFFIX=x86_64
 endif
 ifeq ($(DPTARGET),mac32)
 ARCHSUFFIX=i686
-DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" DP_LINK_OGGVORBIS=shared LIB_OGGVORBIS="`pkg-config --libs --static vorbis vorbisfile`"
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" DP_LINK_OGGVORBIS=shared LIB_OGGVORBIS='`pkg-config --libs --static vorbis vorbisfile`'
 DPTARGET_MAC=y
 endif
 ifeq ($(DPTARGET),mac64)
 ARCHSUFFIX=x86_64
-DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" DP_LINK_OGGVORBIS=shared LIB_OGGVORBIS="`pkg-config --libs --static vorbis vorbisfile`"
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" DP_LINK_OGGVORBIS=shared LIB_OGGVORBIS='`pkg-config --libs --static vorbis vorbisfile`'
 DPTARGET_MAC=y
 endif
 ifeq ($(DPTARGET_WIN),y)
@@ -280,11 +280,11 @@ clean:
 engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY) $(LIBMICROHTTPDFILES)
 ifeq ($(SDL1ENABLE),y)
 	cd DarkPlacesRM && make clean
-	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-nexuiz $(DPMAKEOPTS_SDL1)
-	mv DarkPlacesRM/nexuiz-dprm-sdl DarkPlacesRM/nexuiz-dprm-sdl1
+	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-rexuiz $(DPMAKEOPTS_SDL1)
+	mv DarkPlacesRM/rexuiz-sdl DarkPlacesRM/rexuiz-sdl1
 	cd DarkPlacesRM && make clean
 endif
-	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-nexuiz sv-nexuiz $(DPMAKEOPTS)
+	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-rexuiz sv-rexuiz $(DPMAKEOPTS)
 
 fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(SDL1TARGZ)
 
@@ -316,13 +316,13 @@ stand-alone-engine: engine $(EXTRALIBS)
 	cd DarkPlacesRM && git archive --format=zip --prefix=DarkPlacesRM/ HEAD -o ../Rexuiz/sources/DarkPlacesRM.zip
 	install -m644 $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET_WIN),y)
-	install -m644 DarkPlacesRM/nexuiz-dprm-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
+	install -m644 DarkPlacesRM/rexuiz-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
 ifeq ($(ARCHSUFFIX), x86_64)
-	install -m644 DarkPlacesRM/nexuiz-dprm-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin64/rexuiz-dedicated.exe
+	install -m644 DarkPlacesRM/rexuiz-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin64/rexuiz-dedicated.exe
 	install -m644 scripts/run_server_win64.cmd Rexuiz/server/
 endif
 ifeq ($(ARCHSUFFIX),i686)
-	install -m644 DarkPlacesRM/nexuiz-dprm-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin32/rexuiz-dedicated.exe
+	install -m644 DarkPlacesRM/rexuiz-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin32/rexuiz-dedicated.exe
 	install -m644 scripts/run_server_win32.cmd Rexuiz/server/
 endif
 	install -m644 $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(LIBMICROHTTPDTARGZ) Rexuiz/sources/
@@ -338,10 +338,10 @@ endif
 ifeq ($(DPTARGET_LINUX),y)
 	mkdir -p Rexuiz/linux-bins/$(ARCHSUFFIX)
 	mkdir -p Rexuiz/server
-	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl
-	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl1 Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl1
+	install -m 755 DarkPlacesRM/rexuiz-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl
+	install -m 755 DarkPlacesRM/rexuiz-sdl1 Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl1
 	install -m644 $(EXTRALIBS) Rexuiz/linux-bins/$(ARCHSUFFIX)/
-	install -m 755 DarkPlacesRM/nexuiz-dprm-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-dedicated
+	install -m 755 DarkPlacesRM/rexuiz-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-dedicated
 	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(SDL1TARGZ) Rexuiz/sources/
 	install -m644 patches/sdl-1.2.patch Rexuiz/sources/
 	cat scripts/run_client | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-sdl/g' > Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
@@ -357,7 +357,7 @@ ifeq ($(DPTARGET_MAC),y)
 	install -m 755 scripts/Rexuiz.app/Contents/Resources/English.lproj/InfoPlist.strings Rexuiz/Rexuiz.app/Contents/Resources/English.lproj/
 	install -m 755 scripts/Rexuiz.app/Contents/Resources/Rexuiz.icns Rexuiz/Rexuiz.app/Contents/Resources/
 	install -m 755 scripts/Rexuiz.app/Contents/Info.plist Rexuiz/Rexuiz.app/Contents/
-	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl Rexuiz/Rexuiz.app/Contents/MacOS/rexuiz-dprm-sdl-bin
+	install -m 755 DarkPlacesRM/rexuiz-sdl Rexuiz/Rexuiz.app/Contents/MacOS/rexuiz-dprm-sdl-bin
 	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) Rexuiz/sources/
 endif
 
@@ -365,11 +365,11 @@ stand-alone: stand-alone-engine stand-alone-data
 
 linux-package: engine nexuiz-252.zip
 	mkdir -m 755 -p package/usr/bin
-	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl package/usr/bin/rexuiz
+	install -m 755 DarkPlacesRM/rexuiz-sdl package/usr/bin/rexuiz
 ifeq ($(SDL1ENABLE),y)
-	install -m 755 DarkPlacesRM/nexuiz-dprm-sdl1 package/usr/bin/rexuiz-sdl1
+	install -m 755 DarkPlacesRM/rexuiz-sdl1 package/usr/bin/rexuiz-sdl1
 endif
-	install -m 755 DarkPlacesRM/nexuiz-dprm-dedicated package/usr/bin/rexuiz-dedicated
+	install -m 755 DarkPlacesRM/rexuiz-dedicated package/usr/bin/rexuiz-dedicated
 	mkdir -m 755 -p package/usr/share/applications
 	install -m 644 scripts/rexuiz.desktop "package/usr/share/applications/rexuiz.desktop"
 ifeq ($(SDL1ENABLE),y)

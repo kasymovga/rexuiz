@@ -1,6 +1,13 @@
 #!/bin/sh
 
 cd "`dirname "$0"`"
+if test -d ~/.nexuiz
+then
+	if test ! -d ~/.rexuiz
+	then
+		ln -fs ~/.nexuiz ~/.rexuiz
+	fi
+fi
 chmod 755 linux-bins/@@ARCH@@/rexuiz-dprm-sdl1
 SDL_CHECK="`ldd linux-bins/@@ARCH@@/rexuiz-dprm-sdl1|grep libSDL-1.2.so`"
 if test -z "$LD_LIBRARY_PATH"

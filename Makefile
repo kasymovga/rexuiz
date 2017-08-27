@@ -19,10 +19,10 @@ STRIP=strip
 endif
 LD=$(CC)
 
-LIBPNGDIR=libpng-1.6.25
+LIBPNGDIR=libpng-1.6.32
 LIBPNGTARGZ=$(LIBPNGDIR).tar.gz
 LIBPNGFILES=$(LIBDIR)/lib/libpng.a $(LIBDIR)/lib/libpng16.a
-ZLIBDIR=zlib-1.2.8
+ZLIBDIR=zlib-1.2.11
 ZLIBTARGZ=$(ZLIBDIR).tar.gz
 ZLIBFILES=$(LIBDIR)/lib/libz.a
 JPEGTARGZ=jpegsrc.v8d.tar.gz

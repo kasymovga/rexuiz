@@ -28,7 +28,7 @@ ZLIBFILES=$(LIBDIR)/lib/libz.a
 JPEGTARGZ=jpegsrc.v8d.tar.gz
 JPEGDIR=jpeg-8d
 JPEGFILES=$(LIBDIR)/lib/libjpeg.a
-SDLDIR=SDL2-2.0.4
+SDLDIR=SDL2-2.0.5
 SDLTARGZ=$(SDLDIR).tar.gz
 SDLFILES=$(LIBDIR)/bin/sdl2-config
 SDL1DIR=SDL-1.2.15
@@ -81,12 +81,12 @@ ARCHSUFFIX=x86_64
 DPTARGET_LINUX=y
 endif
 ifeq ($(DPTARGET),win32)
-DPMAKEOPTS:=$(DPMAKEOPTS_SDL1) DP_MAKE_TARGET=mingw DP_FS_FORCE_NOHOME=y SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl-config --libs`" LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32'
+DPMAKEOPTS:=$(DPMAKEOPTS_SDL1) DP_MAKE_TARGET=mingw TARGET=$(CROSSPREFIX) DP_FS_FORCE_NOHOME=y SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl-config --libs`" LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32'
 DPTARGET_WIN=y
 ARCHSUFFIX=i686
 endif
 ifeq ($(DPTARGET),win64)
-DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw DP_FS_FORCE_NOHOME=y MINGWARCH=x86_64 SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32'
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw TARGET=$(CROSSPREFIX) DP_FS_FORCE_NOHOME=y MINGWARCH=x86_64 SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32'
 DPTARGET_WIN=y
 ARCHSUFFIX=x86_64
 endif
@@ -236,7 +236,7 @@ $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
 	tr -d '\015' < $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def > $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed
 	mv $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def
 ifeq ($(DPTARGET_WIN),y)
-	cd $(LIBTHEORADIR) && CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
+	cd $(LIBTHEORADIR) && CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) --disable-examples && make && make install
 else
 	cd $(LIBTHEORADIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 endif
@@ -318,10 +318,12 @@ stand-alone-engine: engine $(EXTRALIBS)
 ifeq ($(DPTARGET_WIN),y)
 	install -m644 DarkPlacesRM/rexuiz-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
 ifeq ($(ARCHSUFFIX), x86_64)
+	mkdir -p -m755 Rexuiz/bin64
 	install -m644 DarkPlacesRM/rexuiz-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin64/rexuiz-dedicated.exe
 	install -m644 scripts/run_server_win64.cmd Rexuiz/server/
 endif
 ifeq ($(ARCHSUFFIX),i686)
+	mkdir -p -m755 Rexuiz/bin32
 	install -m644 DarkPlacesRM/rexuiz-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin32/rexuiz-dedicated.exe
 	install -m644 scripts/run_server_win32.cmd Rexuiz/server/
 endif

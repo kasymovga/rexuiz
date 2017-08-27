@@ -341,7 +341,9 @@ ifeq ($(DPTARGET_LINUX),y)
 	mkdir -p Rexuiz/linux-bins/$(ARCHSUFFIX)
 	mkdir -p Rexuiz/server
 	install -m 755 DarkPlacesRM/rexuiz-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl
+ifeq ($(SDL1ENABLE),y)
 	install -m 755 DarkPlacesRM/rexuiz-sdl1 Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl1
+endif
 	install -m644 $(EXTRALIBS) Rexuiz/linux-bins/$(ARCHSUFFIX)/
 	install -m 755 DarkPlacesRM/rexuiz-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-dedicated
 	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(SDL1TARGZ) Rexuiz/sources/

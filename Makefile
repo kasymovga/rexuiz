@@ -124,9 +124,6 @@ LIBOGGFILES=$(LIBDIR)/lib/libogg.so
 LIBVORBISFILES=$(LIBDIR)/lib/libvorbis.so $(LIBDIR)/lib/libvorbisenc.so $(LIBDIR)/lib/libvorbisfile.so
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.so
 EXTRALIBS=$(LIBOGGFILES) $(LIBVORBISFILES)
-ifeq ($(SDL1ENABLE),y)
-EXTRALIBS_LINKONLY=$(SDL1FILES)
-endif
 endif
 endif
 
@@ -278,12 +275,6 @@ clean:
 	cd DarkPlacesRM && make clean
 
 engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY) $(LIBMICROHTTPDFILES)
-ifeq ($(SDL1ENABLE),y)
-	cd DarkPlacesRM && make clean
-	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-rexuiz $(DPMAKEOPTS_SDL1)
-	mv DarkPlacesRM/rexuiz-sdl DarkPlacesRM/rexuiz-sdl1
-	cd DarkPlacesRM && make clean
-endif
 	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-rexuiz sv-rexuiz $(DPMAKEOPTS)
 
 fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(SDL1TARGZ)
@@ -341,9 +332,6 @@ ifeq ($(DPTARGET_LINUX),y)
 	mkdir -p Rexuiz/linux-bins/$(ARCHSUFFIX)
 	mkdir -p Rexuiz/server
 	install -m 755 DarkPlacesRM/rexuiz-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl
-ifeq ($(SDL1ENABLE),y)
-	install -m 755 DarkPlacesRM/rexuiz-sdl1 Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl1
-endif
 	install -m644 $(EXTRALIBS) Rexuiz/linux-bins/$(ARCHSUFFIX)/
 	install -m 755 DarkPlacesRM/rexuiz-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-dedicated
 	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(SDL1TARGZ) Rexuiz/sources/
@@ -370,15 +358,9 @@ stand-alone: stand-alone-engine stand-alone-data
 linux-package: engine nexuiz-252.zip
 	mkdir -m 755 -p package/usr/bin
 	install -m 755 DarkPlacesRM/rexuiz-sdl package/usr/bin/rexuiz
-ifeq ($(SDL1ENABLE),y)
-	install -m 755 DarkPlacesRM/rexuiz-sdl1 package/usr/bin/rexuiz-sdl1
-endif
 	install -m 755 DarkPlacesRM/rexuiz-dedicated package/usr/bin/rexuiz-dedicated
 	mkdir -m 755 -p package/usr/share/applications
 	install -m 644 scripts/rexuiz.desktop "package/usr/share/applications/rexuiz.desktop"
-ifeq ($(SDL1ENABLE),y)
-	install -m 644 scripts/rexuiz-sdl1.desktop "package/usr/share/applications/rexuiz.desktop"
-endif
 	cd DarkPlacesRM && install -TDm644 nexuiz.xpm "../package/usr/share/pixmaps/rexuiz.xpm"
 	cd DarkPlacesRM && install -TDm644 nexuiz16x16.png "../package/usr/share/icons/hicolor/16x16/apps/rexuiz.png"
 	cd DarkPlacesRM && install -TDm644 nexuiz24x24.png "../package/usr/share/icons/hicolor/24x24/apps/rexuiz.png"

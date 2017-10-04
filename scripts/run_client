@@ -5,14 +5,25 @@ if test -d ~/.nexuiz
 then
 	if test ! -d ~/.rexuiz
 	then
-		ln -fs .nexuiz ~/.rexuiz
+		ln -fs ~/.nexuiz ~/.rexuiz
 	fi
 fi
+chmod 755 linux-bins/@@ARCH@@/rexuiz-dprm-sdl1
+SDL_CHECK="`ldd linux-bins/@@ARCH@@/rexuiz-dprm-sdl1|grep libSDL-1.2.so`"
 if test -z "$LD_LIBRARY_PATH"
 then
 	export LD_LIBRARY_PATH="`pwd`/linux-bins/@@ARCH@@"
 else
 	export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:`pwd`/linux-bins/@@ARCH@@"
+fi
+if test -n "$SDL_CHECK"
+then
+	for F in $SDL_CHECK
+	do
+		test -f "$F" || continue
+		chmod 755 ./linux-bins/@@ARCH@@/rexuiz-dprm-sdl1
+		exec ./linux-bins/@@ARCH@@/rexuiz-dprm-sdl1 -basedir . "$@"
+	done
 fi
 export SDL_DYNAMIC_API=libSDL2.so
 chmod 755 ./linux-bins/@@ARCH@@/@@BINARY_NAME@@

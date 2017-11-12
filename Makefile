@@ -1,4 +1,4 @@
-.PHONY: all clean engine fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc linux-package
+.PHONY: all clean engine fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc linux-package rmqcc
 PWD=$(shell pwd)
 LIBDIR=$(PWD)/libs
 
@@ -391,6 +391,9 @@ endif
 	unzip -j package/usr/share/rexuiz/data/data20091001.pk3 csprogs.dat
 	mv csprogs.dat package/usr/share/rexuiz/data/dlcache/csprogs.dat.408476.61283
 
-update-qc:
-	cd 1vs1 && make SV_PROGNAME=progs.dat CL_PROGNAME=csprogs.dat CFG_NAME=rexuiz-extra.cfg SET_CURL_PACKAGE=no
+rmqcc:
+	cd rmqcc && make
+
+update-qc: rmqcc
+	cd 1vs1 && make QCC=../../../rmqcc/rmqcc.bin SV_PROGNAME=progs.dat CL_PROGNAME=csprogs.dat CFG_NAME=rexuiz-extra.cfg SET_CURL_PACKAGE=no
 	install -m 644 1vs1/progs.dat 1vs1/csprogs.dat 1vs1/menu.dat 1vs1/rexuiz-extra.cfg rexuiz.pk3/

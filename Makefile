@@ -309,6 +309,7 @@ stand-alone-data:
 	cd rexdlc/survival_pack && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_survival_pack.pk3 *
 	cd rexdlc/zapper_v1 && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_zapper_v1.pk3 *
 	cd 1vs1 && git archive --format=zip --prefix=rexuiz-qcsrc/ HEAD -o ../Rexuiz/sources/rexuiz-qcsrc.zip
+	cd rmqcc && git archive --format=zip --prefix=rmqcc/ HEAD -o ../Rexuiz/sources/rmqcc.zip
 
 stand-alone-engine: engine $(EXTRALIBS)
 	mkdir -m 755 -p Rexuiz/sources

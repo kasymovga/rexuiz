@@ -12,13 +12,16 @@ Axisar
 Rafael Tarverdiyev (Laggy Turtle)
 *Composer
 
-**Old Members:
-
 Alex Zloy (Zoom Zoom)
 *Designer
 
-Akari
+Andrei Alexeyev
 *Programmer
+
+**Old Members:
+
+David "Artefact" Revoy
+*Designer
 
 Lee Vermeulen
 *Project Founder and Co-Designer

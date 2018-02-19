@@ -1,39 +1,48 @@
-104.238.159.167:26000//Best Akimbo Server Ever
-51.15.46.239:26001//Best Nexuiz Server Ever
-108.61.164.188:26000//Best Teamplay Akimbo Server
-51.15.46.239:26010//Best 1vs1 Nexuiz Server
-51.15.46.239:26002//[RM] Rexuiz Camping Rifle Arena
-51.15.46.239:26005//Worst Minsta Nexuiz Server
-213.141.136.246:26000//ipNp.su DM [Korolev-NBN]
-213.141.136.246:26003//ipNp.su DM [minsta+hook][Korolev-NBN]
-91.121.222.176:56003//[RM] Heaven to Hell #3 // Camping Rifle Arena
-163.172.104.191:26000//Best Conquest Akimbo Server
-213.141.136.246:26001//ipNp.su DM 1x1 [Korolev-NBN]
-213.141.136.246:26007//ipNp.su CTF [minsta+hook][Korolev-NBN]
-213.141.136.246:26005//ipNp.su TDM [minsta+hook][Korolev-NBN]
-31.131.253.244:26000//Clanwarz : Russia MSK
-144.76.28.11:26002// [AxG] Dead Cat 1vs1 - GH/MinstaGib sofa and hangout area, very low latency.
-144.76.28.11:26000// [AxG] Dead Cat DM - GH/MinstaGib, very low latency.
-158.58.173.16:26000//Clanwarz : Italia
-144.76.28.11:26001// [AxG] Dead Cat Flagged - CTF GH/MinstaGib, very low latency.
-91.121.222.176:56004//[RM] Heaven to Hell #4 // UFB
-212.227.159.135:26000//[Krabalken] - Nexuiz Bot-Fighters - SpeedFire
-91.121.222.176:56001//[RM] Heaven to Hell #1 // Akimbo Camping Rifle Arena
-91.121.222.176:56002//[RM] Heaven to Hell #2 // Camping Rifle Arena 1vs1
-37.120.167.173:26000//Einherjer Europe [linuxiuvat.de]
-66.45.244.2:26000//House of the Hog
-13.89.47.85:1026//Mojo Friggin Mania
-67.228.162.108:26000//Clanwarz : Dallas
-198.58.96.171:26000//Mojo's House (twitter.com/mojo_server)
-74.91.120.112:26010//House of CTF [1] HOCTF - 2.5.2 - DALLAS (NFO) NEW SERVER
-174.37.186.15:26000//Clanwarz : Seattle
-199.167.19.44:26000//Clanwarz : Vancouver
-69.90.48.136:26000//Clanwarz : Toronto
-206.55.179.154:26000//[Minnesota] Hot Dish
-37.147.80.32:26000//getfr.org, v-2.5.2, you need to install nexmappack_r2.zip!
-178.254.31.217:26003//(Prophets) Duel Sanctuary [InstaGib|Hook]
-178.27.122.178:26002//Nexuiz CTF @ Mobile Infanterie
-178.27.122.178:26000//Nexuiz DM @ Mobile Infanterie
 94.232.184.164:26000//Russian FFA Server
-163.172.104.191:26001//Best Survive Server Ever
-24.134.2.85:26000//Planetworms Nexuiz TDM 2.5.2 Server
+213.141.136.246:26000//ipNp.su DM [Korolev-NBN]
+213.141.136.246:26007//ipNp.su TDM [minsta+hook][Korolev-NBN]
+213.141.136.246:26003//ipNp.su DM 1x1 [minsta+hook][Korolev-NBN]
+213.141.136.246:26005//ipNp.su DM [minsta+hook][Korolev-NBN]
+213.141.136.246:26006//ipNp.su CTF [minsta+hook][Korolev-NBN]
+213.141.136.246:26004//ipNp.su DM 1x1 [Korolev-NBN]
+31.131.253.244:26000//Clanwarz : Russia MSK
+128.70.248.156:26000//getfr.org, v-2.5.2, you need to install nexmappack_r2.zip!
+108.61.164.188:26000//Best Teamplay Akimbo Server
+81.169.182.250:26000//Does NOT Compute 2.5.2 [DM]
+144.76.28.11:26002// [AxG] Dead Cat 1vs1 - GH/MinstaGib sofa and hangout area, very low latency.
+149.210.165.201:26000//The Battle Bunker
+163.172.104.191:26005//Worst Minsta Nexuiz Server
+144.76.28.11:26000// [AxG] Dead Cat DM - GH/MinstaGib, very low latency.
+163.172.104.191:26002//[RM] Rexuiz Camping Rifle Arena
+104.238.159.167:26000//Best Akimbo Server Ever
+37.120.167.173:26000//Einherjer Europe [linuxiuvat.de]
+91.121.222.176:56003//[RM] {radio} Heaven to Hell #3 // Camping Rifle Arena
+178.254.31.217:26003//(Prophets) Duel Sanctuary [InstaGib|Hook]
+158.58.173.16:26000//Clanwarz : Italia
+163.172.104.191:26000//Shitty Conquest Server
+144.76.28.11:26001// [AxG] Dead Cat Flagged - CTF GH/MinstaGib, very low latency.
+163.172.104.191:26001//Best Survival Server Ever
+91.121.222.176:56001//[RM] {radio} Heaven to Hell #1 // Akimbo Camping Rifle Arena
+91.121.222.176:56005//[RM] (Rexuiz) Heaven to Hell #5 // Camping Rifle Arena
+163.172.104.191:26003//Best Nexuiz Server Ever
+145.239.227.213:26000//Nexuiz goauld's 2.5.2 Server
+163.172.104.191:26015//Best 1vs1 Nexuiz Server
+188.193.129.22:26002//Nexuiz CTF @ Mobile Infanterie
+91.121.222.176:56004//[RM] Heaven to Hell #4 // UFB
+188.193.129.22:26000//Nexuiz DM @ Mobile Infanterie
+91.121.222.176:56002//[RM] Heaven to Hell #2 // Camping Rifle Arena 1vs1
+69.90.48.136:26000//Clanwarz : Toronto
+144.217.161.134:26001//Gman's Temporary Experimental DM Musket Server (Beauharnois CA)
+144.217.161.134:26000//[300] THIS IS SPARTA III (Beauharnois Canada) - CTF Minsta+Hook
+199.185.130.224:26000//[Minnesota] Hot Dish
+66.45.244.2:26000//House of the Hog
+184.154.7.190:26000//[Krisp]-N-B Chicago
+18.216.167.242:26000//The Idiocracy III: Reign of Orange Man
+199.167.19.44:26000//Clanwarz : Vancouver
+13.89.47.85:4385//The Idiocracy! The Curse of Little Hands
+184.154.7.190:26001//[Krisp]-R-B Chicago
+52.173.245.224:26000//The Idiocracy II: DonaldTown
+67.228.162.108:26000//Clanwarz : Dallas
+174.37.186.15:26000//Clanwarz : Seattle
+70.36.246.71:26001//[Krisp]-R-S California
+70.36.246.71:26000//[Krisp]-N-S California

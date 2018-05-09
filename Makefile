@@ -305,8 +305,9 @@ stand-alone-data:
 	cd rexdlc/rm_effects_v2 && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_rm_effects_v2.pk3 *
 	cd rexdlc/rspear && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_rspear.pk3 *
 	cd rexdlc/supershotgun && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_supershotgun.pk3 *
-	cd rexdlc/survival_campaign && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_survival_campaign.pk3 *
+	cd rexdlc/survival_campaign_v2 && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_survival_campaign_v2.pk3 *
 	cd rexdlc/survival_pack && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_survival_pack.pk3 *
+	cd rexdlc/survival_pack2 && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_survival_pack2.pk3 *
 	cd rexdlc/zapper_v2 && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_zapper_v2.pk3 *
 	cd 1vs1 && git archive --format=zip --prefix=rexuiz-qcsrc/ HEAD -o ../Rexuiz/sources/rexuiz-qcsrc.zip
 	cd rmqcc && git archive --format=zip --prefix=rmqcc/ HEAD -o ../Rexuiz/sources/rmqcc.zip

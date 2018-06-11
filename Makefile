@@ -311,6 +311,7 @@ stand-alone-data:
 	cd rexdlc/zapper_v2 && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_zapper_v2.pk3 *
 	cd 1vs1 && git archive --format=zip --prefix=rexuiz-qcsrc/ HEAD -o ../Rexuiz/sources/rexuiz-qcsrc.zip
 	cd rmqcc && git archive --format=zip --prefix=rmqcc/ HEAD -o ../Rexuiz/sources/rmqcc.zip
+	install -m644 scripts/server-example.cfg Rexuiz/data/server-example.cfg
 
 stand-alone-engine: engine $(EXTRALIBS)
 	mkdir -m 755 -p Rexuiz/sources

@@ -11,3 +11,6 @@
 	path = rmqcc
 	url = git://github.com/kasymovga/rmqcc
 	branch = master
+[submodule "dprex"]
+	path = dprex
+	url = git://github.com/kasymovga/dprex

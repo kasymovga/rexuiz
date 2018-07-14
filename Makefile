@@ -1,8 +1,9 @@
-.PHONY: all clean engine fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc linux-package rmqcc
+.PHONY: all clean engine fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc rmqcc
 PWD=$(shell pwd)
 LIBDIR=$(PWD)/libs
 
 DATA_FILES_NEXUIZ=common-spog.pk3 data20091001.pk3
+DPDIR=dprex
 
 ifneq ($(CROSSPREFIX),)
 CC=$(CROSSPREFIX)-gcc
@@ -19,6 +20,9 @@ STRIP=strip
 endif
 LD=$(CC)
 
+LIBSAMPLERATEDIR=libsamplerate-0.1.9
+LIBSAMPLERATETARGZ=libsamplerate-0.1.9.tar.gz
+LIBSAMPLERATEFILES=$(LIBDIR)/lib/libsamplerate.a
 LIBPNGDIR=libpng-1.6.32
 LIBPNGTARGZ=$(LIBPNGDIR).tar.gz
 LIBPNGFILES=$(LIBDIR)/lib/libpng.a $(LIBDIR)/lib/libpng16.a
@@ -28,12 +32,9 @@ ZLIBFILES=$(LIBDIR)/lib/libz.a
 JPEGTARGZ=jpegsrc.v8d.tar.gz
 JPEGDIR=jpeg-8d
 JPEGFILES=$(LIBDIR)/lib/libjpeg.a
-SDLDIR=SDL2-2.0.5
+SDLDIR=SDL2-2.0.8
 SDLTARGZ=$(SDLDIR).tar.gz
 SDLFILES=$(LIBDIR)/bin/sdl2-config
-SDL1DIR=SDL-1.2.15
-SDL1TARGZ=$(SDL1DIR).tar.gz
-SDL1FILES=$(LIBDIR)/bin/sdl-config
 LIBMICROHTTPDFILES=$(LIBDIR)/lib/libmicrohttpd.a
 FREETYPEDIR=freetype-2.7
 FREETYPETARGZ=$(FREETYPEDIR).tar.gz
@@ -69,8 +70,7 @@ DPTARGET=win32
 endif
 endif
 endif
-DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_LIBMICROHTTPD=yes
-DPMAKEOPTS_SDL1=CC='$(CC) -I$(LIBDIR)/include/SDL -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl-config' DP_LIBMICROHTTPD=yes
+DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_LIBMICROHTTPD=yes $(DPMAKEOPTS_EXTRA)
 
 ifeq ($(DPTARGET),linux32)
 ARCHSUFFIX=i686
@@ -81,12 +81,12 @@ ARCHSUFFIX=x86_64
 DPTARGET_LINUX=y
 endif
 ifeq ($(DPTARGET),win32)
-DPMAKEOPTS:=$(DPMAKEOPTS_SDL1) DP_MAKE_TARGET=mingw TARGET=$(CROSSPREFIX) DP_FS_FORCE_NOHOME=y SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl-config --libs`" LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32'
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw TARGET=$(CROSSPREFIX) DP_FS_FORCE_NOHOME=y SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32' OBJ_ICON=rexuiz.o
 DPTARGET_WIN=y
 ARCHSUFFIX=i686
 endif
 ifeq ($(DPTARGET),win64)
-DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw TARGET=$(CROSSPREFIX) DP_FS_FORCE_NOHOME=y MINGWARCH=x86_64 SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32'
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw TARGET=$(CROSSPREFIX) DP_FS_FORCE_NOHOME=y MINGWARCH=x86_64 SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32' OBJ_ICON=rexuiz.o
 DPTARGET_WIN=y
 ARCHSUFFIX=x86_64
 endif
@@ -124,17 +124,10 @@ LIBOGGFILES=$(LIBDIR)/lib/libogg.so
 LIBVORBISFILES=$(LIBDIR)/lib/libvorbis.so $(LIBDIR)/lib/libvorbisenc.so $(LIBDIR)/lib/libvorbisfile.so
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.so
 EXTRALIBS=$(LIBOGGFILES) $(LIBVORBISFILES)
-ifeq ($(SDL1ENABLE),y)
-EXTRALIBS_LINKONLY=$(SDL1FILES)
-endif
 endif
 endif
 
-ifeq ($(DPTARGET),win32)
-SDLFILES_FORDP=$(SDL1FILES)
-else
 SDLFILES_FORDP=$(SDLFILES)
-endif
 
 
 all: stand-alone
@@ -167,10 +160,6 @@ $(SDLTARGZ):
 	wget -O temp_$@ https://www.libsdl.org/release/$@
 	mv temp_$@ $@
 
-$(SDL1TARGZ):
-	wget -O temp_$@ https://www.libsdl.org/release/$@
-	mv temp_$@ $@
-
 $(JPEGTARGZ):
 	wget -O temp_$@ http://www.ijg.org/files/$@
 	mv temp_$@ $@
@@ -183,6 +172,10 @@ $(LIBPNGTARGZ):
 	wget -O temp_$@ ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/$@
 	mv temp_$@ $@
 
+$(LIBSAMPLERATETARGZ):
+	wget -O temp_$@ http://www.mega-nerd.com/SRC/$@
+	mv temp_$@ $@
+
 $(LIBMICROHTTPDTARGZ):
 	wget -O temp_$@ http://ftp.gnu.org/gnu/libmicrohttpd/$@
 	mv temp_$@ $@
@@ -190,6 +183,10 @@ $(LIBMICROHTTPDTARGZ):
 $(LIBPNGFILES): $(LIBPNGTARGZ) $(ZLIBFILES)
 	tar xzf $(LIBPNGTARGZ)
 	cd $(LIBPNGDIR) && CC="$(CC) -I$(LIBDIR)/include -L$(LIBDIR)/lib" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
+
+$(LIBSAMPLERATEFILES): $(LIBSAMPLERATETARGZ)
+	tar xzf $(LIBSAMPLERATETARGZ)
+	cd $(LIBSAMPLERATEDIR) && ./configure --host=$(CROSSPREFIX) --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
 
 $(ZLIBFILES): $(ZLIBTARGZ)
 	tar xzf $(ZLIBTARGZ)
@@ -245,48 +242,29 @@ $(LIBMICROHTTPDFILES): $(LIBMICROHTTPDTARGZ)
 	tar xzf $(LIBMICROHTTPDTARGZ)
 	cd $(LIBMICROHTTPDDIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --disable-https --prefix=$(LIBDIR) && make && make install
 
-$(SDLFILES): $(SDLTARGZ)
+$(SDLFILES): $(SDLTARGZ) $(LIBSAMPLERATEFILES)
 	tar xzf $(SDLTARGZ)
+	cd $(SDLDIR) && patch -p1 < ../sdl2-1-fixes.patch && ./autogen.sh
 ifeq ($(DPTARGET_WIN),y)
-	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" host_os=mingw ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR)
-	cd $(SDLDIR) && make || cp build/.libs/*.o build/
-	cd $(SDLDIR) && make || cp build/.libs/*.o build/
+	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" host_os=mingw CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --enable-libsamplerate --disable-libsamplerate-shared --prefix=$(LIBDIR)
 	cd $(SDLDIR) && make
 	cd $(SDLDIR) && make install
 else
 ifeq ($(DPTARGET_MAC),y)
-	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --x-includes=$(MAC_OS_SDK)/usr/include --disable-cpuinfo --disable-video-x11 --enable-static --disable-shared --prefix=$(LIBDIR) && make && make install
+	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --x-includes=$(MAC_OS_SDK)/usr/include --disable-cpuinfo --disable-video-x11 --enable-static --disable-shared --prefix=$(LIBDIR) && make && make install
 else
-	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR) && make && make install
+	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR) && make && make install
 endif
 endif
-
-$(SDL1FILES): $(SDL1TARGZ)
-	tar xzf $(SDL1TARGZ)
-	cd $(SDL1DIR) && patch -p1 < ../patches/sdl-1.2.patch
-	cd $(SDL1DIR) && ./autogen.sh
-ifeq ($(DPTARGET_WIN),y)
-	cd $(SDL1DIR) && CC="$(CC)" CXX="$(CXX)" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR)
-else
-	cd $(SDL1DIR) && CC="$(CC)" CXX="$(CXX)" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --disable-static --enable-shared --prefix=$(LIBDIR)
-endif
-	cd $(SDL1DIR) && make
-	cd $(SDL1DIR) && make install
 
 clean:
-	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) $(LIBMICROHTTPDDIR) package
-	cd DarkPlacesRM && make clean
+	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) $(LIBMICROHTTPDDIR) $(LIBSAMPLERATEDIR) package
+	cd $(DPDIR) && make clean
 
 engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY) $(LIBMICROHTTPDFILES)
-ifeq ($(SDL1ENABLE),y)
-	cd DarkPlacesRM && make clean
-	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-rexuiz $(DPMAKEOPTS_SDL1)
-	mv DarkPlacesRM/rexuiz-sdl DarkPlacesRM/rexuiz-sdl1
-	cd DarkPlacesRM && make clean
-endif
-	cd DarkPlacesRM && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-rexuiz sv-rexuiz $(DPMAKEOPTS)
+	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-release sv-release $(DPMAKEOPTS)
 
-fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(SDL1TARGZ)
+fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ)
 
 stand-alone: stand-alone-data stand-alone-engine
 
@@ -315,19 +293,19 @@ stand-alone-data:
 
 stand-alone-engine: engine $(EXTRALIBS)
 	mkdir -m 755 -p Rexuiz/sources
-	rm -f Rexuiz/sources/DarkPlacesRM.zip
-	cd DarkPlacesRM && git archive --format=zip --prefix=DarkPlacesRM/ HEAD -o ../Rexuiz/sources/DarkPlacesRM.zip
+	rm -f Rexuiz/sources/$(DPDIR).zip
+	cd $(DPDIR) && git archive --format=zip --prefix=$(DPDIR)/ HEAD -o ../Rexuiz/sources/$(DPDIR).zip
 	install -m644 $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET_WIN),y)
-	install -m644 DarkPlacesRM/rexuiz-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
+	install -m644 $(DPDIR)/darkplaces-sdl.exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
 ifeq ($(ARCHSUFFIX), x86_64)
 	mkdir -p -m755 Rexuiz/bin64
-	install -m644 DarkPlacesRM/rexuiz-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin64/rexuiz-dedicated.exe
+	install -m644 $(DPDIR)/darkplaces-dedicated.exe Rexuiz/bin64/rexuiz-dedicated.exe
 	install -m644 scripts/run_server_win64.cmd Rexuiz/server/
 endif
 ifeq ($(ARCHSUFFIX),i686)
 	mkdir -p -m755 Rexuiz/bin32
-	install -m644 DarkPlacesRM/rexuiz-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin32/rexuiz-dedicated.exe
+	install -m644 $(DPDIR)/darkplaces-dedicated.exe Rexuiz/bin32/rexuiz-dedicated.exe
 	install -m644 scripts/run_server_win32.cmd Rexuiz/server/
 endif
 	install -m644 $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(LIBMICROHTTPDTARGZ) Rexuiz/sources/
@@ -343,17 +321,13 @@ endif
 ifeq ($(DPTARGET_LINUX),y)
 	mkdir -p Rexuiz/linux-bins/$(ARCHSUFFIX)
 	mkdir -p Rexuiz/server
-	install -m 755 DarkPlacesRM/rexuiz-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl
-ifeq ($(SDL1ENABLE),y)
-	install -m 755 DarkPlacesRM/rexuiz-sdl1 Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-sdl1
-endif
+	install -m 755 $(DPDIR)/darkplaces-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-sdl
 	install -m644 $(EXTRALIBS) Rexuiz/linux-bins/$(ARCHSUFFIX)/
-	install -m 755 DarkPlacesRM/rexuiz-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dprm-dedicated
-	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(SDL1TARGZ) Rexuiz/sources/
-	install -m644 patches/sdl-1.2.patch Rexuiz/sources/
-	cat scripts/run_client | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-sdl/g' > Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
+	install -m 755 $(DPDIR)/darkplaces-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dedicated
+	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) Rexuiz/sources/
+	cat scripts/run_client | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-sdl/g' > Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
 	chmod 755 Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
-	cat scripts/run_server | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dprm-dedicated/g' > Rexuiz/server/rexuiz-linux-dedicated-$(ARCHSUFFIX)
+	cat scripts/run_server | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dedicated/g' > Rexuiz/server/rexuiz-linux-dedicated-$(ARCHSUFFIX)
 	chmod 755 Rexuiz/server/rexuiz-linux-dedicated-$(ARCHSUFFIX)
 endif
 ifeq ($(DPTARGET_MAC),y)
@@ -364,35 +338,11 @@ ifeq ($(DPTARGET_MAC),y)
 	install -m 755 scripts/Rexuiz.app/Contents/Resources/English.lproj/InfoPlist.strings Rexuiz/Rexuiz.app/Contents/Resources/English.lproj/
 	install -m 755 scripts/Rexuiz.app/Contents/Resources/Rexuiz.icns Rexuiz/Rexuiz.app/Contents/Resources/
 	install -m 755 scripts/Rexuiz.app/Contents/Info.plist Rexuiz/Rexuiz.app/Contents/
-	install -m 755 DarkPlacesRM/rexuiz-sdl Rexuiz/Rexuiz.app/Contents/MacOS/rexuiz-dprm-sdl-bin
+	install -m 755 $(DPDIR)/darkplaces-sdl Rexuiz/Rexuiz.app/Contents/MacOS/rexuiz-dprm-sdl-bin
 	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) Rexuiz/sources/
 endif
 
 stand-alone: stand-alone-engine stand-alone-data
-
-linux-package: engine nexuiz-252.zip
-	mkdir -m 755 -p package/usr/bin
-	install -m 755 DarkPlacesRM/rexuiz-sdl package/usr/bin/rexuiz
-ifeq ($(SDL1ENABLE),y)
-	install -m 755 DarkPlacesRM/rexuiz-sdl1 package/usr/bin/rexuiz-sdl1
-endif
-	install -m 755 DarkPlacesRM/rexuiz-dedicated package/usr/bin/rexuiz-dedicated
-	mkdir -m 755 -p package/usr/share/applications
-	install -m 644 scripts/rexuiz.desktop "package/usr/share/applications/rexuiz.desktop"
-ifeq ($(SDL1ENABLE),y)
-	install -m 644 scripts/rexuiz-sdl1.desktop "package/usr/share/applications/rexuiz.desktop"
-endif
-	cd DarkPlacesRM && install -TDm644 nexuiz.xpm "../package/usr/share/pixmaps/rexuiz.xpm"
-	cd DarkPlacesRM && install -TDm644 nexuiz16x16.png "../package/usr/share/icons/hicolor/16x16/apps/rexuiz.png"
-	cd DarkPlacesRM && install -TDm644 nexuiz24x24.png "../package/usr/share/icons/hicolor/24x24/apps/rexuiz.png"
-	cd DarkPlacesRM && install -TDm644 nexuiz32x32.png "../package/usr/share/icons/hicolor/32x32/apps/rexuiz.png"
-	cd DarkPlacesRM && install -TDm644 nexuiz48x48.png "../package/usr/share/icons/hicolor/48x48/apps/rexuiz.png"
-	cd DarkPlacesRM && install -TDm644 nexuiz256x256.png "../package/usr/share/icons/hicolor/256x256/apps/rexuiz.png"
-	mkdir -m 755 -p package/usr/share/rexuiz/data/dlcache
-	cd rexuiz.pk3 && zip -r ../package/usr/share/rexuiz/data/rexuiz.pk3 *
-	unzip -j nexuiz-252.zip Nexuiz/data/common-spog.pk3 Nexuiz/data/data20091001.pk3 -d package/usr/share/rexuiz/data
-	unzip -j package/usr/share/rexuiz/data/data20091001.pk3 csprogs.dat
-	mv csprogs.dat package/usr/share/rexuiz/data/dlcache/csprogs.dat.408476.61283
 
 rmqcc:
 	cd rmqcc && make

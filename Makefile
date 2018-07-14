@@ -244,8 +244,8 @@ $(LIBMICROHTTPDFILES): $(LIBMICROHTTPDTARGZ)
 
 $(SDLFILES): $(SDLTARGZ) $(LIBSAMPLERATEFILES)
 	tar xzf $(SDLTARGZ)
-	cd $(SDLDIR) && patch -p1 < ../sdl2-1-fixes.patch && ./autogen.sh
 ifeq ($(DPTARGET_WIN),y)
+	cd $(SDLDIR) && patch -p1 < ../sdl2-1-fixes.patch && ./autogen.sh
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" host_os=mingw CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --enable-libsamplerate --disable-libsamplerate-shared --prefix=$(LIBDIR)
 	cd $(SDLDIR) && make
 	cd $(SDLDIR) && make install

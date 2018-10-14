@@ -288,6 +288,7 @@ stand-alone-data:
 	cd rexdlc/survival_pack2 && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_survival_pack2.pk3 *
 	cd rexdlc/zapper_v2 && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_zapper_v2.pk3 *
 	cd rexdlc/bat && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_bat.pk3 *
+	cd rexdlc/spdemo && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_spdemo.pk3 *
 	cd 1vs1 && git archive --format=zip --prefix=rexuiz-qcsrc/ HEAD -o ../Rexuiz/sources/rexuiz-qcsrc.zip
 	cd rmqcc && git archive --format=zip --prefix=rmqcc/ HEAD -o ../Rexuiz/sources/rmqcc.zip
 	install -m644 scripts/server-example.cfg Rexuiz/data/server-example.cfg

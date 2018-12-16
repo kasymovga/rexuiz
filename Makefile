@@ -278,17 +278,8 @@ stand-alone-data:
 	unzip -j nexuiz-252.zip Nexuiz/sources/fteqcc-binaries-and-source-rev1253299209-bb8ceb9870af06104b67ae4cc2ec29552dce705b.zip Nexuiz/sources/gamesource20091001.zip -d Rexuiz/sources
 	unzip -j Rexuiz/data/data20091001.pk3 csprogs.dat
 	mv csprogs.dat Rexuiz/data/dlcache/csprogs.dat.408476.61283
-	cd rexdlc/pryaxe_balls && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_pryaxe_balls.pk3 *
-	cd rexdlc/rm_arc && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_rm_arc.pk3 *
-	cd rexdlc/rm_effects_v2 && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_rm_effects_v2.pk3 *
-	cd rexdlc/rspear && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_rspear.pk3 *
-	cd rexdlc/supershotgun && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_supershotgun.pk3 *
-	cd rexdlc/survival_campaign_v2 && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_survival_campaign_v2.pk3 *
-	cd rexdlc/survival_pack && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_survival_pack.pk3 *
-	cd rexdlc/survival_pack2 && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_survival_pack2.pk3 *
-	cd rexdlc/zapper_v2 && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_zapper_v2.pk3 *
-	cd rexdlc/bat && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_bat.pk3 *
-	cd rexdlc/spdemo && zip -r ../../Rexuiz/data/dlcache/zzz-rexdlc_spdemo.pk3 *
+	cd rexdlc && make essential
+	cp rexdlc/*.pk3 Rexuiz/data/dlcache/
 	cd 1vs1 && git archive --format=zip --prefix=rexuiz-qcsrc/ HEAD -o ../Rexuiz/sources/rexuiz-qcsrc.zip
 	cd rmqcc && git archive --format=zip --prefix=rmqcc/ HEAD -o ../Rexuiz/sources/rmqcc.zip
 	install -m644 scripts/server-example.cfg Rexuiz/data/server-example.cfg

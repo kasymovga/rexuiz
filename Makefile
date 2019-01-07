@@ -23,7 +23,7 @@ LD=$(CC)
 LIBSAMPLERATEDIR=libsamplerate-0.1.9
 LIBSAMPLERATETARGZ=libsamplerate-0.1.9.tar.gz
 LIBSAMPLERATEFILES=$(LIBDIR)/lib/libsamplerate.a
-LIBPNGDIR=libpng-1.6.32
+LIBPNGDIR=libpng-1.6.36
 LIBPNGTARGZ=$(LIBPNGDIR).tar.gz
 LIBPNGFILES=$(LIBDIR)/lib/libpng.a $(LIBDIR)/lib/libpng16.a
 ZLIBDIR=zlib-1.2.11
@@ -169,7 +169,7 @@ $(ZLIBTARGZ):
 	mv temp_$@ $@
 
 $(LIBPNGTARGZ):
-	wget -O temp_$@ ftp://ftp.simplesystems.org/pub/libpng/png/src/libpng16/$@
+	wget -O temp_$@ http://prdownloads.sourceforge.net/libpng/libpng-1.6.36.tar.gz?download
 	mv temp_$@ $@
 
 $(LIBSAMPLERATETARGZ):

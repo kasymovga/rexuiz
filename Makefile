@@ -268,11 +268,14 @@ fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBT
 
 stand-alone: stand-alone-data stand-alone-engine
 
-stand-alone-data:
+stand-alone-data: nexuiz-252.zip
+	make update-qc
 	mkdir -m 755 -p Rexuiz/sources
 	mkdir -m 755 -p Rexuiz/data/dlcache
 	rm -f Rexuiz/data/rexuiz.pk3
+	rm -f Rexuiz/data/rexuiz-data.pk3
 	cd rexuiz.pk3 && zip -r ../Rexuiz/data/rexuiz.pk3 *
+	cd rexuiz-data.pk3 && zip -r ../Rexuiz/data/rexuiz-data.pk3 *
 	unzip -j nexuiz-252.zip Nexuiz/data/common-spog.pk3 Nexuiz/data/data20091001.pk3 -d Rexuiz/data
 	unzip -j nexuiz-252.zip Nexuiz/gpl.txt -d Rexuiz
 	unzip -j nexuiz-252.zip Nexuiz/sources/fteqcc-binaries-and-source-rev1253299209-bb8ceb9870af06104b67ae4cc2ec29552dce705b.zip Nexuiz/sources/gamesource20091001.zip -d Rexuiz/sources

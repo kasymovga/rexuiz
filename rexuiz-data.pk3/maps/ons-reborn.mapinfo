@@ -1,0 +1,27 @@
+title Reborn
+description A long time ago war ended here with a giant explosion, the whole area was contaminated, now the radiation has gone, and the armies are coming back to capture this territory.
+author Morphed
+_diameter 24140.087891
+_spawnpoints 54
+has weapons
+has turrets
+has vehicles
+type conq 1000 30
+type ons 20
+cdtrack 8
+size -8224.0 -8224.0 -96.0 8224.0 8224.0 6496.0
+settemp_for_type ons g_jetpack 1
+settemp_for_type all sv_foginterval 1
+settemp_for_type all g_respawn_waves 6
+// turrets conversion
+settemp_for_type all g_turrets_unit_plasma_dual_target_range 8500
+settemp_for_type all g_turrets_unit_plasma_dual_aim_maxpitch 65
+settemp_for_type all g_turrets_unit_plasma_dual_aim_speed 500
+settemp_for_type all g_turrets_unit_plasma_dual_shot_dmg 14
+settemp_for_type all g_turrets_unit_plasma_dual_shot_force 200
+settemp_for_type all g_turrets_unit_plasma_dual_shot_refire 0.09
+settemp_for_type all g_turrets_unit_plasma_dual_shot_speed 4500
+settemp_for_type all g_turrets_unit_plasma_dual_target_range_min 50
+settemp_for_type all g_turrets_unit_plasma_dual_aim_firetolerance_dist 500
+settemp_for_type all g_turrets_unit_plasma_dual_target_range_optimal 3000
+settemp_for_type all g_turrets_aimidle_delay 1

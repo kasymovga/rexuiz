@@ -38,7 +38,7 @@ SDLFILES=$(LIBDIR)/bin/sdl2-config
 LIBMICROHTTPDFILES=$(LIBDIR)/lib/libmicrohttpd.a
 FREETYPEDIR=freetype-2.7
 FREETYPETARGZ=$(FREETYPEDIR).tar.gz
-CURLDIR=curl-7.50.3
+CURLDIR=curl-7.68.0
 CURLTARGZ=$(CURLDIR).tar.gz
 LIBOGGDIR=libogg-1.3.2
 LIBOGGTARGZ=$(LIBOGGDIR).tar.gz
@@ -207,7 +207,7 @@ $(CURLFILES): $(CURLTARGZ)
 ifeq ($(DPTARGET_WIN),y)
 	cd $(CURLDIR) && CC="$(CC) -static-libgcc" ./configure --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 else
-	cd $(CURLDIR) && CC="$(CC)" ./configure --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
+	cd $(CURLDIR) && CC="$(CC)" ./configure --without-ssl --without-gnutls --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 endif
 
 $(LIBOGGFILES): $(LIBOGGTARGZ)
@@ -287,7 +287,7 @@ stand-alone-data: nexuiz-252.zip
 	cd rmqcc && git archive --format=zip --prefix=rmqcc/ HEAD -o ../Rexuiz/sources/rmqcc.zip
 	install -m644 scripts/server-example.cfg Rexuiz/data/server-example.cfg
 
-stand-alone-engine: engine $(EXTRALIBS)
+stand-alone-engine: engine $(EXTRALIBS) $(CURLFILES)
 	mkdir -m 755 -p Rexuiz/sources
 	rm -f Rexuiz/sources/$(DPDIR).zip
 	cd $(DPDIR) && git archive --format=zip --prefix=$(DPDIR)/ HEAD -o ../Rexuiz/sources/$(DPDIR).zip
@@ -319,6 +319,7 @@ ifeq ($(DPTARGET_LINUX),y)
 	mkdir -p Rexuiz/server
 	install -m 755 $(DPDIR)/rexuiz-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-sdl
 	install -m644 $(EXTRALIBS) Rexuiz/linux-bins/$(ARCHSUFFIX)/
+	install -m644 $(CURLFILES) Rexuiz/linux-bins/$(ARCHSUFFIX)/libcurl-fallback.so
 	install -m 755 $(DPDIR)/rexuiz-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dedicated
 	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) Rexuiz/sources/
 	cat scripts/run_client | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-sdl/g' > Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)

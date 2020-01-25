@@ -1,13 +1,19 @@
 #!/bin/sh
 
 cd "`dirname "$0"`"
-if test -d ~/.nexuiz
+if test -h ~/.rexuiz -a ! -d ~/.rexuiz
 then
-	if test ! -d ~/.rexuiz
-	then
-		ln -fs .nexuiz ~/.rexuiz
-	fi
+	rm -f ~/.rexuiz
 fi
+for F in data/dlcache/zzz-rexdlc_*.pk3
+do
+	F=~/.rexuiz/data/dlcache/${F##*/}
+	if test -f "$F"
+	then
+		echo "Duplicated package $F!"
+		rm -f "$F"
+	fi
+done
 if test -z "$LD_LIBRARY_PATH"
 then
 	export LD_LIBRARY_PATH="`pwd`/linux-bins/@@ARCH@@"

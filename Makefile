@@ -42,10 +42,13 @@ CURLDIR=curl-7.68.0
 CURLTARGZ=$(CURLDIR).tar.gz
 LIBOGGDIR=libogg-1.3.2
 LIBOGGTARGZ=$(LIBOGGDIR).tar.gz
+LIBOGGFILES=$(LIBDIR)/lib/libogg.a
 LIBVORBISDIR=libvorbis-1.3.5
 LIBVORBISTARGZ=$(LIBVORBISDIR).tar.gz
+LIBVORBISFILES=$(LIBDIR)/lib/libvorbis.a $(LIBDIR)/lib/libvorbisenc.a $(LIBDIR)/lib/libvorbisfile.a
 LIBTHEORADIR=libtheora-1.1.1
 LIBTHEORATARGZ=$(LIBTHEORADIR).tar.gz
+LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.a $(LIBDIR)/lib/libtheoraenc.a
 LIBMICROHTTPDDIR=libmicrohttpd-0.9.55
 LIBMICROHTTPDTARGZ=$(LIBMICROHTTPDDIR).tar.gz
 
@@ -70,7 +73,7 @@ DPTARGET=win32
 endif
 endif
 endif
-DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_LIBMICROHTTPD=yes $(DPMAKEOPTS_EXTRA)
+DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_LIBMICROHTTPD=yes $(DPMAKEOPTS_EXTRA) CFLAGS_OGGVORBIS='-DLINK_TO_LIBVORBIS' LIB_OGGVORBIS='-ltheora -lvorbisenc -ltheoraenc -ltheoradec -lvorbisfile -lvorbis -logg'
 
 ifeq ($(DPTARGET),linux32)
 ARCHSUFFIX=i686
@@ -100,30 +103,21 @@ ARCHSUFFIX=x86_64
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" DP_LINK_OGGVORBIS=shared LIB_OGGVORBIS='`pkg-config --libs --static vorbis vorbisfile`'
 DPTARGET_MAC=y
 endif
+EXTRALIBS_LINKONLY=$(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
 ifeq ($(DPTARGET_WIN),y)
 FREETYPEFILES=$(LIBDIR)/bin/libfreetype-6.dll
 CURLFILES=$(LIBDIR)/bin/libcurl-4.dll
-LIBOGGFILES=$(LIBDIR)/bin/libogg-0.dll
-LIBVORBISFILES=$(LIBDIR)/bin/libvorbis-0.dll $(LIBDIR)/bin/libvorbisenc-2.dll $(LIBDIR)/bin/libvorbisfile-3.dll
-LIBTHEORAFILES=$(LIBDIR)/bin/libtheora-0.dll
-EXTRALIBS=$(FREETYPEFILES) $(CURLFILES) $(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
+EXTRALIBS=$(FREETYPEFILES) $(CURLFILES)
 else
 ifeq ($(DPTARGET_MAC),y)
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.dylib
 CURLFILES=$(LIBDIR)/lib/libcurl.dylib
-LIBOGGFILES=$(LIBDIR)/lib/libogg.a
-LIBVORBISFILES=$(LIBDIR)/lib/libvorbis.a $(LIBDIR)/lib/libvorbisenc.a $(LIBDIR)/lib/libvorbisfile.a
-LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.dylib
 EXTRALIBS=
-EXTRALIBS_LINKONLY=$(LIBOGGFILES) $(LIBVORBISFILES)
 else
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_FS_BASEDIR=/usr/share/rexuiz/
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.so
 CURLFILES=$(LIBDIR)/lib/libcurl.so
-LIBOGGFILES=$(LIBDIR)/lib/libogg.so
-LIBVORBISFILES=$(LIBDIR)/lib/libvorbis.so $(LIBDIR)/lib/libvorbisenc.so $(LIBDIR)/lib/libvorbisfile.so
-LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.so
-EXTRALIBS=$(LIBOGGFILES) $(LIBVORBISFILES)
+EXTRALIBS=
 endif
 endif
 
@@ -212,19 +206,11 @@ endif
 
 $(LIBOGGFILES): $(LIBOGGTARGZ)
 	tar xzf $(LIBOGGTARGZ)
-ifeq ($(DPTARGET_MAC),y)
 	cd $(LIBOGGDIR) && CC="$(CC)" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
-else
-	cd $(LIBOGGDIR) && CC="$(CC)" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
-endif
 
 $(LIBVORBISFILES): $(LIBVORBISTARGZ) $(LIBOGGFILES)
 	tar xzf $(LIBVORBISTARGZ)
-ifeq ($(DPTARGET_MAC),y)
 	cd $(LIBVORBISDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
-else
-	cd $(LIBVORBISDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
-endif
 
 $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
 	tar xzf $(LIBTHEORATARGZ)
@@ -233,9 +219,9 @@ $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
 	tr -d '\015' < $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def > $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed
 	mv $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def
 ifeq ($(DPTARGET_WIN),y)
-	cd $(LIBTHEORADIR) && CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) --disable-examples && make && make install
+	cd $(LIBTHEORADIR) && CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-examples && make && make install
 else
-	cd $(LIBTHEORADIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
+	cd $(LIBTHEORADIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
 endif
 
 $(LIBMICROHTTPDFILES): $(LIBMICROHTTPDTARGZ)

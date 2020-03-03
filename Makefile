@@ -29,8 +29,8 @@ LIBPNGFILES=$(LIBDIR)/lib/libpng.a $(LIBDIR)/lib/libpng16.a
 ZLIBDIR=zlib-1.2.11
 ZLIBTARGZ=$(ZLIBDIR).tar.gz
 ZLIBFILES=$(LIBDIR)/lib/libz.a
-JPEGTARGZ=jpegsrc.v8d.tar.gz
-JPEGDIR=jpeg-8d
+JPEGTARGZ=jpegsrc.v9d.tar.gz
+JPEGDIR=jpeg-9d
 JPEGFILES=$(LIBDIR)/lib/libjpeg.a
 SDLDIR=SDL2-2.0.9
 SDLTARGZ=$(SDLDIR).tar.gz
@@ -73,51 +73,63 @@ DPTARGET=win32
 endif
 endif
 endif
-DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_JPEG_VERSION=80 LIB_JPEG=-ljpeg CFLAGS_LIBJPEG=-DLINK_TO_LIBJPEG DP_LINK_PNG=shared LIB_PNG='-lpng' CFLAGS_LIBPNG='-I$(LIBDIR) -DLINK_TO_LIBPNG' SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_LIBMICROHTTPD=yes $(DPMAKEOPTS_EXTRA) CFLAGS_OGGVORBIS='-DLINK_TO_LIBVORBIS' LIB_OGGVORBIS='-ltheora -lvorbisenc -ltheoraenc -ltheoradec -lvorbisfile -lvorbis -logg'
+DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_LINK_PNG=shared SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_SDL_STATIC=yes DP_LIBMICROHTTPD=static DP_LINK_OGGVORBIS=static DP_LINK_ZLIB=static DP_LINK_JPEG=static DP_LINK_PNG=static $(DPMAKEOPTS_EXTRA)
 
 ifeq ($(DPTARGET),linux32)
 ARCHSUFFIX=i686
 DPTARGET_LINUX=y
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=linux
 endif
 ifeq ($(DPTARGET),linux64)
 ARCHSUFFIX=x86_64
 DPTARGET_LINUX=y
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=linux
 endif
 ifeq ($(DPTARGET),win32)
-DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw TARGET=$(CROSSPREFIX) DP_FS_FORCE_NOHOME=y SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32' OBJ_ICON=rexuiz.o
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw TARGET=$(CROSSPREFIX) DP_FS_FORCE_NOHOME=y LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32' OBJ_ICON=rexuiz.o
 DPTARGET_WIN=y
 ARCHSUFFIX=i686
 endif
 ifeq ($(DPTARGET),win64)
-DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw TARGET=$(CROSSPREFIX) DP_FS_FORCE_NOHOME=y MINGWARCH=x86_64 SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32' OBJ_ICON=rexuiz.o
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw TARGET=$(CROSSPREFIX) DP_FS_FORCE_NOHOME=y MINGWARCH=x86_64 LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32' OBJ_ICON=rexuiz.o
 DPTARGET_WIN=y
 ARCHSUFFIX=x86_64
 endif
 ifeq ($(DPTARGET),mac32)
 ARCHSUFFIX=i686
-DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" DP_LINK_OGGVORBIS=shared LIB_OGGVORBIS='`pkg-config --libs --static vorbis vorbisfile`'
 DPTARGET_MAC=y
 endif
 ifeq ($(DPTARGET),mac64)
 ARCHSUFFIX=x86_64
-DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx SDLCONFIG_LIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXCFLAGS="`$(LIBDIR)/bin/sdl2-config --cflags`" SDLCONFIG_MACOSXLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" SDLCONFIG_MACOSXSTATICLIBS="`$(LIBDIR)/bin/sdl2-config --libs`" DP_LINK_OGGVORBIS=shared LIB_OGGVORBIS='`pkg-config --libs --static vorbis vorbisfile`'
 DPTARGET_MAC=y
 endif
+ifeq ($(DPTARGET),android)
+EXTRALIBS_LINKONLY=$(LIBOGGFILES) $(LIBVORBISFILES)
+SDLDEPS=
+else
 EXTRALIBS_LINKONLY=$(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
+SDLDEPS=$(LIBSAMPLERATEFILES)
+endif
 ifeq ($(DPTARGET_WIN),y)
 FREETYPEFILES=$(LIBDIR)/bin/libfreetype-6.dll
 CURLFILES=$(LIBDIR)/bin/libcurl-4.dll
 EXTRALIBS=$(FREETYPEFILES) $(CURLFILES)
 else
 ifeq ($(DPTARGET_MAC),y)
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.dylib
 CURLFILES=$(LIBDIR)/lib/libcurl.dylib
+EXTRALIBS=
+else
+ifeq ($(DPTARGET),android)
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_FS_BASEDIR=/sdcard/Rexuiz/ DP_MAKE_TARGET=android DP_VIDEO_CAPTURE=disabled
 EXTRALIBS=
 else
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_FS_BASEDIR=/usr/share/rexuiz/
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.so
 CURLFILES=$(LIBDIR)/lib/libcurl.so
 EXTRALIBS=
+endif
 endif
 endif
 
@@ -210,6 +222,9 @@ $(LIBOGGFILES): $(LIBOGGTARGZ)
 
 $(LIBVORBISFILES): $(LIBVORBISTARGZ) $(LIBOGGFILES)
 	tar xzf $(LIBVORBISTARGZ)
+ifeq ($(DPTARGET),android)
+	sed -i 's/-mno-ieee-fp//' $(LIBVORBISDIR)/configure
+endif
 	cd $(LIBVORBISDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
 
 $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
@@ -228,7 +243,7 @@ $(LIBMICROHTTPDFILES): $(LIBMICROHTTPDTARGZ)
 	tar xzf $(LIBMICROHTTPDTARGZ)
 	cd $(LIBMICROHTTPDDIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --disable-https --prefix=$(LIBDIR) && make && make install
 
-$(SDLFILES): $(SDLTARGZ) $(LIBSAMPLERATEFILES)
+$(SDLFILES): $(SDLTARGZ) $(SDLDEPS)
 	tar xzf $(SDLTARGZ)
 ifeq ($(DPTARGET_WIN),y)
 	cd $(SDLDIR) && patch -p1 < ../sdl2-1-fixes.patch && ./autogen.sh
@@ -239,7 +254,12 @@ else
 ifeq ($(DPTARGET_MAC),y)
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --x-includes=$(MAC_OS_SDK)/usr/include --disable-cpuinfo --disable-video-x11 --enable-static --disable-shared --prefix=$(LIBDIR) && make && make install
 else
+ifeq ($(DPTARGET),android)
+	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --oldincludedir=$(LIBDIR)/include --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR) --disable-libsamplerate --disable-pulseaudio --disable-video-x11 --disable-video-wayland && make && make install
+	sed -i 's/-I\/usr\/include//' $(LIBDIR)/bin/sdl2-config
+else
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR) && make && make install
+endif
 endif
 endif
 
@@ -248,7 +268,11 @@ clean:
 	cd $(DPDIR) && make clean
 
 engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY) $(LIBMICROHTTPDFILES)
+ifeq ($(DPTARGET),android)
+	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make android-rexuiz $(DPMAKEOPTS)
+else
 	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-rexuiz sv-rexuiz $(DPMAKEOPTS)
+endif
 
 fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ)
 
@@ -273,7 +297,7 @@ stand-alone-data: nexuiz-252.zip
 	cd rmqcc && git archive --format=zip --prefix=rmqcc/ HEAD -o ../Rexuiz/sources/rmqcc.zip
 	install -m644 scripts/server-example.cfg Rexuiz/data/server-example.cfg
 
-stand-alone-engine: engine $(EXTRALIBS) $(CURLFILES)
+stand-alone-engine: engine $(EXTRALIBS)
 	mkdir -m 755 -p Rexuiz/sources
 	rm -f Rexuiz/sources/$(DPDIR).zip
 	cd $(DPDIR) && git archive --format=zip --prefix=$(DPDIR)/ HEAD -o ../Rexuiz/sources/$(DPDIR).zip

@@ -328,7 +328,6 @@ ifeq ($(DPTARGET_LINUX),y)
 	mkdir -p Rexuiz/linux-bins/$(ARCHSUFFIX)
 	mkdir -p Rexuiz/server
 	install -m 755 $(DPDIR)/rexuiz-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-sdl
-	install -m644 $(EXTRALIBS) Rexuiz/linux-bins/$(ARCHSUFFIX)/
 	install -m644 $(CURLFILES) Rexuiz/linux-bins/$(ARCHSUFFIX)/libcurl-fallback.so
 	install -m 755 $(DPDIR)/rexuiz-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dedicated
 	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) Rexuiz/sources/

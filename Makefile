@@ -128,7 +128,7 @@ else
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_FS_BASEDIR=/usr/share/rexuiz/
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.so
 CURLFILES=$(LIBDIR)/lib/libcurl.so
-EXTRALIBS=
+EXTRALIBS=$(CURLFILES)
 endif
 endif
 endif

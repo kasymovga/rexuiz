@@ -236,7 +236,11 @@ $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
 ifeq ($(DPTARGET_WIN),y)
 	cd $(LIBTHEORADIR) && CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-examples && make && make install
 else
+ifeq ($(ARCHSUFFIX),x86_64)
 	cd $(LIBTHEORADIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
+else
+	cd $(LIBTHEORADIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-asm && make && make install
+endif
 endif
 
 $(LIBMICROHTTPDFILES): $(LIBMICROHTTPDTARGZ)

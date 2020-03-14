@@ -1,44 +1,42 @@
+108.61.164.188:26000//***LAGGY TURTLE PRESENTS BADASS CRA***
 213.141.136.246:26000//ipNp.su DM [Korolev-NBN]
-213.141.136.246:26003//ipNp.su DM [minsta+hook][Korolev-NBN]
 136.243.2.171:26004//Best Akimbo Server Ever
-213.141.136.246:26006//ipNp.su CTF [minsta+hook][Korolev-NBN]
 31.131.253.244:26000//Clanwarz : Russia MSK
 66.45.244.2:26000//House of the Hog
 176.9.74.51:26000//wolfpit
 94.232.184.164:26000//Russian FFA Server
-213.141.136.246:26005//ipNp.su DM 1x1 [minsta+hook][Korolev-NBN]
-213.141.136.246:26004//ipNp.su TDM [minsta+hook][Korolev-NBN]
+213.141.136.246:26005//ipNp.su TDM [minsta+hook][Korolev-NBN]
+213.141.136.246:26006//ipNp.su DM 1x1 [minsta+hook][Korolev-NBN]
+213.141.136.246:26004//ipNp.su DM [minsta+hook][Korolev-NBN]
 144.76.28.11:26002// [AxG] Dead Cat 1vs1 - GH/MinstaGib sofa and hangout area, very low latency.
 144.76.28.11:26000// [AxG] Dead Cat DM - GH/MinstaGib, very low latency.
 178.254.31.217:26003//(Prophets) Duel Sanctuary [InstaGib|Hook]
 144.76.28.11:26001// [AxG] Dead Cat Flagged - CTF GH/MinstaGib, very low latency.
 69.90.48.136:26000//Clanwarz : Toronto
-37.139.25.40:26000//Authentik Dedicated Server
-147.135.6.223:26000//Men in Tux - Tourney 2.5.2 (VA, USA)
-213.141.136.246:26002//ipNp.su DM 1x1 [Korolev-NBN]
 158.69.193.190:26000//Gman's Commando and General Server Beauharnois Canada (Akimbo@DM)
 62.210.38.210:56004//[RM] Heaven to Hell #4 // UFB
-213.141.136.246:26007//ipNp.su CTF BigMaps [minsta+hook][Korolev-NBN]
-23.253.105.132:26000//dark_rack 2.5.2 Server
-40.113.207.195:1984//The Idiocracy: Welcome to the Drumph-hole
-212.237.7.67:26123//Hostlip.Ru Russia in Italia
+213.141.136.246:26007//ipNp.su CTF [minsta+hook][Korolev-NBN]
+81.169.182.250:26000//Does NOT Compute 2.5.2 [DM]
 66.45.244.2:26001//House of the Hog
 62.210.38.210:56002//[RM] Heaven to Hell #2 // Camping Rifle Arena 1vs1
 136.243.2.171:26000//Rexuiz Conquest Akimbo Server
+216.59.184.137:26000//Makers Syndicate!
 136.243.2.171:26001//Best Survival Server Ever
-136.243.2.171:26007//Best Teamplay Multimode Server
-46.232.251.31:26000//Einherjer Europe [linuxiuvat.de]
-69.195.138.86:26000//rm -rf /
-136.243.2.171:26010//Best Nostalgic Coop Server
+40.113.207.195:1985//The Idiocracy: Fragging the Constitution
+213.141.136.246:26001//ipNp.su DM 1x1 [Korolev-NBN]
+178.79.160.71:26000//GamePlayer Club Nexuiz 2.5.2 Server
 136.243.2.171:26015//Best 1vs1 Nexuiz Server
-187.20.243.248:26050//Forum NetQuake [FREE FOR ALL] netquake.zz.vc #Cotemig98
-136.243.2.171:26006//Best Teamplay Akimbo Server
-190.46.171.29:26000//chuzo Nexuiz 2.5.2 Server
-50.116.13.119:26000//GamePlayer Club Nexuiz 2.5.2 Server
-136.243.2.171:26002//!!! Rexuiz Camping Rifle Arena !!! [RM/CRA/FreezeTag/TheBadAssChoobs]
+46.232.251.31:26000//Einherjer Europe [linuxiuvat.de]
+64.94.95.234:15627//H.O.C.T.F
+47.33.54.171:26001//[Krisp]-R-Reno
 188.193.129.211:26002//Nexuiz CTF @ Mobile Infanterie
-136.243.2.171:26005//Best Rexuiz Minsta Server
-188.193.129.211:26000//Nexuiz DM @ Mobile Infanterie
 136.243.2.171:26003//Best Nexuiz Server Ever
-128.70.224.112:26000//getfr.org, v-2.5.2, you need to install nexmappack_r2.zip!
-93.131.167.236:26000//  [ColdIVs] MinstaGib + Hook (DM)
+188.193.129.211:26000//Nexuiz DM @ Mobile Infanterie
+136.243.2.171:26005//Best Rexuiz Minsta Server
+136.243.2.171:26002//!!! Rexuiz Camping Rifle Arena !!! [RM/CRA/FreezeTag/TheBadAssChoobs]
+187.20.243.36:26050//arenacamper.125mb.com [FREE FOR ALL +humans -bots] #Cotemig98
+136.243.2.171:26006//Best Teamplay Akimbo Server
+162.251.167.146:15742//Rexuiz LA :DM TDM CTF AKIMBO you Vote 
+136.243.2.171:26010//Best Nostalgic Coop Server
+136.243.2.171:26007//Best Teamplay Multimode Server [ Autobalance disabled ]
+2.95.92.226:26000//getfr.org, v-2.5.2, you need to install nexmappack_r2.zip!

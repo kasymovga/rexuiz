@@ -339,6 +339,7 @@ ifeq ($(DPTARGET_LINUX),y)
 	chmod 755 Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
 	cat scripts/run_server | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dedicated/g' > Rexuiz/server/rexuiz-linux-dedicated-$(ARCHSUFFIX)
 	chmod 755 Rexuiz/server/rexuiz-linux-dedicated-$(ARCHSUFFIX)
+	install -m755 scripts/update.sh Rexuiz/server/update.sh
 endif
 ifeq ($(DPTARGET_MAC),y)
 	mkdir -m755 -p Rexuiz/Rexuiz.app/Contents/MacOS

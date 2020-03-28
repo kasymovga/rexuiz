@@ -1,5 +1,7 @@
 #!/bin/sh
 
 DIR="`dirname "$0"`"
+chmod 755 "$DIR/update.sh"
+"$DIR/update.sh" "$DIR/.."
 chmod 755 "$DIR"/../linux-bins/@@ARCH@@/@@BINARY_NAME@@
 "$DIR"/../linux-bins/@@ARCH@@/@@BINARY_NAME@@ -basedir "$DIR/../" "$@"

@@ -1,6 +1,5 @@
 .PHONY: all clean engine fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc rmqcc
 PWD=$(shell pwd)
-LIBDIR=$(PWD)/libs
 
 DATA_FILES_NEXUIZ=common-spog.pk3 data20091001.pk3
 DPDIR=DarkPlacesRM
@@ -20,6 +19,29 @@ STRIP=strip
 endif
 LD=$(CC)
 
+ifeq ($(shell uname -s),Linux)
+ifeq ($(shell uname -m),x86_64)
+DPTARGET=linux64
+else
+DPTARGET=linux32
+endif
+else
+ifeq ($(shell uname -s),Darwin)
+ifeq ($(shell uname -m),x86_64)
+DPTARGET=mac64
+else
+DPTARGET=mac32
+endif
+else
+ifeq ($(shell uname -m),x86_64)
+DPTARGET=win64
+else
+DPTARGET=win32
+endif
+endif
+endif
+
+LIBDIR=$(PWD)/libs/$(DPTARGET)/
 LIBSAMPLERATEDIR=libsamplerate-0.1.9
 LIBSAMPLERATETARGZ=libsamplerate-0.1.9.tar.gz
 LIBSAMPLERATEFILES=$(LIBDIR)/lib/libsamplerate.a
@@ -51,28 +73,6 @@ LIBTHEORATARGZ=$(LIBTHEORADIR).tar.gz
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.a $(LIBDIR)/lib/libtheoraenc.a
 LIBMICROHTTPDDIR=libmicrohttpd-0.9.55
 LIBMICROHTTPDTARGZ=$(LIBMICROHTTPDDIR).tar.gz
-
-ifeq ($(shell uname -s),Linux)
-ifeq ($(shell uname -m),x86_64)
-DPTARGET=linux64
-else
-DPTARGET=linux32
-endif
-else
-ifeq ($(shell uname -s),Darwin)
-ifeq ($(shell uname -m),x86_64)
-DPTARGET=mac64
-else
-DPTARGET=mac32
-endif
-else
-ifeq ($(shell uname -m),x86_64)
-DPTARGET=win64
-else
-DPTARGET=win32
-endif
-endif
-endif
 DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_LINK_PNG=shared SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_SDL_STATIC=yes DP_LIBMICROHTTPD=static DP_LINK_OGGVORBIS=static DP_LINK_ZLIB=static DP_LINK_JPEG=static DP_LINK_PNG=static $(DPMAKEOPTS_EXTRA)
 
 ifeq ($(DPTARGET),linux32)
@@ -234,12 +234,12 @@ $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
 	tr -d '\015' < $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def > $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed
 	mv $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def
 ifeq ($(DPTARGET_WIN),y)
-	cd $(LIBTHEORADIR) && CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-examples && make && make install
+	cd $(LIBTHEORADIR) && CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --disable-examples --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-examples && make && make install
 else
 ifeq ($(ARCHSUFFIX),x86_64)
-	cd $(LIBTHEORADIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
+	cd $(LIBTHEORADIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) && make && make install
 else
-	cd $(LIBTHEORADIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-asm && make && make install
+	cd $(LIBTHEORADIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) --disable-asm && make && make install
 endif
 endif
 

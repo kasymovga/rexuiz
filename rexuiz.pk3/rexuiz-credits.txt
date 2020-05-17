@@ -3,14 +3,16 @@
 802.1ad
 *Programmer
 
-rtz
-*Designer
-
 Axisar
 *Useful guy
 
+Claymore
+*Translator
+
 Rafael Tarverdiyev (Laggy Turtle)
 *Composer
+
+**Old Members:
 
 Alex Zloy (Zoom Zoom)
 *Designer
@@ -18,7 +20,8 @@ Alex Zloy (Zoom Zoom)
 Andrei Alexeyev
 *Programmer
 
-**Old Members:
+rtz
+*Designer
 
 David "Artefact" Revoy
 *Designer

@@ -286,12 +286,12 @@
 }
 {
 "classname" "item_armor_large"
-"cvarfilter" "g_maxplayers>2"
+"cvarfilter" "g_maxplayers!=2"
 "origin" "-120.000000 -400.000000 -300.000000"
 }
 {
 "classname" "item_armor_big"
-"cvarfilter" "g_maxplayers<=2"
+"cvarfilter" "g_maxplayers==2"
 "origin" "-120.000000 -400.000000 -300.000000"
 }
 {
@@ -403,12 +403,12 @@
 }
 {
 "classname" "item_armor_large"
-"cvarfilter" "g_maxplayers>2"
+"cvarfilter" "g_maxplayers!=2"
 "origin" "80.000000 -160.000000 180.000000"
 }
 {
 "classname" "item_armor_big"
-"cvarfilter" "g_maxplayers<=2"
+"cvarfilter" "g_maxplayers==2"
 "origin" "80.000000 -160.000000 180.000000"
 }
 {

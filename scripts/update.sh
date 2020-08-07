@@ -1,6 +1,6 @@
 #!/bin/sh
 
-REPOS='http://rexuiz.top/maps/RexuizLauncher
+REPOS='http://rexuiz.com/maps/RexuizLauncher
 http://bnse.rexuiz.top/RexuizLauncher
 http://nexuiz.mooo.com/RexuizLauncher
 http://108.61.164.188/RexuizLauncher'
@@ -9,7 +9,7 @@ download() {
 	mkdir -m 755 -p "`dirname "$2"`" || return 1
 	if test "$CURL" = y
 	then
-		curl --connect-timeout 10 "$1" --output "$2"
+		curl -L --connect-timeout 10 "$1" --output "$2"
 	else
 		if test "$WGET" = y
 		then

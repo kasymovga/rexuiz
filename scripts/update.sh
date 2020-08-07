@@ -115,6 +115,9 @@ while read L
 do
 	echo "Updating $L"
 	mkdir -m 755 -p "`dirname "$REXUIZ_DIR/$L"`" || fail "Can not create directory for files"
-	mv "$UPDATE_DIR/$L" "$REXUIZ_DIR/$L"
+	if test -f "$UPDATE_DIR/$L"
+	then
+		mv "$UPDATE_DIR/$L" "$REXUIZ_DIR/$L" || fail "Can not update files"
+	fi
 done < "$UPDATE_DIR/.update.lst"
 rm -rf "$UPDATE_DIR"

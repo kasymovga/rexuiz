@@ -2015,6 +2015,7 @@ textures/egyptsoc_sfx/s128-01wdr
 textures/egyptsoc_floor/grate1a
 {
 	surfaceparm	metalsteps		
+	surfaceparm trans
 	cull none
 	nopicmip
 	{
@@ -2035,6 +2036,7 @@ textures/egyptsoc_floor/grate1a
 textures/egyptsoc_floor/grate1b
 {
 	surfaceparm	metalsteps		
+	surfaceparm trans
 	cull none
 	nopicmip
 	{
@@ -2055,6 +2057,7 @@ textures/egyptsoc_floor/grate1b
 textures/egyptsoc_floor/grate2a
 {
 	surfaceparm	metalsteps		
+	surfaceparm trans
 	cull none
 	nopicmip
 	{
@@ -2075,6 +2078,7 @@ textures/egyptsoc_floor/grate2a
 textures/egyptsoc_floor/grate2b
 {
 	surfaceparm	metalsteps		
+	surfaceparm trans
 	cull none
 	nopicmip
 	{
@@ -2095,6 +2099,7 @@ textures/egyptsoc_floor/grate2b
 textures/egyptsoc_floor/grate3a
 {
 	surfaceparm	metalsteps		
+	surfaceparm trans
 	cull none
 	nopicmip
 	{
@@ -2115,6 +2120,7 @@ textures/egyptsoc_floor/grate3a
 textures/egyptsoc_floor/grate3b
 {
 	surfaceparm	metalsteps		
+	surfaceparm trans
 	cull none
 	nopicmip
 	{
@@ -2135,6 +2141,7 @@ textures/egyptsoc_floor/grate3b
 textures/egyptsoc_floor/grate4a
 {
 	surfaceparm	metalsteps		
+	surfaceparm trans
 	cull none
 	nopicmip
 	{
@@ -2155,6 +2162,7 @@ textures/egyptsoc_floor/grate4a
 textures/egyptsoc_floor/grate4b
 {
 	surfaceparm	metalsteps		
+	surfaceparm trans
 	cull none
 	nopicmip
 	{

@@ -1,0 +1,38 @@
+msgid "Quit"
+msgstr "Выход"
+
+msgid "Yes"
+msgstr "Да"
+
+msgid "No"
+msgstr "Нет"
+
+msgid "Are you sure you want to quit?"
+msgstr "Уверены, что хотите выйти?"
+
+msgid "Load"
+msgstr "Загрузить"
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Autosave"
+msgstr "Автосохранение"
+
+msgid "Quicksave"
+msgstr "Быстрое сохранение"
+
+msgid "Autosave:"
+msgstr "Автосохранение:"
+
+msgid "Quicksave:"
+msgstr "Быстрое сохранение:"
+
+msgid "Load Game"
+msgstr "Загрузить игру"
+
+msgid "Save/Load Game"
+msgstr "Сохранить/загрузить игру"
+
+msgid "custom"
+msgstr "особое"

@@ -338,7 +338,7 @@ msgid "Disable gore effects"
 msgstr "Disabilita effetti gore"
 
 msgid "Gibs:"
-msgstr "Ошмётки:"
+msgstr "Frammenti e membra:"
 
 msgid "Few"
 msgstr "Pochi"
@@ -428,7 +428,7 @@ msgid "Waypoint alpha:"
 msgstr "Alpha waypoint"
 
 msgid "Key bindings:"
-msgstr "Настройки клавиш:"
+msgstr "Tasti rapidi:"
 
 msgid "Sensitivity:"
 msgstr "Sensibilità:"
@@ -440,7 +440,7 @@ msgid "Invert mouse"
 msgstr "Inverti il mouse"
 
 msgid "Use joystick input"
-msgstr "Использовать джойстик"
+msgstr "Usa il joystick"
 
 msgid "\"enter console\" also closes"
 msgstr "\"apre la console\" e la chiude"
@@ -509,7 +509,7 @@ msgid "Vertices"
 msgstr "Vertici"
 
 msgid "Vertices, some Tris (compatible)"
-msgstr "Вершины, некоторые линии (совместимые)"
+msgstr "Vertici, alcuni Tris (compatibile)"
 
 msgid "Vertices and Triangles"
 msgstr "Vertici e Triangoli"
@@ -527,7 +527,7 @@ msgid "Disable multithreaded OpenGL"
 msgstr "Disabilita il multithreading OpenGL"
 
 msgid "Wait for GPU to finish each frame"
-msgstr "Ждать пока GPU закончит каждый кадр"
+msgstr "Aspetta che la GPU finisca ciascun frame"
 
 msgid "Brightness:"
 msgstr "Luminosità:"

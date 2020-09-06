@@ -452,7 +452,7 @@ msgid "Actions"
 msgstr "Azioni"
 
 msgid "Bound keys"
-msgstr "Клавиши"
+msgstr "Tasti"
 
 msgid "Both"
 msgstr "Entrambi"

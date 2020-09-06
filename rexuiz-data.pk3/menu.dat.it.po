@@ -248,7 +248,7 @@ msgid "AntiLag"
 msgstr "AntiLag"
 
 msgid "Friendly fire scale:"
-msgstr "Союзный огонь:"
+msgstr "Scala il fuoco amico:"
 
 msgid "Friendly fire penalty:"
 msgstr "Penalità da fuoco amico:"
@@ -509,7 +509,7 @@ msgid "Vertices"
 msgstr "Vertici"
 
 msgid "Vertices, some Tris (compatible)"
-msgstr "Vertici, alcuni Tris (compatibile)"
+msgstr "Vertici, alcune linee (compatibile)"
 
 msgid "Vertices and Triangles"
 msgstr "Vertici e Triangoli"

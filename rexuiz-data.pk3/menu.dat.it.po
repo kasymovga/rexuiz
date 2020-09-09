@@ -590,7 +590,7 @@ msgid "Texture quality:"
 msgstr "Qualità delle texture:"
 
 msgid "World texture quality:"
-msgstr "Qualità delle texture ambientali:"
+msgstr "Qualità delle texture del mondo:"
 
 msgid "Anisotropy:"
 msgstr "Anisotropia:"
@@ -617,10 +617,10 @@ msgid "Time:"
 msgstr "Tempo:"
 
 msgid "Use lightmaps"
-msgstr "Usa texture preprocessate"
+msgstr "Luce del mondo"
 
 msgid "Deluxe mapping"
-msgstr "Mappe delux"
+msgstr "Luci delux"
 
 msgid "Gloss"
 msgstr "Lucido"
@@ -647,7 +647,7 @@ msgid "Shadows"
 msgstr "Ombre"
 
 msgid "Realtime world lighting"
-msgstr "Luci dinamiche della mappa"
+msgstr "Luci dinamiche del mondo"
 
 msgid "Use normal maps"
 msgstr "Usa mappe normali"

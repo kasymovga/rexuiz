@@ -87,8 +87,9 @@ if test "$REPO_FOUND" = 0
 then
 	fail "No working repo found"
 fi
+cut "$UPDATE_DIR/index.lst" -d '|' -f 1,2,3 | sort -u > "$UPDATE_DIR/index.lst.uniq"
 echo -n > "$UPDATE_DIR/.update.lst" || fail "Can not create update list"
-while IFS='|' read -r HASH SIZE FILE TAIL
+while IFS='|' read -r HASH SIZE FILE
 do
 	TARGET_FILE="$REXUIZ_DIR/$FILE"
 	UPDATE_FILE="$UPDATE_DIR/$FILE"
@@ -110,7 +111,7 @@ do
 		echo "Downloading of $REPO_URL/$FILE failed"
 		fail "Can not download update data"
 	fi
-done < "$UPDATE_DIR/index.lst"
+done < "$UPDATE_DIR/index.lst.uniq"
 while read L
 do
 	echo "Updating $L"

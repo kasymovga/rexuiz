@@ -894,3 +894,9 @@ msgstr "Lingua / Language ..."
 
 msgid "Language"
 msgstr "Lingua / Language"
+
+msgid "Disable Nexuiz-compatible symbols"
+msgstr "Disabilita i caratteri compatibili con Nexuiz"
+
+msgid "* Needed for some european characters, player names might be displayed incorrectly"
+msgstr "* Necessario per alcuni caratteri europei, i nomi dei giocatori potrebbero essere visualizzati incorrettamente"

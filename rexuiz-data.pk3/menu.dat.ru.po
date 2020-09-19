@@ -181,6 +181,9 @@ msgstr "Простое большинство выигрывает vcall"
 msgid "Advanced settings..."
 msgstr "Расширенные настройки..."
 
+msgid "Advanced settings"
+msgstr "Расширенные настройки"
+
 msgid "Mutators..."
 msgstr "Модификаторы..."
 

@@ -181,6 +181,9 @@ msgstr "La maggioranza semplice vince vcall"
 msgid "Advanced settings..."
 msgstr "Impostazioni avanzate..."
 
+msgid "Advanced settings"
+msgstr "Impostazioni avanzate"
+
 msgid "Mutators..."
 msgstr "Mutatori..."
 

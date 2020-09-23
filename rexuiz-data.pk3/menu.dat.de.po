@@ -1,0 +1,917 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: de_DE\n"
+
+msgid "Singleplayer"
+msgstr "Einzelspieler"
+
+msgid "Classic Campaign"
+msgstr "Klassische Kampagne"
+
+msgid "Survival Campaign"
+msgstr "Überlebenskampagne"
+
+msgid "Arena Training"
+msgstr "Arenatraining"
+
+msgid "Single Player (Demo)"
+msgstr "Einzelspieler (Demo)"
+
+msgid "Difficulty:"
+msgstr "Schwierigkeitsgrad:"
+
+msgid "Load Game..."
+msgstr "Lade Spiel..."
+
+msgid "Start Game!"
+msgstr "Spielstart!"
+
+msgid "Easy"
+msgstr "Leicht"
+
+msgid "Medium"
+msgstr "Mittel"
+
+msgid "Hard"
+msgstr "Schwer"
+
+msgid "Insane"
+msgstr "Horror"
+
+msgid "Multiplayer"
+msgstr "Mehrspieler"
+
+msgid "Servers"
+msgstr "Server"
+
+msgid "Create"
+msgstr "Erstellen"
+
+msgid "Demos"
+msgstr "Demos"
+
+msgid "Player Setup"
+msgstr "Spielereinstellungen"
+
+msgid "Credits"
+msgstr "Credits"
+
+msgid "Ok"
+msgstr "Ok"
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Input"
+msgstr "Eingabe"
+
+msgid "Video"
+msgstr "Video"
+
+msgid "Effects"
+msgstr "Effekte"
+
+msgid "Audio"
+msgstr "Audio"
+
+msgid "Network"
+msgstr "Netzwerk"
+
+msgid "Misc"
+msgstr "Verschiedenes"
+
+msgid "Show netgraph"
+msgstr "Zeige Netzgrafik"
+
+msgid "Network speed:"
+msgstr "Netzwerkgeschwindigkeit:"
+
+msgid "Input packets/s:"
+msgstr "Input packets/s:"
+
+msgid "HTTP downloads:"
+msgstr "HTTP-Downloads:"
+
+msgid "Downloads:"
+msgstr "Downloads:"
+
+msgid "Speed (kB/s):"
+msgstr "Geschwindigkeit (kB/s):"
+
+msgid "Client UDP port:"
+msgstr "Client UDP port:"
+
+msgid "Map list:"
+msgstr "Kartenliste:"
+
+msgid "All"
+msgstr "Alle"
+
+msgid "None"
+msgstr "Nichts"
+
+msgid "Match settings:"
+msgstr "Match-Einstellungen:"
+
+msgid "Clear"
+msgstr "Löschen"
+
+msgid "Bookmark"
+msgstr "Lesezeichen"
+
+msgid "Address:"
+msgstr "Adresse:"
+
+msgid "Join!"
+msgstr "Beitreten!"
+
+msgid "Ping"
+msgstr "Ping"
+
+msgid "Host name"
+msgstr "Hostname"
+
+msgid "Map"
+msgstr "Map"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Players"
+msgstr "Spieler"
+
+msgid "Filter:"
+msgstr "Filter:"
+
+msgid "Empty"
+msgstr "Leer"
+
+msgid "Pause"
+msgstr "Pause"
+
+msgid "Full"
+msgstr "Voll"
+
+msgid "Start Multiplayer!"
+msgstr "Start Multiplayer!"
+
+msgid "Time limit:"
+msgstr "Zeitlimit:"
+
+msgid "Frag limit:"
+msgstr "Frag-Limit:"
+
+msgid "Win limit:"
+msgstr "Gewinnlimit:"
+
+msgid "Player slots:"
+msgstr "Spieler-Slots:"
+
+msgid "Number of bots:"
+msgstr "Anzahl der Bots:"
+
+msgid "Bot skill:"
+msgstr "Bot-Stärke:"
+
+msgid "Bot names:"
+msgstr "Bot-Namen:"
+
+msgid "Map voting:"
+msgstr "Kartenwahl:"
+
+msgid "Simple majority wins vcall"
+msgstr "Einfache Mehrheit gewinnt vcall"
+
+msgid "Advanced settings..."
+msgstr "Erweiterte Einstellungen..."
+
+msgid "Mutators..."
+msgstr "Mutatoren..."
+
+msgid "No voting"
+msgstr "Keine Wahlen"
+
+msgid "2 choices"
+msgstr "2 Möglichkeiten"
+
+msgid "3 choices"
+msgstr "3 Möglichkeiten"
+
+msgid "4 choices"
+msgstr "4 Möglichkeiten"
+
+msgid "5 choices"
+msgstr "5 Möglichkeiten"
+
+msgid "6 choices"
+msgstr "6 Möglichkeiten"
+
+msgid "7 choices"
+msgstr "7 Möglichkeiten"
+
+msgid "8 choices"
+msgstr "8 Möglichkeiten"
+
+msgid "9 choices"
+msgstr "9 Möglichkeiten"
+
+msgid "Point limit:"
+msgstr "Punktelimit:"
+
+msgid "Capture limit:"
+msgstr "Capture-limit:"
+
+msgid "Goals:"
+msgstr "Punkte:"
+
+msgid "Laps:"
+msgstr "Runden:"
+
+msgid "Mutators"
+msgstr "Mutatoren"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Advanced server settings"
+msgstr "Erweiterte Servereinstellungen"
+
+msgid "Game settings:"
+msgstr "Spieleinstellungen:"
+
+msgid "Allow spectating"
+msgstr "Beobachten erlauben"
+
+msgid "Spawn shield:"
+msgstr "Spawn-Schild:"
+
+msgid "Start delay:"
+msgstr "Startverzögerung:"
+
+msgid "AntiLag"
+msgstr "AntiLag"
+
+msgid "Friendly fire scale:"
+msgstr "Friendly fire Ausmaß:"
+
+msgid "Friendly fire penalty:"
+msgstr "Friendly fire Strafe:"
+
+msgid "Teams:"
+msgstr "Teams:"
+
+msgid "Teamplay settings:"
+msgstr "Teamplay-Einstellungen:"
+
+msgid "Record demos while playing"
+msgstr "Demos während des Spiels aufnehmen"
+
+msgid "Play"
+msgstr "Play"
+
+msgid "Timedemo"
+msgstr "Timedemo"
+
+msgid "Apply immediately"
+msgstr "Sofort anwenden"
+
+msgid "Name:"
+msgstr "Name:"
+
+msgid "Model:"
+msgstr "Model:"
+
+msgid "Field of View:"
+msgstr "Sichtfeld:"
+
+msgid "Damage kick:"
+msgstr "Trefferrückschlag:"
+
+msgid "Zoom Factor:"
+msgstr "Zoom-Stärke:"
+
+msgid "Zoom speed:"
+msgstr "Zoom-Geschwindigkeit:"
+
+msgid "Weapon settings..."
+msgstr "Waffeneinstellungen..."
+
+msgid "Show names:"
+msgstr "Namen anzeigen:"
+
+msgid "All players"
+msgstr "Alle Spieler"
+
+msgid "Teammates"
+msgstr "Teammates"
+
+msgid "Never"
+msgstr "Niemals"
+
+msgid "Per weapon crosshairs"
+msgstr "Fadenkreuz pro Waffe"
+
+msgid "& crosshair colors"
+msgstr "& Fadenkreuzfarben"
+
+msgid "Crosshair:"
+msgstr "Fadenkreuz:"
+
+msgid "Crosshair Size:"
+msgstr "Fadenkreuz-Größe:"
+
+msgid "Crosshair Alpha:"
+msgstr "Fadenkreuz-Alpha:"
+
+msgid "Crosshair Red:"
+msgstr "Fadenkreuz-Rot:"
+
+msgid "Crosshair Green:"
+msgstr "Fadenkreuz-Grün:"
+
+msgid "Crosshair Blue:"
+msgstr "Fadenkreuz-Blau:"
+
+msgid "Weapon settings"
+msgstr "Waffeneinstellungen"
+
+msgid "HUD & Waypoints..."
+msgstr "HUD & Wegpunkte..."
+
+msgid "Disable gore effects"
+msgstr "Treffer-Effekte ausschalten"
+
+msgid "Gibs:"
+msgstr "Eingeweide:"
+
+msgid "Few"
+msgstr "Wenig"
+
+msgid "Many"
+msgstr "Mittel"
+
+msgid "Lots"
+msgstr "Viel"
+
+msgid "Up"
+msgstr "Hoch"
+
+msgid "Down"
+msgstr "Runter"
+
+msgid "Weapon priority list:"
+msgstr "Waffenprioritätenliste:"
+
+msgid "Use priority list for weapon cycling"
+msgstr "Benutze Prioritätenliste zum Waffenwechsel"
+
+msgid "Auto switch weapons on pickup"
+msgstr "Automatischer Waffenwechsel beim Einsammeln"
+
+msgid "Draw 1st person weapon model"
+msgstr "Zeichne first-person-Waffe"
+
+msgid "Weapon alpha:"
+msgstr "Waffen-Alpha:"
+
+msgid "Align:"
+msgstr "Ausrichtung:"
+
+msgid "Left"
+msgstr "Links"
+
+msgid "Right"
+msgstr "Rechts"
+
+msgid "Left or center"
+msgstr "Links oder Mitte"
+
+msgid "Right or center"
+msgstr "Rechts oder Mitte"
+
+msgid "Force center position"
+msgstr "Erzwinge mittlere Position"
+
+msgid "Weapon location hint"
+msgstr "Hinweis zur Waffenposition"
+
+msgid "Flip view horizontally"
+msgstr "Ansicht horizontal spiegeln"
+
+msgid "HUD & Waypoints"
+msgstr "HUD & Wegpunkte"
+
+msgid "HUD settings:"
+msgstr "HUD-Einstellungen:"
+
+msgid "Background:"
+msgstr "Hintergrund:"
+
+msgid "Default Red:"
+msgstr "Standard Rot:"
+
+msgid "Default Green:"
+msgstr "Standard Grün:"
+
+msgid "Default Blue:"
+msgstr "Standard Blau:"
+
+msgid "Team color:"
+msgstr "Teamfarbe:"
+
+msgid "Waypoint settings:"
+msgstr "Wegpunkteinstellungen:"
+
+msgid "Show base waypoints"
+msgstr "Zeige Base-Wegpunkte"
+
+msgid "Waypoint scale:"
+msgstr "Wegpunktgröße:"
+
+msgid "Waypoint alpha:"
+msgstr "Wegpunkt-Alpha:"
+
+msgid "Key bindings:"
+msgstr "Tastenbelegung:"
+
+msgid "Sensitivity:"
+msgstr "Empfindlichkeit:"
+
+msgid "UI mouse speed:"
+msgstr "UI-Mausgeschwindigkeit:"
+
+msgid "Invert mouse"
+msgstr "Maus invertieren"
+
+msgid "Use joystick input"
+msgstr "Benutze Joystick-Eingabe"
+
+msgid "\"enter console\" also closes"
+msgstr "Entertaste schließt auch die Konsole"
+
+msgid "Show binds:"
+msgstr "Zeige Tastenbelegung:"
+
+msgid "Actions"
+msgstr "Aktionen"
+
+msgid "Bound keys"
+msgstr "Zugewiesene Tasten"
+
+msgid "Both"
+msgstr "Beide"
+
+msgid "Show pressed keys"
+msgstr "Gedrückte Tasten anzeigen"
+
+msgid "Change key..."
+msgstr "Taste wechseln..."
+
+msgid "Edit..."
+msgstr "Bearbeiten..."
+
+msgid "Full screen"
+msgstr "Vollbild"
+
+msgid "Desktop resolution"
+msgstr "Desktopauflösung"
+
+msgid "Resolution:"
+msgstr "Auflösung:"
+
+msgid "Color depth:"
+msgstr "Farbtiefe:"
+
+msgid "Texture compression"
+msgstr "Texturkomprimierung"
+
+msgid "Fast"
+msgstr "Schnell"
+
+msgid "Good"
+msgstr "Gut"
+
+msgid "Vertical Synchronization"
+msgstr "Vertikale Synchronisation"
+
+msgid "Use OpenGL 2.0 shaders (GLSL)"
+msgstr "Verwende OpenGL 2.0 shaders (GLSL)"
+
+msgid "Use Occlusion Queries"
+msgstr "Verwende Occlusion Queries"
+
+msgid "Vertex Buffer Objects (VBOs)"
+msgstr "Vertex Buffer Objects (VBOs)"
+
+msgid "Off"
+msgstr "Aus"
+
+msgid "Vertices"
+msgstr "Vertices"
+
+msgid "Vertices, some Tris (compatible)"
+msgstr "Vertices, einige Tris (Kompatibel)"
+
+msgid "Vertices and Triangles"
+msgstr "Vertices und Triangles"
+
+msgid "Depth first:"
+msgstr "Tiefe zuerst:"
+
+msgid "Disabled"
+msgstr "Deaktiviert"
+
+msgid "World"
+msgstr "Welt"
+
+msgid "Disable multithreaded OpenGL"
+msgstr "Multithreaded OpenGL ausschalten"
+
+msgid "Wait for GPU to finish each frame"
+msgstr "Warten bis GPU den Frame berechnet hat"
+
+msgid "Brightness:"
+msgstr "Helligkeit:"
+
+msgid "Contrast:"
+msgstr "Kontrast:"
+
+msgid "Gamma:"
+msgstr "Gamma:"
+
+msgid "Contrast boost:"
+msgstr "Kontrast-Boost:"
+
+msgid "Saturation:"
+msgstr "Sättigung:"
+
+msgid "Use GLSL to handle color control"
+msgstr "Verwende GLSL zur Farbsteuerung"
+
+msgid "Ambient light:"
+msgstr "Umgebungslicht:"
+
+msgid "Intensity:"
+msgstr "Intensität:"
+
+msgid "Max FPS:"
+msgstr "Max. FPS:"
+
+msgid "Quality preset:"
+msgstr "Qualitätsvoreinstellung:"
+
+msgid "Low"
+msgstr "Niedrig"
+
+msgid "Normal"
+msgstr "Normal"
+
+msgid "High"
+msgstr "Hoch"
+
+msgid "Ultra"
+msgstr "Ultra"
+
+msgid "Geometry detail:"
+msgstr "Geometriedetail:"
+
+msgid "Best"
+msgstr "Beste"
+
+msgid "Lowest"
+msgstr "Niedrigste"
+
+msgid "Antialiasing:"
+msgstr "Antialiasing:"
+
+msgid "Ambient:"
+msgstr "Umgebungslicht:"
+
+msgid "Texture quality:"
+msgstr "Texturqualität:"
+
+msgid "World texture quality:"
+msgstr "Welttexturqualität:"
+
+msgid "Anisotropy:"
+msgstr "Anisotropie:"
+
+msgid "Particle quality:"
+msgstr "Partikelqualität:"
+
+msgid "Particle dist.:"
+msgstr "Partikelentfernung:"
+
+msgid "Gibs count:"
+msgstr "Eingeweideanzahl:"
+
+msgid "Casing count:"
+msgstr "Patronenhülsenanzahl:"
+
+msgid "Decals"
+msgstr "Einschüsse"
+
+msgid "Distance:"
+msgstr "Entfernung:"
+
+msgid "Time:"
+msgstr "Zeit:"
+
+msgid "Use lightmaps"
+msgstr "Verwende lightmaps"
+
+msgid "Deluxe mapping"
+msgstr "Deluxe mapping"
+
+msgid "Gloss"
+msgstr "Glanz"
+
+msgid "Offset mapping"
+msgstr "Offset mapping"
+
+msgid "Relief mapping"
+msgstr "Relief mapping"
+
+msgid "Reflections:"
+msgstr "Reflektionen:"
+
+msgid "Blurred"
+msgstr "Unscharf"
+
+msgid "Sharp"
+msgstr "Scharf"
+
+msgid "Realtime dynamic lighting"
+msgstr "Dynamische Echtzeitbeleuchtung"
+
+msgid "Shadows"
+msgstr "Schatten"
+
+msgid "Realtime world lighting"
+msgstr "Echtzeit-Weltbeleuchtung"
+
+msgid "Use normal maps"
+msgstr "Normale Karten verwenden"
+
+msgid "Bloom"
+msgstr "Bloom"
+
+msgid "Coronas"
+msgstr "Lichtschein"
+
+msgid "Deform vertexes"
+msgstr "Vertexes verformen"
+
+msgid "Motion blur:"
+msgstr "Bewegungsunschärfe:"
+
+msgid "Damage blur:"
+msgstr "Schadensunschärfe:"
+
+msgid "Music:"
+msgstr "Musik:"
+
+msgid "Master:"
+msgstr "Master:"
+
+msgid "Info:"
+msgstr "Info:"
+
+msgid "Items:"
+msgstr "Items:"
+
+msgid "Pain:"
+msgstr "Schmerz:"
+
+msgid "Player:"
+msgstr "Spieler:"
+
+msgid "Shots:"
+msgstr "Schüsse:"
+
+msgid "Voice:"
+msgstr "Stimme:"
+
+msgid "Weapons:"
+msgstr "Waffen:"
+
+msgid "MAX"
+msgstr "MAX"
+
+msgid "Frequency:"
+msgstr "Frequenz:"
+
+msgid "Channels:"
+msgstr "Kanäle:"
+
+msgid "Swap Stereo"
+msgstr "Stereo tauschen"
+
+msgid "Headphone friendly mode"
+msgstr "Kopfhörerfreundlicher Modus"
+
+msgid "Stereo"
+msgstr "Stereo"
+
+msgid "Spatial voices:"
+msgstr "Stimmnachrichten:"
+
+msgid "Taunts"
+msgstr "Spotte"
+
+msgid "Taunt range:"
+msgstr "Spottreichweite:"
+
+msgid "Long"
+msgstr "Lang"
+
+msgid "Very long"
+msgstr "Sehr lang"
+
+msgid "Short"
+msgstr "Kurz"
+
+msgid "Very short"
+msgstr "Sehr kurz"
+
+msgid "Automatic taunts"
+msgstr "Auto-Verspottungen"
+
+msgid "Time warning:"
+msgstr "Zeitwarnung:"
+
+msgid "1 minute"
+msgstr "1 Minute"
+
+msgid "5 minutes"
+msgstr "5 Minuten"
+
+msgid "Hit indicator"
+msgstr "Trefferanzeige"
+
+msgid "Annoying chat beep sound"
+msgstr "Markantes Chatsignal"
+
+msgid "Unlimited"
+msgstr "Unbegrenzt"
+
+msgid "OFF"
+msgstr "Aus"
+
+msgid "Menu skins:"
+msgstr "Menu skins:"
+
+msgid "Show current time"
+msgstr "Uhrzeit anzeigen"
+
+msgid "Show current date"
+msgstr "Datum anzeigen"
+
+msgid "Show frames per second"
+msgstr "Frames per secound anzeigen"
+
+msgid "Speedometer"
+msgstr "Tacho"
+
+msgid "Show accelerometer"
+msgstr "Beschleunigung anzeigen"
+
+msgid "Accelerometer scale:"
+msgstr "Beschleunigungsgröße:"
+
+msgid "Simple items"
+msgstr "Einfache Items"
+
+msgid "Old nex model"
+msgstr "Altes nex-Modell"
+
+msgid "Bright player skins"
+msgstr "Skin-Helligkeit"
+
+msgid "Cvar filter:"
+msgstr "Cvar-Filter:"
+
+msgid "Setting:"
+msgstr "Einstellung:"
+
+msgid "Type:"
+msgstr "Typ:"
+
+msgid "Value:"
+msgstr "Wert:"
+
+msgid "Description:"
+msgstr "Beschreibung:"
+
+msgid "km/h"
+msgstr "km/h"
+
+msgid "m/s"
+msgstr "m/s"
+
+msgid "mph"
+msgstr "mph"
+
+msgid "knots"
+msgstr "Knoten"
+
+msgid "qu/s"
+msgstr "qu/s"
+
+msgid "qu/s (hidden)"
+msgstr "qu/s (versteckt)"
+
+msgid ", will not be saved"
+msgstr ", wird nicht gespeichert"
+
+msgid ", will be saved to config.cfg"
+msgstr ", wird in config.cfg gespeichert"
+
+msgid ", engine setting"
+msgstr ""
+
+msgid ", read only"
+msgstr ", nur lesen"
+
+msgid " dB"
+msgstr " dB"
+
+msgid "8 kHz"
+msgstr "8 kHz"
+
+msgid "11.025 kHz"
+msgstr "11,025 kHz"
+
+msgid "16 kHz"
+msgstr "16 kHz"
+
+msgid "22.05 kHz"
+msgstr "22,05 kHz"
+
+msgid "24 kHz"
+msgstr "24 kHz"
+
+msgid "32 kHz"
+msgstr "32 kHz"
+
+msgid "44.1 kHz"
+msgstr "44,1 kHz"
+
+msgid "48 kHz"
+msgstr "48 kHz"
+
+msgid "Remove"
+msgstr "Entfernen"
+
+msgid "Info"
+msgstr "Info"
+
+msgid "Server Information"
+msgstr "Serverinformation"
+
+msgid "Players:"
+msgstr "Spieler:"
+
+msgid "Map:"
+msgstr "Map:"
+
+msgid "Bots:"
+msgstr "Bots:"
+
+msgid "Mod:"
+msgstr "Mod:"
+
+msgid "Version:"
+msgstr "Version:"
+
+msgid "Ping:"
+msgstr "Ping:"
+
+msgid "Close"
+msgstr "Schließen"
+
+msgid "Language..."
+msgstr "Sprache..."
+
+msgid "Language"
+msgstr "Sprache"
+
+msgid "Disable Nexuiz-compatible symbols"
+msgstr "Deaktiviere Nexuiz-kompatible Symbole"
+
+msgid ""
+"* Needed for some european characters, player names might be displayed "
+"incorrectly"
+msgstr ""
+"* Für einige europäische Buchstaben erforderlich. Spielernamen werden "
+"möglicherweise falsch angezeigt"

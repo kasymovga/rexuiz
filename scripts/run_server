@@ -2,6 +2,6 @@
 
 DIR="`dirname "$0"`"
 chmod 755 "$DIR/update.sh"
-flock "$DIR/.update.lock" "$DIR/update.sh" "$DIR/.."
+test -z "$REXUIZ_NOUPDATE" && flock "$DIR/.update.lock" "$DIR/update.sh" "$DIR/.."
 chmod 755 "$DIR"/../linux-bins/@@ARCH@@/@@BINARY_NAME@@
 "$DIR"/../linux-bins/@@ARCH@@/@@BINARY_NAME@@ -basedir "$DIR/../" "$@"

@@ -1,5 +1,6 @@
 #!/bin/sh
 
+stty quit undef
 DIR="`dirname "$0"`"
 chmod 755 "$DIR/update.sh"
 test -z "$REXUIZ_NOUPDATE" && flock "$DIR/.update.lock" "$DIR/update.sh" "$DIR/.."

@@ -121,4 +121,6 @@ do
 		mv "$UPDATE_DIR/$L" "$REXUIZ_DIR/$L" || fail "Can not update files"
 	fi
 done < "$UPDATE_DIR/.update.lst"
+chmod 755 "$REXUIZ_DIR/server/"*linux*
+chmod 755 "$REXUIZ_DIR/"*linux*
 rm -rf "$UPDATE_DIR"

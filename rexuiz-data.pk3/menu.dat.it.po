@@ -406,13 +406,13 @@ msgstr "Impostazioni HUD:"
 msgid "Background:"
 msgstr "Sfondo:"
 
-msgid "Default Red:"
+msgid "Default red:"
 msgstr "Rosso Default:"
 
-msgid "Default Green:"
+msgid "Default green:"
 msgstr "Verde Default:"
 
-msgid "Default Blue:"
+msgid "Default blue:"
 msgstr "Blu Default:"
 
 msgid "Team color:"

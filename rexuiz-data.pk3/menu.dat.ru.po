@@ -290,7 +290,7 @@ msgid "Zoom Factor:"
 msgstr "Увеличение:"
 
 msgid "Zoom speed:"
-msgstr "Скорость ув-я:"
+msgstr "Скорость увеличения:"
 
 msgid "Weapon settings..."
 msgstr "Настройки оружия..."
@@ -320,7 +320,7 @@ msgid "Crosshair Size:"
 msgstr "Размер прицела:"
 
 msgid "Crosshair Alpha:"
-msgstr "Непрозрачность п-ла:"
+msgstr "Непрозрачность прицела:"
 
 msgid "Crosshair Red:"
 msgstr "Красность прицела:"
@@ -406,13 +406,13 @@ msgstr "Настройки интерфейса:"
 msgid "Background:"
 msgstr "Фон:"
 
-msgid "Default Red:"
+msgid "Default red:"
 msgstr "Красный:"
 
-msgid "Default Green:"
+msgid "Default green:"
 msgstr "Зелёный:"
 
-msgid "Default Blue:"
+msgid "Default blue:"
 msgstr "Синий:"
 
 msgid "Team color:"
@@ -428,7 +428,7 @@ msgid "Waypoint scale:"
 msgstr "Размер указателей"
 
 msgid "Waypoint alpha:"
-msgstr "Непр-ть указателей"
+msgstr "Непрозрачность указателей"
 
 msgid "Key bindings:"
 msgstr "Настройки клавиш:"
@@ -437,7 +437,7 @@ msgid "Sensitivity:"
 msgstr "Чувствительность:"
 
 msgid "UI mouse speed:"
-msgstr "Чувств-ть в меню:"
+msgstr "Чувствительность в меню:"
 
 msgid "Invert mouse"
 msgstr "Инвертировать мышь"
@@ -719,10 +719,10 @@ msgid "Spatial voices:"
 msgstr "Объёмные голоса:"
 
 msgid "Taunts"
-msgstr "Смех"
+msgstr "Насмешки"
 
 msgid "Taunt range:"
-msgstr "Дальность смеха:"
+msgstr "Дальность насмешек:"
 
 msgid "Long"
 msgstr "Длинно"

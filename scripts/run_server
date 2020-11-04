@@ -9,5 +9,10 @@ if test -n "$REXUIZ_LOGDIR"
 then
 	"$DIR"/../linux-bins/@@ARCH@@/@@BINARY_NAME@@ -basedir "$DIR/../" "$@" | LOGPREFIX="$REXUIZ_LOGDIR/rexuiz-" LOGSUFFIX=".log" split -l 10000 --filter 'rm -f `ls -t "$LOGPREFIX"*"$LOGSUFFIX"|tail -n +10`; exec tee -a "$LOGPREFIX`date +%Y%m%d%H`$LOGSUFFIX"' - none
 else
-	exec "$DIR"/../linux-bins/@@ARCH@@/@@BINARY_NAME@@ -basedir "$DIR/../" "$@"
+	if test -n "$REXUIZ_SYSLOG"
+	then
+		"$DIR"/../linux-bins/@@ARCH@@/@@BINARY_NAME@@ -basedir "$DIR/../" "$@" | logger -s -t "rexuiz$REXUIZ_SYSLOG"
+	else
+		exec "$DIR"/../linux-bins/@@ARCH@@/@@BINARY_NAME@@ -basedir "$DIR/../" "$@"
+	fi
 fi

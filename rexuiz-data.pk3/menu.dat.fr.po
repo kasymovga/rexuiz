@@ -901,10 +901,10 @@ msgid "Close"
 msgstr "Fermer"
 
 msgid "Language..."
-msgstr "Language... / Langue..."
+msgstr "Langue... / Language..."
 
 msgid "Language"
-msgstr "Langauge / Langue"
+msgstr "Langue / Langauge"
 
 msgid "Disable Nexuiz-compatible symbols"
 msgstr "Désactiver symbole Nexuiz-compatible"

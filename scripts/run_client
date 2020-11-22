@@ -22,4 +22,4 @@ else
 fi
 export SDL_DYNAMIC_API=libSDL2.so
 chmod 755 ./linux-bins/@@ARCH@@/@@BINARY_NAME@@
-exec ./linux-bins/@@ARCH@@/@@BINARY_NAME@@ -basedir . "$@"
+exec ./linux-bins/@@ARCH@@/@@BINARY_NAME@@ -basedir . "$@" +integration_discord_game_command "`pwd`/`basename "$0"`"

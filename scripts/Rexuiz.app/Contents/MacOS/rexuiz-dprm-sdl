@@ -3,4 +3,5 @@ chmod 755 "$0"-bin
 cd "`dirname "$0"`"
 export DYLD_LIBRARY_PATH="`pwd`"
 APPPATH=${DYLD_LIBRARY_PATH%/Contents/MacOS}
-exec ./rexuiz-dprm-sdl-bin -notexturenonpoweroftwo +gl_lockarrays 0 -basedir ../../../ +integration_discord_game_command "$APPPATH" "$@"
+BASEPATH="`dirname "$APPPATH"`"
+exec ./rexuiz-dprm-sdl-bin -notexturenonpoweroftwo +gl_lockarrays 0 -basedir "$BASEPATH/" +integration_discord_game_command "$APPPATH" "$@"

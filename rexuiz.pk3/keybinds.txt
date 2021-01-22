@@ -50,6 +50,7 @@
 "quickload"                             "quick load"
 "disconnect"                            "disconnect"
 "quit"                                  "quit"
+"kill"                                  "suicide"
 ""                                      ""
 ""                                      "Teamplay"
 "messagemode2"                          "team chat"

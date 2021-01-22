@@ -112,6 +112,7 @@ do
 		fail "Can not download update data"
 	fi
 done < "$UPDATE_DIR/index.lst.uniq"
+WASUPDATED=0
 while read L
 do
 	echo "Updating $L"
@@ -119,8 +120,16 @@ do
 	if test -f "$UPDATE_DIR/$L"
 	then
 		mv "$UPDATE_DIR/$L" "$REXUIZ_DIR/$L" || fail "Can not update files"
+		WASUPDATED=1
 	fi
 done < "$UPDATE_DIR/.update.lst"
+if test "$WASUPDATED" = 1
+then
+	if test -n "$REXUIZ_UPDATE_HOOK"
+	then
+		"$REXUIZ_UPDATE_HOOK"
+	fi
+fi
 chmod 755 "$REXUIZ_DIR/server/"*linux*
 chmod 755 "$REXUIZ_DIR/"*linux*
 rm -rf "$UPDATE_DIR"

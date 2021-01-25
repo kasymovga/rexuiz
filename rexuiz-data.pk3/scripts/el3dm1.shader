@@ -205,6 +205,7 @@ textures/e8/e8xgirder_small
 textures/e8/e8xgirder_small2
 {
 	cull disable
+	nopicmip
 	{
 		map textures/e8/e8xgirder_small2.tga
 		rgbGen identity
@@ -224,6 +225,7 @@ textures/e8/e8rail2
 {
 	surfaceparm alphashadow
 	cull disable
+	nopicmip
 	nomipmaps
 	{
 		map textures/e8/e8rail2.tga

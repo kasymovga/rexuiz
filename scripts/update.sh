@@ -93,6 +93,12 @@ while IFS='|' read -r HASH SIZE FILE
 do
 	TARGET_FILE="$REXUIZ_DIR/$FILE"
 	UPDATE_FILE="$UPDATE_DIR/$FILE"
+	case "$FILE" in
+	*.exe | *.dll | *.app/* | *sdl* | *.cmd)
+		echo "$FILE is not for linux"
+		continue
+		;;
+	esac
 	if test -f "$TARGET_FILE" && checksize "$TARGET_FILE" "$SIZE" && checkhash "$TARGET_FILE" "$HASH"
 	then
 		echo "$TARGET_FILE is up to date"

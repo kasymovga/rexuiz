@@ -54,7 +54,7 @@ ZLIBFILES=$(LIBDIR)/lib/libz.a
 JPEGTARGZ=jpegsrc.v9d.tar.gz
 JPEGDIR=jpeg-9d
 JPEGFILES=$(LIBDIR)/lib/libjpeg.a
-SDLDIR=SDL2-2.0.9
+SDLDIR=SDL2-2.0.14
 SDLTARGZ=$(SDLDIR).tar.gz
 SDLFILES=$(LIBDIR)/bin/sdl2-config
 LIBMICROHTTPDFILES=$(LIBDIR)/lib/libmicrohttpd.a
@@ -250,7 +250,6 @@ $(LIBMICROHTTPDFILES): $(LIBMICROHTTPDTARGZ)
 $(SDLFILES): $(SDLTARGZ) $(SDLDEPS)
 	tar xzf $(SDLTARGZ)
 ifeq ($(DPTARGET_WIN),y)
-	cd $(SDLDIR) && patch -p1 < ../sdl2-1-fixes.patch && ./autogen.sh
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" host_os=mingw CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --enable-libsamplerate --disable-libsamplerate-shared --prefix=$(LIBDIR)
 	cd $(SDLDIR) && make
 	cd $(SDLDIR) && make install

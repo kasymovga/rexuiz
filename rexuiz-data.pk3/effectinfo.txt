@@ -4695,6 +4695,7 @@ lightcolor 0.9 0.9 0.2
 effect tr_rifle
 trailspacing 128
 type spark
+tex 40 40
 color 0x800000 0xFF8020
 alpha 256 256 2560
 size 3 3
@@ -4702,7 +4703,7 @@ stretchfactor 0.2
 velocitymultiplier 0.1
 effect tr_rifle
 notunderwater
-tex 40 40
+tex 0 8
 trailspacing 8
 type static
 color 0x202020 0x404040

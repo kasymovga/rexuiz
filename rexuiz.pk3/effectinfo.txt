@@ -3313,14 +3313,14 @@ velocityjitter 256 256 256
 
 // bullet trail (somewhat like a tracer)
 effect tr_bullet
-trailspacing 750
+trailspacing 128
 type spark
-tex 70 70
+tex 40 40
 color 0xff8960 0xff8533
 alpha 256 256 2560
-size 4 4
+size 3 3
 stretchfactor 0.2
-velocitymultiplier 3
+velocitymultiplier 0.2
 
 // smoke emitter for small pipes
 // used nowhere in code
@@ -4697,12 +4697,12 @@ trailspacing 128
 type spark
 color 0x800000 0xFF8020
 alpha 256 256 2560
-size 1.5 1.5
-stretchfactor 1
-velocitymultiplier 0.7
+size 3 3
+stretchfactor 0.2
+velocitymultiplier 0.1
 effect tr_rifle
 notunderwater
-tex 0 8
+tex 40 40
 trailspacing 8
 type static
 color 0x202020 0x404040

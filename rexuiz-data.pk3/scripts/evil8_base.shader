@@ -218,6 +218,7 @@ textures/evil8_fx/e8alphaspawn
 	surfaceparm nomarks
 	surfaceparm trans
 	surfaceparm pointlight
+	nopicmip
 	{
 		map textures/evil8_fx/e8alphaspawn.tga
 		blendfunc add
@@ -230,6 +231,7 @@ textures/evil8_fx/e8yarrow
 	surfaceparm nomarks
 	surfaceparm trans
 	surfaceparm pointlight
+	nopicmip
 	{
 		map textures/evil8_fx/e8yarrow.tga
 		blendfunc add
@@ -600,6 +602,7 @@ textures/evil8_fx/e8circle_red
 	surfaceparm nolightmap
 	surfaceparm nomarks
 	surfaceparm trans
+	nopicmip
 	{
 		map textures/evil8_fx/e8circle_red.tga
 		blendfunc add
@@ -612,6 +615,7 @@ textures/evil8_fx/e8circle_blue
 	surfaceparm nolightmap
 	surfaceparm nomarks
 	surfaceparm trans
+	nopicmip
 	{
 		map textures/evil8_fx/e8circle_blue.tga
 		blendfunc add
@@ -626,6 +630,7 @@ textures/evil8_fx/e8circle_red_fade
 	surfaceparm nomarks
 	surfaceparm trans
 	cull disable
+	nopicmip
 	{
 		map textures/evil8_fx/e8circle_red.tga
 		blendfunc add
@@ -640,6 +645,7 @@ textures/evil8_fx/e8circle_blue_fade
 	surfaceparm nomarks
 	surfaceparm trans
 	cull disable
+	nopicmip
 	{
 		map textures/evil8_fx/e8circle_blue.tga
 		blendfunc add
@@ -711,6 +717,7 @@ textures/evil8_fx/e8evilspacetxt
 	surfaceparm nomarks
 	surfaceparm trans
 	surfaceparm pointlight
+	nopicmip
 	{
 		map textures/evil8_fx/e8evilspacetxt.tga
 		blendfunc add

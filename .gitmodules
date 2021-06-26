@@ -7,7 +7,6 @@
 [submodule "rexdlc"]
 	path = rexdlc
 	url = git://github.com/kasymovga/rexdlc
-[submodule "rmqcc"]
-	path = rmqcc
-	url = git://github.com/kasymovga/rmqcc
-	branch = master
+[submodule "gmqcc"]
+	path = gmqcc
+	url = git://github.com/kasymovga/gmqcc

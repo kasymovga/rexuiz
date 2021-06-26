@@ -1,4 +1,4 @@
-.PHONY: all clean engine fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc rmqcc
+.PHONY: all clean engine fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc gmqcc
 PWD=$(shell pwd)
 
 DATA_FILES_NEXUIZ=common-spog.pk3 data20091001.pk3
@@ -297,7 +297,7 @@ stand-alone-data: nexuiz-252.zip
 	cd rexdlc && make essential
 	cp rexdlc/*.pk3 Rexuiz/data/dlcache/
 	cd 1vs1 && git archive --format=zip --prefix=rexuiz-qcsrc/ HEAD -o ../Rexuiz/sources/rexuiz-qcsrc.zip
-	cd rmqcc && git archive --format=zip --prefix=rmqcc/ HEAD -o ../Rexuiz/sources/rmqcc.zip
+	cd gmqcc && git archive --format=zip --prefix=gmqcc/ HEAD -o ../Rexuiz/sources/gmqcc.zip
 	install -m644 scripts/server-example.cfg Rexuiz/data/server-example.cfg
 
 stand-alone-engine: engine $(EXTRALIBS)
@@ -354,10 +354,10 @@ endif
 
 stand-alone: stand-alone-engine stand-alone-data
 
-rmqcc:
-	cd rmqcc && make
+gmqcc:
+	cd gmqcc && cmake . && make
 
-update-qc: rmqcc
-	cd 1vs1 && make QCC=../../../rmqcc/rmqcc.bin SV_PROGNAME=progs.dat CL_PROGNAME=csprogs.dat CFG_NAME=rexuiz-extra.cfg SET_CURL_PACKAGE=no
+update-qc: gmqcc
+	cd 1vs1 && make QCC=../../../gmqcc/gmqcc SV_PROGNAME=progs.dat CL_PROGNAME=csprogs.dat CFG_NAME=rexuiz-extra.cfg SET_CURL_PACKAGE=no
 	install -m 644 1vs1/progs.dat 1vs1/csprogs.dat 1vs1/menu.dat 1vs1/rexuiz-extra.cfg rexuiz.pk3/
 	install -m 644 1vs1/translations/*.po 1vs1/rexuiz-extra.cfg rexuiz-data.pk3/

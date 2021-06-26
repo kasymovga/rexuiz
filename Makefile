@@ -289,11 +289,10 @@ stand-alone-data: nexuiz-252.zip
 	rm -f Rexuiz/data/rexuiz-data.pk3
 	cd rexuiz.pk3 && zip -r ../Rexuiz/data/rexuiz.pk3 *
 	cd rexuiz-data.pk3 && zip -r ../Rexuiz/data/rexuiz-data.pk3 *
-	unzip -j nexuiz-252.zip Nexuiz/data/common-spog.pk3 Nexuiz/data/data20091001.pk3 -d Rexuiz/data
-	unzip -j nexuiz-252.zip Nexuiz/gpl.txt -d Rexuiz
-	unzip -j nexuiz-252.zip Nexuiz/sources/fteqcc-binaries-and-source-rev1253299209-bb8ceb9870af06104b67ae4cc2ec29552dce705b.zip Nexuiz/sources/gamesource20091001.zip -d Rexuiz/sources
-	unzip -j Rexuiz/data/data20091001.pk3 csprogs.dat
-	mv csprogs.dat Rexuiz/data/dlcache/csprogs.dat.408476.61283
+	test -f Rexuiz/data/data20091001.pk3 || unzip -j nexuiz-252.zip Nexuiz/data/common-spog.pk3 Nexuiz/data/data20091001.pk3 -d Rexuiz/data
+	test -f Rexuiz/gpl.txt || unzip -j nexuiz-252.zip Nexuiz/gpl.txt -d Rexuiz
+	test -f Rexuiz/sources/gamesource20091001.zip || unzip -j nexuiz-252.zip Nexuiz/sources/fteqcc-binaries-and-source-rev1253299209-bb8ceb9870af06104b67ae4cc2ec29552dce705b.zip Nexuiz/sources/gamesource20091001.zip -d Rexuiz/sources
+	test -f Rexuiz/data/dlcache/csprogs.dat.408476.61283 || (rm -f csprogs.dat && unzip -j Rexuiz/data/data20091001.pk3 csprogs.dat && mv csprogs.dat Rexuiz/data/dlcache/csprogs.dat.408476.61283)
 	cd rexdlc && make essential
 	cp rexdlc/*.pk3 Rexuiz/data/dlcache/
 	cd 1vs1 && git archive --format=zip --prefix=rexuiz-qcsrc/ HEAD -o ../Rexuiz/sources/rexuiz-qcsrc.zip

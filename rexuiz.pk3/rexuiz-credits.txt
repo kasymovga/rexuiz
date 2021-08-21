@@ -9,22 +9,57 @@ Axisar
 Gustavo Zamboni
 *Translator
 
-Alexandre "Art" William
-*Translator
-
-Alexander L. (Bratwurst)
-*Translator
-
 Claymore
 *Translator
 
 Nico The Badass Choob
 *Translator
 
-Rafael Tarverdiyev (Laggy Turtle)
-*Composer
+**Third party content:
+Intro music
+*Original title: Video Game 7
+*Source: https://freesound.org/people/djgriffin/sounds/172561/
+*Author: djgriffin
+*License: CC-BY 3.0 https://creativecommons.org/licenses/by/3.0/
+*Changes: vorbis compression
+
+Canyon theme
+*Original title: Abandeoned Fields
+*Source: https://freesound.org/people/Dredile/sounds/164272/
+*Author: Dredile
+*License: CC0 1.0 https://creativecommons.org/publicdomain/zero/1.0/
+*Changes: vorbis compression
+
+Church theme
+*Original title: horror ambience 10
+*Source: https://freesound.org/people/klankbeeld/sounds/133100/
+*Author: klankbeeld
+*License: CC-BY 3.0 https://creativecommons.org/licenses/by/3.0/
+*Changes: vorbis compression
+
+Desert theme
+*Original title: Savanna stomp groove
+*Source: https://freesound.org/people/jobro/sounds/76731/
+*Author: jobro
+*License: CC-BY 3.0 https://creativecommons.org/licenses/by/3.0/
+*Changes: vorbis compression
+
+Axe model
+*Original author: James White https://opengameart.org/users/jameswhite
+*License: CC-BY 2.0 http://creativecommons.org/licenses/by/2.0/
+*Changes: converted to md3, scaled, rotated.
+
+Arachna model
+*Borrowed from OpenArena
+*License: GPL2
 
 **Old Members:
+
+Alexandre "Art" William
+*Translator
+
+Alexander L. (Bratwurst)
+*Translator
 
 Alex Zloy (Zoom Zoom)
 *Designer

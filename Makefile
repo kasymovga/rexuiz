@@ -1,4 +1,4 @@
-.PHONY: all clean engine fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc gmqcc
+.PHONY: all clean engine curl fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc gmqcc
 PWD=$(shell pwd)
 
 DATA_FILES_NEXUIZ=common-spog.pk3 data20091001.pk3
@@ -123,7 +123,8 @@ EXTRALIBS=
 else
 ifeq ($(DPTARGET),android)
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_FS_BASEDIR=/sdcard/Rexuiz/ DP_MAKE_TARGET=android DP_VIDEO_CAPTURE=disabled
-EXTRALIBS=
+CURLFILES=$(LIBDIR)/lib/libcurl.so
+EXTRALIBS=$(CURLFILES)
 else
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_FS_BASEDIR=/usr/share/rexuiz/
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.so
@@ -207,6 +208,8 @@ $(JPEGFILES): $(JPEGTARGZ)
 $(FREETYPEFILES): $(FREETYPETARGZ)
 	tar xzf $(FREETYPETARGZ)
 	cd $(FREETYPEDIR) && CC="$(CC)" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
+
+curl: $(CURLFILES)
 
 $(CURLFILES): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)

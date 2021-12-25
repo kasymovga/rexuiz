@@ -1,4 +1,4 @@
-.PHONY: all clean engine curl fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc gmqcc
+.PHONY: all clean engine curl freetype fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc gmqcc
 PWD=$(shell pwd)
 
 DATA_FILES_NEXUIZ=common-spog.pk3 data20091001.pk3
@@ -58,7 +58,7 @@ SDLDIR=SDL2-2.0.16
 SDLTARGZ=$(SDLDIR).tar.gz
 SDLFILES=$(LIBDIR)/bin/sdl2-config
 LIBMICROHTTPDFILES=$(LIBDIR)/lib/libmicrohttpd.a
-FREETYPEDIR=freetype-2.7
+FREETYPEDIR=freetype-2.10.4
 FREETYPETARGZ=$(FREETYPEDIR).tar.gz
 CURLDIR=curl-7.68.0
 CURLTARGZ=$(CURLDIR).tar.gz
@@ -124,7 +124,8 @@ else
 ifeq ($(DPTARGET),android)
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_FS_BASEDIR=/sdcard/Rexuiz/ DP_MAKE_TARGET=android DP_VIDEO_CAPTURE=disabled
 CURLFILES=$(LIBDIR)/lib/libcurl.so
-EXTRALIBS=$(CURLFILES)
+FREETYPEFILES=$(LIBDIR)/lib/libfreetype.so
+EXTRALIBS=$(CURLFILES) $(FREETYPEFILES)
 else
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_FS_BASEDIR=/usr/share/rexuiz/
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.so
@@ -207,9 +208,11 @@ $(JPEGFILES): $(JPEGTARGZ)
 
 $(FREETYPEFILES): $(FREETYPETARGZ)
 	tar xzf $(FREETYPETARGZ)
-	cd $(FREETYPEDIR) && CC="$(CC)" ./configure --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
+	cd $(FREETYPEDIR) && CC="$(CC)" ./configure --with-png=no --with-harfbuzz=no --with-zlib=no --with-bzip2=no --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 
 curl: $(CURLFILES)
+
+freetype: $(FREETYPEFILES)
 
 $(CURLFILES): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)
@@ -335,6 +338,7 @@ ifeq ($(DPTARGET_LINUX),y)
 	mkdir -p Rexuiz/server
 	install -m 755 $(DPDIR)/rexuiz-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-sdl
 	install -m644 $(CURLFILES) Rexuiz/linux-bins/$(ARCHSUFFIX)/libcurl-fallback.so
+	install -m644 $(FREETYPEFILES) Rexuiz/linux-bins/$(ARCHSUFFIX)/libfreetype-fallback.so
 	install -m 755 $(DPDIR)/rexuiz-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dedicated
 	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) Rexuiz/sources/
 	cat scripts/run_client | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-sdl/g' > Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)

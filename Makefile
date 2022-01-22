@@ -54,7 +54,7 @@ ZLIBFILES=$(LIBDIR)/lib/libz.a
 JPEGTARGZ=jpegsrc.v9d.tar.gz
 JPEGDIR=jpeg-9d
 JPEGFILES=$(LIBDIR)/lib/libjpeg.a
-SDLDIR=SDL2-2.0.16
+SDLDIR=SDL2-2.0.20
 SDLTARGZ=$(SDLDIR).tar.gz
 SDLFILES=$(LIBDIR)/bin/sdl2-config
 LIBMICROHTTPDFILES=$(LIBDIR)/lib/libmicrohttpd.a
@@ -219,7 +219,7 @@ $(CURLFILES): $(CURLTARGZ)
 ifeq ($(DPTARGET_WIN),y)
 	cd $(CURLDIR) && CC="$(CC) -static-libgcc" ./configure --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) --disable-pthreads && make && make install
 else
-	cd $(CURLDIR) && CC="$(CC)" ./configure --without-ssl --without-gnutls --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
+	cd $(CURLDIR) && CC="$(CC)" ./configure --without-ssl --without-gnutls --without-zlib --disable-ldap --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 endif
 
 $(LIBOGGFILES): $(LIBOGGTARGZ)

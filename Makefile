@@ -291,6 +291,7 @@ stand-alone: stand-alone-data stand-alone-engine
 stand-alone-data: nexuiz-252.zip
 	make update-qc
 	mkdir -m 755 -p Rexuiz/sources
+	echo "https://github.com/kasymovga/rexuiz" > Rexuiz/sources/sources.txt
 	mkdir -m 755 -p Rexuiz/data/dlcache
 	rm -f Rexuiz/data/rexuiz.pk3
 	rm -f Rexuiz/data/rexuiz-data.pk3
@@ -298,19 +299,13 @@ stand-alone-data: nexuiz-252.zip
 	cd rexuiz-data.pk3 && zip -r ../Rexuiz/data/rexuiz-data.pk3 *
 	test -f Rexuiz/data/data20091001.pk3 || unzip -j nexuiz-252.zip Nexuiz/data/common-spog.pk3 Nexuiz/data/data20091001.pk3 -d Rexuiz/data
 	test -f Rexuiz/gpl.txt || unzip -j nexuiz-252.zip Nexuiz/gpl.txt -d Rexuiz
-	test -f Rexuiz/sources/gamesource20091001.zip || unzip -j nexuiz-252.zip Nexuiz/sources/fteqcc-binaries-and-source-rev1253299209-bb8ceb9870af06104b67ae4cc2ec29552dce705b.zip Nexuiz/sources/gamesource20091001.zip -d Rexuiz/sources
 	test -f Rexuiz/data/dlcache/csprogs.dat.408476.61283 || (rm -f csprogs.dat && unzip -j Rexuiz/data/data20091001.pk3 csprogs.dat && mv csprogs.dat Rexuiz/data/dlcache/csprogs.dat.408476.61283)
 	cd rexdlc && make essential
 	cp rexdlc/*.pk3 Rexuiz/data/dlcache/
-	cd 1vs1 && git archive --format=zip --prefix=rexuiz-qcsrc/ HEAD -o ../Rexuiz/sources/rexuiz-qcsrc.zip
-	cd gmqcc && git archive --format=zip --prefix=gmqcc/ HEAD -o ../Rexuiz/sources/gmqcc.zip
 	install -m644 scripts/server-example.cfg Rexuiz/data/server-example.cfg
 
 stand-alone-engine: engine $(EXTRALIBS)
 	mkdir -m 755 -p Rexuiz/sources
-	rm -f Rexuiz/sources/$(DPDIR).zip
-	cd $(DPDIR) && git archive --format=zip --prefix=$(DPDIR)/ HEAD -o ../Rexuiz/sources/$(DPDIR).zip
-	install -m644 $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET_WIN),y)
 	install -m644 $(DPDIR)/rexuiz-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
 ifeq ($(ARCHSUFFIX), x86_64)
@@ -323,7 +318,6 @@ ifeq ($(ARCHSUFFIX),i686)
 	install -m644 $(DPDIR)/rexuiz-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin32/rexuiz-dedicated.exe
 	install -m644 scripts/run_server_win32.cmd Rexuiz/server/
 endif
-	install -m644 $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) $(LIBMICROHTTPDTARGZ) Rexuiz/sources/
 ifeq ($(DPTARGET),win32)
 	mkdir -m755 -p Rexuiz/bin32
 	install -m644 $(EXTRALIBS) Rexuiz/bin32/
@@ -340,7 +334,6 @@ ifeq ($(DPTARGET_LINUX),y)
 	install -m644 $(CURLFILES) Rexuiz/linux-bins/$(ARCHSUFFIX)/libcurl-fallback.so
 	install -m644 $(FREETYPEFILES) Rexuiz/linux-bins/$(ARCHSUFFIX)/libfreetype-fallback.so
 	install -m 755 $(DPDIR)/rexuiz-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dedicated
-	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) Rexuiz/sources/
 	cat scripts/run_client | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-sdl/g' > Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
 	chmod 755 Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
 	cat scripts/run_server | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-dedicated/g' > Rexuiz/server/rexuiz-linux-dedicated-$(ARCHSUFFIX)
@@ -356,7 +349,6 @@ ifeq ($(DPTARGET_MAC),y)
 	install -m 755 scripts/Rexuiz.app/Contents/Resources/Rexuiz.icns Rexuiz/Rexuiz.app/Contents/Resources/
 	install -m 755 scripts/Rexuiz.app/Contents/Info.plist Rexuiz/Rexuiz.app/Contents/
 	install -m 755 $(DPDIR)/rexuiz-sdl Rexuiz/Rexuiz.app/Contents/MacOS/rexuiz-dprm-sdl-bin
-	install -m644 $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ) Rexuiz/sources/
 endif
 
 stand-alone: stand-alone-engine stand-alone-data

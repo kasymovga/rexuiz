@@ -1,1 +1,1 @@
-..\bin64\rexuiz-dedicated.exe -basedir ../ %*
+..\rexuiz-sdl-x86_64.exe -dedicated -basedir ../ %*

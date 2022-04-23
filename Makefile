@@ -285,7 +285,10 @@ engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_L
 ifeq ($(DPTARGET),android)
 	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make android-rexuiz $(DPMAKEOPTS)
 else
-	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-rexuiz sv-rexuiz $(DPMAKEOPTS)
+	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-rexuiz $(DPMAKEOPTS)
+ifeq ($(DPTARGET),linux)
+	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sv-rexuiz $(DPMAKEOPTS)
+endif
 endif
 
 fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ)
@@ -313,13 +316,9 @@ stand-alone-engine: engine $(EXTRALIBS)
 ifeq ($(DPTARGET_WIN),y)
 	install -m644 $(DPDIR)/rexuiz-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
 ifeq ($(ARCHSUFFIX), x86_64)
-	mkdir -p -m755 Rexuiz/bin64
-	install -m644 $(DPDIR)/rexuiz-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin64/rexuiz-dedicated.exe
 	install -m644 scripts/run_server_win64.cmd Rexuiz/server/
 endif
 ifeq ($(ARCHSUFFIX),i686)
-	mkdir -p -m755 Rexuiz/bin32
-	install -m644 $(DPDIR)/rexuiz-dedicated-$(ARCHSUFFIX).exe Rexuiz/bin32/rexuiz-dedicated.exe
 	install -m644 scripts/run_server_win32.cmd Rexuiz/server/
 endif
 ifeq ($(DPTARGET),win32)

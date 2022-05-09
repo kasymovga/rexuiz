@@ -1,9 +1,10 @@
 #!/bin/sh
 
-REPOS='http://rexuiz.com/maps/RexuizLauncher
-http://bnse.rexuiz.top/RexuizLauncher
-http://nexuiz.mooo.com/RexuizLauncher
-http://108.61.164.188/RexuizLauncher'
+REPOS='http://rexuiz.com/maps/RexuizLauncher2
+https://kasymovga.github.io/rexdlc-web/rl
+http://bnse.rexuiz.top/RexuizLauncher2
+http://nexuiz.mooo.com/RexuizLauncher2
+http://108.61.164.188/RexuizLauncher2'
 
 download() {
 	mkdir -m 755 -p "`dirname "$2"`" || return 1
@@ -94,8 +95,8 @@ do
 	TARGET_FILE="$REXUIZ_DIR/$FILE"
 	UPDATE_FILE="$UPDATE_DIR/$FILE"
 	case "$FILE" in
-	*.exe | *.dll | *.app/* | *sdl* | *.cmd)
-		echo "$FILE is not for linux"
+	*.exe | *.dll | *.app/* | *sdl* | *.cmd | *textures-lightmaps* | *textures-extra*)
+		echo "$FILE is not for linux dedicated server"
 		continue
 		;;
 	esac

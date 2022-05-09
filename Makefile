@@ -1,7 +1,6 @@
 .PHONY: all clean engine curl freetype fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc gmqcc
 PWD=$(shell pwd)
 
-DATA_FILES_NEXUIZ=common-spog.pk3 data20091001.pk3
 DPDIR=DarkPlacesRM
 
 ifneq ($(CROSSPREFIX),)
@@ -307,11 +306,13 @@ stand-alone-data: nexuiz-252.zip
 	rm -f Rexuiz/data/rexuiz-data.pk3
 	cd rexuiz.pk3 && zip -r ../Rexuiz/data/rexuiz.pk3 *
 	cd rexuiz-data.pk3 && zip -r ../Rexuiz/data/rexuiz-data.pk3 *
-	test -f Rexuiz/data/data20091001.pk3 || unzip -j nexuiz-252.zip Nexuiz/data/common-spog.pk3 Nexuiz/data/data20091001.pk3 -d Rexuiz/data
+	test -f Rexuiz/data/common-spog.pk3 || unzip -j nexuiz-252.zip Nexuiz/data/common-spog.pk3 -d Rexuiz/data
 	test -f Rexuiz/gpl.txt || unzip -j nexuiz-252.zip Nexuiz/gpl.txt -d Rexuiz
-	test -f Rexuiz/data/dlcache/csprogs.dat.408476.61283 || (rm -f csprogs.dat && unzip -j Rexuiz/data/data20091001.pk3 csprogs.dat && mv csprogs.dat Rexuiz/data/dlcache/csprogs.dat.408476.61283)
-	cd rexdlc && make essential
+	test -f Rexuiz/data/dlcache/csprogs.dat.408476.61283 || (rm -f csprogs.dat && unzip -j nexuiz-252.zip Nexuiz/data/data20091001.pk3 && unzip -j data20091001.pk3 csprogs.dat && mv csprogs.dat Rexuiz/data/dlcache/csprogs.dat.408476.61283 && rm -f data20091001.pk3)
+	cd rexdlc && make base essential
 	cp rexdlc/*.pk3 Rexuiz/data/dlcache/
+	mv Rexuiz/data/dlcache/zzz-rexdlc_base-* Rexuiz/data/
+	for F in Rexuiz/data/zzz-rexdlc_base-* ; do mv "$$F" Rexuiz/data/rexuiz-$${F#Rexuiz/data/zzz-rexdlc_} ; done
 	install -m644 scripts/server-example.cfg Rexuiz/data/server-example.cfg
 
 stand-alone-engine: engine $(EXTRALIBS)

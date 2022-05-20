@@ -22,7 +22,11 @@ ifeq ($(shell uname -s),Linux)
 ifeq ($(shell uname -m),x86_64)
 DPTARGET=linux64
 else
+ifeq ($(shell uname -m),aarch64)
+DPTARGET=linux-arm64
+else
 DPTARGET=linux32
+endif
 endif
 else
 ifeq ($(shell uname -s),Darwin)
@@ -41,8 +45,9 @@ endif
 endif
 
 LIBDIR=$(PWD)/libs/$(DPTARGET)/
-LIBSAMPLERATEDIR=libsamplerate-0.1.9
-LIBSAMPLERATETARGZ=libsamplerate-0.1.9.tar.gz
+LIBSAMPLERATEVERSION=0.2.2
+LIBSAMPLERATEDIR=libsamplerate-$(LIBSAMPLERATEVERSION)
+LIBSAMPLERATETARXZ=$(LIBSAMPLERATEDIR).tar.xz
 LIBSAMPLERATEFILES=$(LIBDIR)/lib/libsamplerate.a
 LIBPNGDIR=libpng-1.6.36
 LIBPNGTARGZ=$(LIBPNGDIR).tar.gz
@@ -87,6 +92,11 @@ ifeq ($(DPTARGET),linux64)
 ARCHSUFFIX=x86_64
 DPTARGET_LINUX=y
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=linux
+endif
+ifeq ($(DPTARGET),linux-arm64)
+ARCHSUFFIX=aarch64
+DPTARGET_LINUX=y
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=linux CFLAGS_SSE="" CFLAGS_SSE2=""
 endif
 ifeq ($(DPTARGET),win32)
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=mingw TARGET=$(CROSSPREFIX) LIB_LIBMICROHTTPD='-lmicrohttpd -lws2_32' OBJ_ICON=rexuiz.o
@@ -183,8 +193,8 @@ $(LIBPNGTARGZ):
 	wget -O temp_$@ http://prdownloads.sourceforge.net/libpng/libpng-1.6.36.tar.gz?download
 	mv temp_$@ $@
 
-$(LIBSAMPLERATETARGZ):
-	wget -O temp_$@ http://www.mega-nerd.com/SRC/$@
+$(LIBSAMPLERATETARXZ):
+	wget -O temp_$@ https://github.com/libsndfile/libsamplerate/releases/download/$(LIBSAMPLERATEVERSION)/$@
 	mv temp_$@ $@
 
 $(LIBMICROHTTPDTARGZ):
@@ -195,9 +205,9 @@ $(LIBPNGFILES): $(LIBPNGTARGZ) $(ZLIBFILES)
 	tar xzf $(LIBPNGTARGZ)
 	cd $(LIBPNGDIR) && CC="$(CC) -I$(LIBDIR)/include -L$(LIBDIR)/lib" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
 
-$(LIBSAMPLERATEFILES): $(LIBSAMPLERATETARGZ)
-	tar xzf $(LIBSAMPLERATETARGZ)
-	cd $(LIBSAMPLERATEDIR) && ./configure --host=$(CROSSPREFIX) --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
+$(LIBSAMPLERATEFILES): $(LIBSAMPLERATETARXZ)
+	tar xJf $(LIBSAMPLERATETARXZ)
+	cd $(LIBSAMPLERATEDIR) && ./configure --host=$(CROSSPREFIX) --disable-sndfile --disable-alsa --disable-fftw --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
 
 $(ZLIBFILES): $(ZLIBTARGZ)
 	tar xzf $(ZLIBTARGZ)
@@ -242,13 +252,14 @@ $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
 	mv $(LIBTHEORADIR)/win32/xmingw32/libtheoradec-all.def.fixed $(LIBTHEORADIR)/win32/xmingw32/libtheoradec-all.def
 	tr -d '\015' < $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def > $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed
 	mv $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def
+	cd $(LIBTHEORADIR) && sed -i s/cross_compiling=no/cross_compiling=yes/ configure && sed -i '263i |aarch64 \\'  config.sub
 ifeq ($(DPTARGET_WIN),y)
 	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --disable-examples --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-examples && make && make install
 else
 ifeq ($(ARCHSUFFIX),x86_64)
-	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) && make && make install
+	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --build=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) && make && make install
 else
-	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) --disable-asm && make && make install
+	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --build=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) --disable-asm && make && make install
 endif
 endif
 
@@ -270,6 +281,7 @@ ifeq ($(DPTARGET),android)
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --oldincludedir=$(LIBDIR)/include --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR) --disable-libsamplerate --disable-pulseaudio --disable-video-x11 --disable-video-wayland --disable-video-kmsdrm --disable-pipewire && make && make install
 	sed -i 's/-I\/usr\/include//' $(LIBDIR)/bin/sdl2-config
 else
+	#cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --disable-video-wayland --disable-pulseaudio --disable-video-kmsdrm --disable-pipewire --prefix=$(LIBDIR) && make && make install
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR) && make && make install
 endif
 endif
@@ -285,10 +297,7 @@ ifeq ($(DPTARGET),android)
 	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make android-rexuiz $(DPMAKEOPTS)
 else
 	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sdl-rexuiz $(DPMAKEOPTS)
-ifeq ($(DPTARGET),linux32)
-	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sv-rexuiz $(DPMAKEOPTS)
-endif
-ifeq ($(DPTARGET),linux64)
+ifeq ($(DPTARGET_LINUX),y)
 	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sv-rexuiz $(DPMAKEOPTS)
 endif
 endif

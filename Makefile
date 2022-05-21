@@ -58,13 +58,14 @@ ZLIBFILES=$(LIBDIR)/lib/libz.a
 JPEGTARGZ=jpegsrc.v9d.tar.gz
 JPEGDIR=jpeg-9d
 JPEGFILES=$(LIBDIR)/lib/libjpeg.a
-ifeq ($(DPTARGET),android)
-SDLDIR=SDL2-2.0.16
-else
 SDLDIR=SDL2-2.0.20
-endif
 SDLTARGZ=$(SDLDIR).tar.gz
+ifeq ($(DPTARGET),android)
+HIDAPIFILES=$(LIBDIR)/lib/libhidapi.so
+SDLFILES=$(LIBDIR)/lib/libSDL2.so
+else
 SDLFILES=$(LIBDIR)/bin/sdl2-config
+endif
 LIBMICROHTTPDFILES=$(LIBDIR)/lib/libmicrohttpd.a
 FREETYPEDIR=freetype-2.10.4
 FREETYPETARGZ=$(FREETYPEDIR).tar.gz
@@ -81,7 +82,10 @@ LIBTHEORATARGZ=$(LIBTHEORADIR).tar.gz
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.a $(LIBDIR)/lib/libtheoraenc.a
 LIBMICROHTTPDDIR=libmicrohttpd-0.9.75
 LIBMICROHTTPDTARGZ=$(LIBMICROHTTPDDIR).tar.gz
-DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_LINK_PNG=shared SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_SDL_STATIC=yes DP_LIBMICROHTTPD=static DP_LINK_OGGVORBIS=static DP_LINK_ZLIB=static DP_LINK_JPEG=static DP_LINK_PNG=static $(DPMAKEOPTS_EXTRA)
+DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_LINK_PNG=shared SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_LIBMICROHTTPD=static DP_LINK_OGGVORBIS=static DP_LINK_ZLIB=static DP_LINK_JPEG=static DP_LINK_PNG=static $(DPMAKEOPTS_EXTRA)
+ifneq ($(DPTARGET),android)
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_SDL_STATIC=yes
+endif
 
 ifeq ($(DPTARGET),linux32)
 ARCHSUFFIX=i686
@@ -278,8 +282,16 @@ ifeq ($(DPTARGET_MAC),y)
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --x-includes=$(MAC_OS_SDK)/usr/include --disable-cpuinfo --disable-video-x11 --enable-static --disable-shared --prefix=$(LIBDIR) && make && make install
 else
 ifeq ($(DPTARGET),android)
-	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --oldincludedir=$(LIBDIR)/include --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR) --disable-libsamplerate --disable-pulseaudio --disable-video-x11 --disable-video-wayland --disable-video-kmsdrm --disable-pipewire && make && make install
+ifeq ($(ANDROID_ABI),)
+	echo ANDROID_ABI must be set
+	exit 1
+endif
+	mkdir -m755 -p $(SDLDIR)/buildtree
+	cd $(SDLDIR) && patch -p1 < ../SDL2.patch
+	cd $(SDLDIR)/buildtree && CC="$(CC) -static-libstdc++" CXX="$(CXX) -static-libstdc++" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" cmake -DANDROID=1 -DCMAKE_LIBRARY_PATH=${ANDROID_NDK_ROOT}/usr/lib/${CROSSPREFIX}/$(ANDROID_ABI)/ -DANDROID_NDK=${ANDROID_NDK_HOME} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(LIBDIR) -DCMAKE_CROSSCOMPILING=1 -DIMPORTED_NO_SONAME=1 -DNO_SONAME=1 .. && make && make install
+	#cd $(SDLDIR) && CC="$(CC) -static-libstdc++" CXX="$(CXX) -static-libstdc++" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --oldincludedir=$(LIBDIR)/include --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --disable-static --enable-shared --prefix=$(LIBDIR) --disable-libsamplerate --disable-pulseaudio --disable-video-x11 --disable-video-wayland --disable-video-kmsdrm --disable-pipewire && make && make install
 	sed -i 's/-I\/usr\/include//' $(LIBDIR)/bin/sdl2-config
+	cd $(SDLDIR)/src/hidapi/android/ && $(CXX) -O2 -Wall -I$(LIBDIR)/include `$(LIBDIR)/bin/sdl2-config --cflags` -L$(LIBDIR)/lib hid.cpp -static-libstdc++ `$(LIBDIR)/bin/sdl2-config --libs` -llog -shared -o $(HIDAPIFILES)
 else
 	#cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --disable-video-wayland --disable-pulseaudio --disable-video-kmsdrm --disable-pipewire --prefix=$(LIBDIR) && make && make install
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR) && make && make install
@@ -307,6 +319,13 @@ fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBT
 stand-alone: stand-alone-data stand-alone-engine
 
 stand-alone-data: nexuiz-252.zip
+ifeq ($(DPTARGET),android)
+	rm -f Rexuiz/data/rexuiz.pk3
+	rm -f Rexuiz/data/rexuiz-data.pk3
+	cd rexuiz.pk3 && zip -r ../rexuiz-android/app/src/main/assets/rexuiz/data/rexuiz.pk3 *
+	cd rexuiz-data.pk3 && zip -r ../rexuiz-android/app/src/main/assets/rexuiz/data/rexuiz-data.pk3 *
+	cd zmobile.pk3 && zip -r ../rexuiz-android/app/src/main/assets/rexuiz/data/zmobile.pk3 *
+else
 	make update-qc
 	mkdir -m 755 -p Rexuiz/sources
 	echo "https://github.com/kasymovga/rexuiz" > Rexuiz/sources/sources.txt
@@ -323,8 +342,24 @@ stand-alone-data: nexuiz-252.zip
 	mv Rexuiz/data/dlcache/zzz-rexdlc_base-* Rexuiz/data/
 	for F in Rexuiz/data/zzz-rexdlc_base-* ; do mv "$$F" Rexuiz/data/rexuiz-$${F#Rexuiz/data/zzz-rexdlc_} ; done
 	install -m644 scripts/server-example.cfg Rexuiz/data/server-example.cfg
+endif
 
 stand-alone-engine: engine $(EXTRALIBS)
+ifeq ($(DPTARGET),android)
+ifeq ($(ANDROID_ARCH),)
+	echo ANDROID_ARCH must be set
+	exit 1
+else
+	mkdir -p rexuiz-android/app/src/main/jniLibs/$(ANDROID_ARCH)
+	install -m755 $(DPDIR)/librexuiz-android.so rexuiz-android/app/src/main/jniLibs/$(ANDROID_ARCH)/
+	install -m755 $(FREETYPEFILES) rexuiz-android/app/src/main/jniLibs/$(ANDROID_ARCH)/
+	install -m755 $(CURLFILES) rexuiz-android/app/src/main/jniLibs/$(ANDROID_ARCH)/
+	install -m755 $(HIDAPIFILES) rexuiz-android/app/src/main/jniLibs/$(ANDROID_ARCH)/
+	install -m755 $(SDLFILES) rexuiz-android/app/src/main/jniLibs/$(ANDROID_ARCH)/
+	mkdir -m 755 -p rexuiz-android/app/src/main/java/org/libsdl/app/
+	install -m644 $(SDLDIR)/android-project/app/src/main/java/org/libsdl/app/*.java rexuiz-android/app/src/main/java/org/libsdl/app/
+endif
+else
 	mkdir -m 755 -p Rexuiz/sources
 ifeq ($(DPTARGET_WIN),y)
 	install -m644 $(DPDIR)/rexuiz-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
@@ -365,6 +400,7 @@ ifeq ($(DPTARGET_MAC),y)
 	install -m 755 scripts/Rexuiz.app/Contents/Resources/Rexuiz.icns Rexuiz/Rexuiz.app/Contents/Resources/
 	install -m 755 scripts/Rexuiz.app/Contents/Info.plist Rexuiz/Rexuiz.app/Contents/
 	install -m 755 $(DPDIR)/rexuiz-sdl Rexuiz/Rexuiz.app/Contents/MacOS/rexuiz-dprm-sdl-bin
+endif
 endif
 
 stand-alone: stand-alone-engine stand-alone-data

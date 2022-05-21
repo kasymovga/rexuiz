@@ -1,0 +1,12 @@
+--- SDL2-2.0.20/CMakeLists.txt	2022-01-09 02:13:56.000000000 +0500
++++ CMakeLists.txt	2022-05-21 14:45:11.544909944 +0500
+@@ -2780,6 +2780,9 @@
+       VERSION ${LT_VERSION}
+       SOVERSION ${LT_MAJOR}
+       OUTPUT_NAME "SDL2-${LT_RELEASE}")
++  elseif(ANDROID)
++    set_target_properties(SDL2 PROPERTIES
++      OUTPUT_NAME "SDL2")
+   else()
+     if(WINDOWS OR CYGWIN)
+       set_target_properties(SDL2 PROPERTIES

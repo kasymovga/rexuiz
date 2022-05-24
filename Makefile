@@ -211,7 +211,7 @@ $(LIBPNGFILES): $(LIBPNGTARGZ) $(ZLIBFILES)
 
 $(LIBSAMPLERATEFILES): $(LIBSAMPLERATETARXZ)
 	tar xJf $(LIBSAMPLERATETARXZ)
-	cd $(LIBSAMPLERATEDIR) && ./configure --host=$(CROSSPREFIX) --disable-sndfile --disable-alsa --disable-fftw --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
+	cd $(LIBSAMPLERATEDIR) && CFLAGS="-std=c99" ./configure --host=$(CROSSPREFIX) --disable-sndfile --disable-alsa --disable-fftw --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
 
 $(ZLIBFILES): $(ZLIBTARGZ)
 	tar xzf $(ZLIBTARGZ)

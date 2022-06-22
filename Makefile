@@ -1,4 +1,4 @@
-.PHONY: all clean engine curl freetype fetch-build-data stand-alone stand-alone-data stand-alone-engine update-qc gmqcc
+.PHONY: all clean engine curl freetype stand-alone stand-alone-data stand-alone-engine update-qc gmqcc
 PWD=$(shell pwd)
 
 DPDIR=DarkPlacesRM
@@ -82,7 +82,10 @@ LIBTHEORATARGZ=$(LIBTHEORADIR).tar.gz
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.a $(LIBDIR)/lib/libtheoraenc.a
 LIBMICROHTTPDDIR=libmicrohttpd-0.9.75
 LIBMICROHTTPDTARGZ=$(LIBMICROHTTPDDIR).tar.gz
-DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_LINK_PNG=shared SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_LIBMICROHTTPD=static DP_LINK_OGGVORBIS=static DP_LINK_ZLIB=static DP_LINK_JPEG=static DP_LINK_PNG=static $(DPMAKEOPTS_EXTRA)
+OPUSDIR=opus-1.3.1
+OPUSTARGZ=$(OPUSDIR).tar.gz
+OPUSFILES=$(LIBDIR)/lib/libopus.a
+DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_LINK_PNG=shared SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_LIBMICROHTTPD=static DP_LINK_OGGVORBIS=static DP_LINK_ZLIB=static DP_LINK_JPEG=static DP_LINK_PNG=static DP_LINK_OPUS=static $(DPMAKEOPTS_EXTRA)
 ifneq ($(DPTARGET),android)
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_SDL_STATIC=yes
 endif
@@ -205,6 +208,10 @@ $(LIBMICROHTTPDTARGZ):
 	wget -O temp_$@ http://ftp.gnu.org/gnu/libmicrohttpd/$@
 	mv temp_$@ $@
 
+$(OPUSTARGZ):
+	wget -O temp_$@ https://archive.mozilla.org/pub/opus/$@
+	mv temp_$@ $@
+
 $(LIBPNGFILES): $(LIBPNGTARGZ) $(ZLIBFILES)
 	tar xzf $(LIBPNGTARGZ)
 	cd $(LIBPNGDIR) && CC="$(CC) -I$(LIBDIR)/include -L$(LIBDIR)/lib" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
@@ -227,9 +234,9 @@ $(FREETYPEFILES): $(FREETYPETARGZ)
 	tar xzf $(FREETYPETARGZ)
 	cd $(FREETYPEDIR) && CC="$(CC)" ./configure --with-png=no --with-harfbuzz=no --with-zlib=no --with-bzip2=no --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 
-curl: $(CURLFILES)
-
-freetype: $(FREETYPEFILES)
+$(OPUSFILES): $(OPUSTARGZ)
+	tar xzf $(OPUSTARGZ)
+	cd $(OPUSDIR) && CC="$(CC)" ./configure --enable-static --disable-shared --host=$(CROSSPREFIX) --prefix=$(LIBDIR) --disable-extra-programs && make && make install
 
 $(CURLFILES): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)
@@ -304,7 +311,7 @@ clean:
 	rm -rf $(LIBDIR)
 	cd $(DPDIR) && make clean
 
-engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY) $(LIBMICROHTTPDFILES)
+engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY) $(LIBMICROHTTPDFILES) $(OPUSFILES)
 ifeq ($(DPTARGET),android)
 	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make android-rexuiz $(DPMAKEOPTS)
 else
@@ -313,8 +320,6 @@ ifeq ($(DPTARGET_LINUX),y)
 	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make sv-rexuiz $(DPMAKEOPTS)
 endif
 endif
-
-fetch-build-data: nexuiz-252.zip $(LIBPNGTARGZ) $(JPEGTARGZ) $(SDLTARGZ) $(ZLIBTARGZ) $(FREETYPETARGZ) $(CURLTARGZ) $(LIBOGGTARGZ) $(LIBVORBISTARGZ) $(LIBTHEORATARGZ)
 
 stand-alone: stand-alone-data stand-alone-engine
 

@@ -36,6 +36,7 @@
 "radar"                                 "включить радар"
 ""                                      ""
 ""                                      "Общение"
+"+snd_voip_talk"                        "голосовой чат"
 "messagemode"                           "общий чат"
 "messagemode2"                          "коммандный чат"
 "+con_chat_maximize"                    "показать историю чата"

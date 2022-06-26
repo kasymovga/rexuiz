@@ -236,7 +236,7 @@ $(FREETYPEFILES): $(FREETYPETARGZ)
 
 $(OPUSFILES): $(OPUSTARGZ)
 	tar xzf $(OPUSTARGZ)
-	cd $(OPUSDIR) && CC="$(CC)" ./configure --enable-static --disable-shared --host=$(CROSSPREFIX) --prefix=$(LIBDIR) --disable-extra-programs && make && make install
+	cd $(OPUSDIR) && CC="$(CC)" AR="$(AR)" ./configure --enable-static --disable-shared --host=$(CROSSPREFIX) --prefix=$(LIBDIR) --disable-extra-programs && make && make install
 
 $(CURLFILES): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)
@@ -307,7 +307,7 @@ endif
 endif
 
 clean:
-	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) $(LIBMICROHTTPDDIR) $(LIBSAMPLERATEDIR)
+	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) $(LIBMICROHTTPDDIR) $(LIBSAMPLERATEDIR) $(OPUSDIR)
 	rm -rf $(LIBDIR)
 	cd $(DPDIR) && make clean
 

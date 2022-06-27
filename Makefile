@@ -25,7 +25,11 @@ else
 ifeq ($(shell uname -m),aarch64)
 DPTARGET=linux-arm64
 else
+ifeq ($(shell uname -m),armv7l)
+DPTARGET=linux-arm32
+else
 DPTARGET=linux32
+endif
 endif
 endif
 else
@@ -102,6 +106,11 @@ DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=linux
 endif
 ifeq ($(DPTARGET),linux-arm64)
 ARCHSUFFIX=aarch64
+DPTARGET_LINUX=y
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=linux CFLAGS_SSE="" CFLAGS_SSE2=""
+endif
+ifeq ($(DPTARGET),linux-arm32)
+ARCHSUFFIX=armv7l
 DPTARGET_LINUX=y
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=linux CFLAGS_SSE="" CFLAGS_SSE2=""
 endif

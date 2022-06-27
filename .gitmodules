@@ -1,12 +1,12 @@
 [submodule "1vs1"]
 	path = 1vs1
-	url = git@github.com:kasymovga/1vs1
+	url = https://github.com/kasymovga/1vs1
 [submodule "DarkPlacesRM"]
 	path = DarkPlacesRM
-	url = git@github.com:kasymovga/DarkPlacesRM
+	url = https://github.com/kasymovga/DarkPlacesRM
 [submodule "rexdlc"]
 	path = rexdlc
-	url = git@github.com:kasymovga/rexdlc
+	url = https://github.com/kasymovga/rexdlc
 [submodule "gmqcc"]
 	path = gmqcc
-	url = git@github.com:kasymovga/gmqcc
+	url = https://github.com/kasymovga/gmqcc

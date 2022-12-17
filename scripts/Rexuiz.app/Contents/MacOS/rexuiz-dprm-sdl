@@ -4,4 +4,4 @@ cd "`dirname "$0"`"
 export DYLD_LIBRARY_PATH="`pwd`"
 APPPATH=${DYLD_LIBRARY_PATH%/Contents/MacOS}
 BASEPATH="`dirname "$APPPATH"`"
-exec ./rexuiz-dprm-sdl-bin -notexturenonpoweroftwo +gl_lockarrays 0 -basedir "$BASEPATH/" +integration_discord_game_command "$APPPATH" "$@"
+exec ./rexuiz-dprm-sdl-bin -notexturenonpoweroftwo -basedir "$BASEPATH/" +integration_discord_game_command "$APPPATH" "$@"

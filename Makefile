@@ -86,12 +86,17 @@ LIBTHEORATARGZ=$(LIBTHEORADIR).tar.gz
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.a $(LIBDIR)/lib/libtheoraenc.a
 LIBMICROHTTPDDIR=libmicrohttpd-0.9.75
 LIBMICROHTTPDTARGZ=$(LIBMICROHTTPDDIR).tar.gz
+LIBVPXDIR=libvpx-1.12.0
+LIBVPXTARGZ=$(LIBVPXDIR).tar.gz
+LIBVPXFILES=$(LIBDIR)/lib/libvpx.a
 OPUSDIR=opus-1.3.1
 OPUSTARGZ=$(OPUSDIR).tar.gz
 OPUSFILES=$(LIBDIR)/lib/libopus.a
 DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_LINK_PNG=shared SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_LIBMICROHTTPD=static DP_LINK_OGGVORBIS=static DP_LINK_ZLIB=static DP_LINK_JPEG=static DP_LINK_PNG=static DP_LINK_OPUS=static $(DPMAKEOPTS_EXTRA)
 ifneq ($(DPTARGET),android)
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_SDL_STATIC=yes
+else
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_LINK_VPX=static
 endif
 
 ifeq ($(DPTARGET),linux32)
@@ -136,7 +141,7 @@ ifeq ($(DPTARGET),android)
 EXTRALIBS_LINKONLY=$(LIBOGGFILES) $(LIBVORBISFILES)
 SDLDEPS=
 else
-EXTRALIBS_LINKONLY=$(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
+EXTRALIBS_LINKONLY=$(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES) $(LIBVPXFILES)
 SDLDEPS=$(LIBSAMPLERATEFILES)
 endif
 ifeq ($(DPTARGET_WIN),y)
@@ -206,7 +211,7 @@ $(ZLIBTARGZ):
 	mv temp_$@ $@
 
 $(LIBPNGTARGZ):
-	wget -O temp_$@ http://prdownloads.sourceforge.net/libpng/libpng-1.6.36.tar.gz?download
+	wget -O temp_$@ http://prdownloads.sourceforge.net/libpng/$(LIBPNGTARGZ)?download
 	mv temp_$@ $@
 
 $(LIBSAMPLERATETARXZ):
@@ -219,6 +224,10 @@ $(LIBMICROHTTPDTARGZ):
 
 $(OPUSTARGZ):
 	wget -O temp_$@ https://archive.mozilla.org/pub/opus/$@
+	mv temp_$@ $@
+
+$(LIBVPXTARGZ):
+	wget -O temp_$@ https://github.com/webmproject/libvpx/archive/v1.12.0/$@
 	mv temp_$@ $@
 
 $(LIBPNGFILES): $(LIBPNGTARGZ) $(ZLIBFILES)
@@ -246,6 +255,36 @@ $(FREETYPEFILES): $(FREETYPETARGZ)
 $(OPUSFILES): $(OPUSTARGZ)
 	tar xzf $(OPUSTARGZ)
 	cd $(OPUSDIR) && CC="$(CC)" AR="$(AR)" ./configure --enable-static --disable-shared --host=$(CROSSPREFIX) --prefix=$(LIBDIR) --disable-extra-programs && make && make install
+
+$(LIBVPXFILES): $(LIBVPXTARGZ)
+	tar xzf $(LIBVPXTARGZ)
+ifeq ($(DPTARGET),win32)
+	cd $(LIBVPXDIR) && LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86-win32-gcc && make && make install
+else
+ifeq ($(DPTARGET),win64)
+	cd $(LIBVPXDIR) && LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86_64-win64-gcc && make && make install
+else
+ifeq ($(DPTARGET),linux64)
+	cd $(LIBVPXDIR) && LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86_64-linux-gcc && make && make install
+else
+ifeq ($(DPTARGET),linux32)
+	cd $(LIBVPXDIR) && LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86-linux-gcc && make && make install
+else
+ifeq ($(DPTARGET),mac64)
+	cd $(LIBVPXDIR) && LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86_64-darwin14-gcc && make && make install
+else
+ifeq ($(DPTARGET),mac32)
+	cd $(LIBVPXDIR) && LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86-darwin14-gcc && make && make install
+else
+ifeq ($(DPTARGET),linux-arm64)
+	cd $(LIBVPXDIR) && LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=arm64-linux-gcc && make && make install
+endif
+endif
+endif
+endif
+endif
+endif
+endif
 
 $(CURLFILES): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)
@@ -316,7 +355,7 @@ endif
 endif
 
 clean:
-	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) $(LIBMICROHTTPDDIR) $(LIBSAMPLERATEDIR) $(OPUSDIR)
+	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) $(LIBMICROHTTPDDIR) $(LIBSAMPLERATEDIR) $(OPUSDIR) $(LIBVPXDIR)
 	rm -rf $(LIBDIR)
 	cd $(DPDIR) && make clean
 

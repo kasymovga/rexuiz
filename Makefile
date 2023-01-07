@@ -37,7 +37,11 @@ ifeq ($(shell uname -s),Darwin)
 ifeq ($(shell uname -m),x86_64)
 DPTARGET=mac64
 else
+ifeq ($(shell uname -m),arm64)
+DPTARGET=mac-arm64
+else
 DPTARGET=mac32
+endif
 endif
 else
 ifeq ($(shell uname -m),x86_64)
@@ -130,6 +134,10 @@ DPTARGET_MAC=y
 endif
 ifeq ($(DPTARGET),mac64)
 ARCHSUFFIX=x86_64
+DPTARGET_MAC=y
+endif
+ifeq ($(DPTARGET),mac-arm64)
+ARCHSUFFIX=arm64
 DPTARGET_MAC=y
 endif
 ifeq ($(DPTARGET),android)

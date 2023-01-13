@@ -270,7 +270,7 @@ $(LIBOGGFILES): $(LIBOGGTARGZ)
 $(LIBVORBISFILES): $(LIBVORBISTARGZ) $(LIBOGGFILES)
 	tar xzf $(LIBVORBISTARGZ)
 ifeq ($(DPTARGET),android)
-	sed -i 's/-mno-ieee-fp//' $(LIBVORBISDIR)/configure
+	sed -i.bak 's/-mno-ieee-fp//' $(LIBVORBISDIR)/configure
 endif
 	cd $(LIBVORBISDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
 
@@ -280,7 +280,8 @@ $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
 	mv $(LIBTHEORADIR)/win32/xmingw32/libtheoradec-all.def.fixed $(LIBTHEORADIR)/win32/xmingw32/libtheoradec-all.def
 	tr -d '\015' < $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def > $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed
 	mv $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def
-	cd $(LIBTHEORADIR) && sed -i s/cross_compiling=no/cross_compiling=yes/ configure && sed -i '263i |aarch64 \\'  config.sub
+	cd $(LIBTHEORADIR) && sed -i.bak s/cross_compiling=no/cross_compiling=yes/ configure
+	cd $(LIBTHEORADIR) && sed -i.bak '263i |aarch64 \\'  config.sub
 ifeq ($(DPTARGET_WIN),y)
 	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --disable-examples --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-examples && make && make install
 else
@@ -314,7 +315,7 @@ endif
 	cd $(SDLDIR) && patch -p1 < ../SDL2.patch
 	cd $(SDLDIR)/buildtree && CC="$(CC) -static-libstdc++" CXX="$(CXX) -static-libstdc++" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" cmake -DANDROID=1 -DCMAKE_LIBRARY_PATH=${ANDROID_NDK_ROOT}/usr/lib/${CROSSPREFIX}/$(ANDROID_ABI)/ -DANDROID_NDK=${ANDROID_NDK_HOME} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(LIBDIR) -DCMAKE_CROSSCOMPILING=1 -DIMPORTED_NO_SONAME=1 -DNO_SONAME=1 .. && make && make install
 	#cd $(SDLDIR) && CC="$(CC) -static-libstdc++" CXX="$(CXX) -static-libstdc++" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --oldincludedir=$(LIBDIR)/include --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --disable-static --enable-shared --prefix=$(LIBDIR) --disable-libsamplerate --disable-pulseaudio --disable-video-x11 --disable-video-wayland --disable-video-kmsdrm --disable-pipewire && make && make install
-	sed -i 's/-I\/usr\/include//' $(LIBDIR)/bin/sdl2-config
+	sed -i.bak 's/-I\/usr\/include//' $(LIBDIR)/bin/sdl2-config
 	cd $(SDLDIR)/src/hidapi/android/ && $(CXX) -O2 -Wall -I$(LIBDIR)/include `$(LIBDIR)/bin/sdl2-config --cflags` -L$(LIBDIR)/lib hid.cpp -static-libstdc++ `$(LIBDIR)/bin/sdl2-config --libs` -llog -shared -o $(HIDAPIFILES)
 else
 	#cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --disable-video-wayland --disable-pulseaudio --disable-video-kmsdrm --disable-pipewire --prefix=$(LIBDIR) && make && make install

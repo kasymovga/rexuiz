@@ -281,7 +281,7 @@ $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
 	tr -d '\015' < $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def > $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed
 	mv $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def
 	cd $(LIBTHEORADIR) && sed -i.bak s/cross_compiling=no/cross_compiling=yes/ configure
-	cd $(LIBTHEORADIR) && sed -i.bak '263i |aarch64 \\'  config.sub
+	cd $(LIBTHEORADIR) && patch -p1 < ../libtheora.patch config.sub
 ifeq ($(DPTARGET_WIN),y)
 	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --disable-examples --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-examples && make && make install
 else

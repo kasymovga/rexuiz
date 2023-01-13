@@ -1,0 +1,10 @@
+--- libtheora-1.1.1-orig/config.sub	2009-02-24 08:50:50.000000000 +0500
++++ libtheora-1.1.1/config.sub	2023-01-13 20:28:12.517139043 +0500
+@@ -260,6 +260,7 @@
+ 	| tahoe | thumb | tic80 | tron \
+ 	| v850 | v850e \
+ 	| we32k \
++	| aarch64 \
+ 	| x86 | xscale | xstormy16 | xtensa \
+ 	| z8k)
+ 		basic_machine=$basic_machine-unknown

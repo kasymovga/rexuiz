@@ -347,7 +347,6 @@ ifeq ($(DPTARGET),android)
 	rm -f Rexuiz/data/rexuiz-data.pk3
 	cd rexuiz.pk3 && zip -r ../rexuiz-android/app/src/main/assets/rexuiz/data/rexuiz.pk3 *
 	cd rexuiz-data.pk3 && zip -r ../rexuiz-android/app/src/main/assets/rexuiz/data/rexuiz-data.pk3 *
-	cd zmobile.pk3 && zip -r ../rexuiz-android/app/src/main/assets/rexuiz/data/zmobile.pk3 *
 else
 	make update-qc
 	mkdir -m 755 -p Rexuiz/sources

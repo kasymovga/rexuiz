@@ -1,4 +1,3 @@
 rexuiz-data.pk3
 rexuiz.pk3
-zmobile.pk3
 

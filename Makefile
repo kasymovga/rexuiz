@@ -343,8 +343,8 @@ stand-alone: stand-alone-data stand-alone-engine
 
 stand-alone-data: nexuiz-252.zip
 ifeq ($(DPTARGET),android)
-	rm -f Rexuiz/data/rexuiz.pk3
-	rm -f Rexuiz/data/rexuiz-data.pk3
+	rm -f rexuiz-android/app/src/main/assets/rexuiz/data/rexuiz.pk3
+	rm -f rexuiz-android/app/src/main/assets/rexuiz/data/rexuiz-data.pk3
 	cd rexuiz.pk3 && zip -r ../rexuiz-android/app/src/main/assets/rexuiz/data/rexuiz.pk3 *
 	cd rexuiz-data.pk3 && zip -r ../rexuiz-android/app/src/main/assets/rexuiz/data/rexuiz-data.pk3 *
 else

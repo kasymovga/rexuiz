@@ -66,7 +66,11 @@ ZLIBFILES=$(LIBDIR)/lib/libz.a
 JPEGTARGZ=jpegsrc.v9d.tar.gz
 JPEGDIR=jpeg-9d
 JPEGFILES=$(LIBDIR)/lib/libjpeg.a
+ifeq ($(DPTARGET),android)
+SDLDIR=SDL2-2.0.16
+else
 SDLDIR=SDL2-2.0.20
+endif
 SDLTARGZ=$(SDLDIR).tar.gz
 ifeq ($(DPTARGET),android)
 HIDAPIFILES=$(LIBDIR)/lib/libhidapi.so

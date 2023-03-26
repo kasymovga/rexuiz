@@ -358,8 +358,10 @@ else
 	mkdir -m 755 -p Rexuiz/data/dlcache
 	rm -f Rexuiz/data/rexuiz.pk3
 	rm -f Rexuiz/data/rexuiz-data.pk3
+	rm -f Rexuiz/data/rexuiz-demos.pk3
 	cd rexuiz.pk3 && zip -r ../Rexuiz/data/rexuiz.pk3 *
 	cd rexuiz-data.pk3 && zip -r ../Rexuiz/data/rexuiz-data.pk3 *
+	cd rexuiz-demos.pk3 && zip -r ../Rexuiz/data/rexuiz-demos.pk3 *
 	test -f Rexuiz/data/common-spog.pk3 || unzip -j nexuiz-252.zip Nexuiz/data/common-spog.pk3 -d Rexuiz/data
 	test -f Rexuiz/gpl.txt || unzip -j nexuiz-252.zip Nexuiz/gpl.txt -d Rexuiz
 	test -f Rexuiz/data/dlcache/csprogs.dat.408476.61283 || (rm -f csprogs.dat && unzip -j nexuiz-252.zip Nexuiz/data/data20091001.pk3 && unzip -j data20091001.pk3 csprogs.dat && mv csprogs.dat Rexuiz/data/dlcache/csprogs.dat.408476.61283 && rm -f data20091001.pk3)

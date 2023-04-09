@@ -302,6 +302,7 @@ $(LIBMICROHTTPDFILES): $(LIBMICROHTTPDTARGZ)
 
 $(SDLFILES): $(SDLTARGZ) $(SDLDEPS)
 	tar xzf $(SDLTARGZ)
+	sed -i.bak 's/EXTRA_CFLAGS="$$EXTRA_CFLAGS -Wdeclaration-after-statement -Werror=declaration-after-statement"/EXTRA_CFLAGS="$$EXTRA_CFLAGS -Wdeclaration-after-statement"/' $(SDLDIR)/configure
 ifeq ($(DPTARGET_WIN),y)
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" host_os=mingw CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --enable-libsamplerate --disable-libsamplerate-shared --prefix=$(LIBDIR)
 	cd $(SDLDIR) && make

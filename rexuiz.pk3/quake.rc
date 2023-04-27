@@ -1,6 +1,5 @@
 exec default.cfg
 exec config.cfg
-exec data/campaign.cfg
 exec autoexec.cfg
 stuffcmds
 //startdemos demos/demo1 demos/demo2 demos/demo3

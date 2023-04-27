@@ -22,7 +22,7 @@ fail() {
 
 build() {
 	make DPTARGET=android clean
-	make DPTARGET=android CROSSPREFIX="$1" CXX="$2-clang++ -fPIC -I$ANDROID_NDK_ROOT/include/" CC="$2-clang -fPIC -I$ANDROID_NDK_ROOT/include/" ANDROID_ARCH="$3" "ANDROID_ABI=$ANDROID_ABI" stand-alone-engine || fail
+	make DPTARGET=android CROSSPREFIX="$1" CXX="$2-clang++ -fPIC -I$ANDROID_NDK_ROOT/include/" CC="$2-clang -fPIC -I$ANDROID_NDK_ROOT/include/" ANDROID_ARCH="$3" "ANDROID_ABI=$ANDROID_ABI" AR=llvm-ar RANLIB=llvm-ranlib stand-alone-engine || fail
 }
 
 build i686-linux-android    "i686-linux-android$ANDROID_ABI"       x86

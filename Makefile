@@ -37,7 +37,11 @@ ifeq ($(shell uname -s),Darwin)
 ifeq ($(shell uname -m),x86_64)
 DPTARGET=mac64
 else
+ifeq ($(shell uname -m),arm64)
+DPTARGET=mac-arm64
+else
 DPTARGET=mac32
+endif
 endif
 else
 ifeq ($(shell uname -m),x86_64)
@@ -62,7 +66,11 @@ ZLIBFILES=$(LIBDIR)/lib/libz.a
 JPEGTARGZ=jpegsrc.v9d.tar.gz
 JPEGDIR=jpeg-9d
 JPEGFILES=$(LIBDIR)/lib/libjpeg.a
+ifeq ($(DPTARGET),android)
+SDLDIR=SDL2-2.0.16
+else
 SDLDIR=SDL2-2.0.20
+endif
 SDLTARGZ=$(SDLDIR).tar.gz
 ifeq ($(DPTARGET),android)
 HIDAPIFILES=$(LIBDIR)/lib/libhidapi.so
@@ -135,6 +143,10 @@ DPTARGET_MAC=y
 endif
 ifeq ($(DPTARGET),mac64)
 ARCHSUFFIX=x86_64
+DPTARGET_MAC=y
+endif
+ifeq ($(DPTARGET),mac-arm64)
+ARCHSUFFIX=arm64
 DPTARGET_MAC=y
 endif
 ifeq ($(DPTARGET),android)
@@ -301,7 +313,7 @@ $(LIBOGGFILES): $(LIBOGGTARGZ)
 $(LIBVORBISFILES): $(LIBVORBISTARGZ) $(LIBOGGFILES)
 	tar xzf $(LIBVORBISTARGZ)
 ifeq ($(DPTARGET),android)
-	sed -i 's/-mno-ieee-fp//' $(LIBVORBISDIR)/configure
+	sed -i.bak 's/-mno-ieee-fp//' $(LIBVORBISDIR)/configure
 endif
 	cd $(LIBVORBISDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
 
@@ -311,7 +323,8 @@ $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
 	mv $(LIBTHEORADIR)/win32/xmingw32/libtheoradec-all.def.fixed $(LIBTHEORADIR)/win32/xmingw32/libtheoradec-all.def
 	tr -d '\015' < $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def > $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed
 	mv $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def.fixed $(LIBTHEORADIR)/win32/xmingw32/libtheoraenc-all.def
-	cd $(LIBTHEORADIR) && sed -i s/cross_compiling=no/cross_compiling=yes/ configure && sed -i '263i |aarch64 \\'  config.sub
+	cd $(LIBTHEORADIR) && sed -i.bak s/cross_compiling=no/cross_compiling=yes/ configure
+	cd $(LIBTHEORADIR) && patch -p1 < ../libtheora.patch config.sub
 ifeq ($(DPTARGET_WIN),y)
 	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --disable-examples --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-examples && make && make install
 else
@@ -328,6 +341,7 @@ $(LIBMICROHTTPDFILES): $(LIBMICROHTTPDTARGZ)
 
 $(SDLFILES): $(SDLTARGZ) $(SDLDEPS)
 	tar xzf $(SDLTARGZ)
+	sed -i.bak 's/EXTRA_CFLAGS="$$EXTRA_CFLAGS -Wdeclaration-after-statement -Werror=declaration-after-statement"/EXTRA_CFLAGS="$$EXTRA_CFLAGS -Wdeclaration-after-statement"/' $(SDLDIR)/configure
 ifeq ($(DPTARGET_WIN),y)
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" host_os=mingw CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --enable-libsamplerate --disable-libsamplerate-shared --prefix=$(LIBDIR)
 	cd $(SDLDIR) && make
@@ -345,7 +359,7 @@ endif
 	cd $(SDLDIR) && patch -p1 < ../SDL2.patch
 	cd $(SDLDIR)/buildtree && CC="$(CC) -static-libstdc++" CXX="$(CXX) -static-libstdc++" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" cmake -DANDROID=1 -DCMAKE_LIBRARY_PATH=${ANDROID_NDK_ROOT}/usr/lib/${CROSSPREFIX}/$(ANDROID_ABI)/ -DANDROID_NDK=${ANDROID_NDK_HOME} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(LIBDIR) -DCMAKE_CROSSCOMPILING=1 -DIMPORTED_NO_SONAME=1 -DNO_SONAME=1 .. && make && make install
 	#cd $(SDLDIR) && CC="$(CC) -static-libstdc++" CXX="$(CXX) -static-libstdc++" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --oldincludedir=$(LIBDIR)/include --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --disable-static --enable-shared --prefix=$(LIBDIR) --disable-libsamplerate --disable-pulseaudio --disable-video-x11 --disable-video-wayland --disable-video-kmsdrm --disable-pipewire && make && make install
-	sed -i 's/-I\/usr\/include//' $(LIBDIR)/bin/sdl2-config
+	sed -i.bak 's/-I\/usr\/include//' $(LIBDIR)/bin/sdl2-config
 	cd $(SDLDIR)/src/hidapi/android/ && $(CXX) -O2 -Wall -I$(LIBDIR)/include `$(LIBDIR)/bin/sdl2-config --cflags` -L$(LIBDIR)/lib hid.cpp -static-libstdc++ `$(LIBDIR)/bin/sdl2-config --libs` -llog -shared -o $(HIDAPIFILES)
 else
 	#cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --disable-video-wayland --disable-pulseaudio --disable-video-kmsdrm --disable-pipewire --prefix=$(LIBDIR) && make && make install
@@ -373,11 +387,10 @@ stand-alone: stand-alone-data stand-alone-engine
 
 stand-alone-data: nexuiz-252.zip
 ifeq ($(DPTARGET),android)
-	rm -f Rexuiz/data/rexuiz.pk3
-	rm -f Rexuiz/data/rexuiz-data.pk3
+	rm -f rexuiz-android/app/src/main/assets/rexuiz/data/rexuiz.pk3
+	rm -f rexuiz-android/app/src/main/assets/rexuiz/data/rexuiz-data.pk3
 	cd rexuiz.pk3 && zip -r ../rexuiz-android/app/src/main/assets/rexuiz/data/rexuiz.pk3 *
 	cd rexuiz-data.pk3 && zip -r ../rexuiz-android/app/src/main/assets/rexuiz/data/rexuiz-data.pk3 *
-	cd zmobile.pk3 && zip -r ../rexuiz-android/app/src/main/assets/rexuiz/data/zmobile.pk3 *
 else
 	make update-qc
 	mkdir -m 755 -p Rexuiz/sources
@@ -385,8 +398,10 @@ else
 	mkdir -m 755 -p Rexuiz/data/dlcache
 	rm -f Rexuiz/data/rexuiz.pk3
 	rm -f Rexuiz/data/rexuiz-data.pk3
+	rm -f Rexuiz/data/rexuiz-demos.pk3
 	cd rexuiz.pk3 && zip -r ../Rexuiz/data/rexuiz.pk3 *
 	cd rexuiz-data.pk3 && zip -r ../Rexuiz/data/rexuiz-data.pk3 *
+	cd rexuiz-demos.pk3 && zip -r ../Rexuiz/data/rexuiz-demos.pk3 *
 	test -f Rexuiz/data/common-spog.pk3 || unzip -j nexuiz-252.zip Nexuiz/data/common-spog.pk3 -d Rexuiz/data
 	test -f Rexuiz/gpl.txt || unzip -j nexuiz-252.zip Nexuiz/gpl.txt -d Rexuiz
 	test -f Rexuiz/data/dlcache/csprogs.dat.408476.61283 || (rm -f csprogs.dat && unzip -j nexuiz-252.zip Nexuiz/data/data20091001.pk3 && unzip -j data20091001.pk3 csprogs.dat && mv csprogs.dat Rexuiz/data/dlcache/csprogs.dat.408476.61283 && rm -f data20091001.pk3)
@@ -464,5 +479,4 @@ gmqcc:
 
 update-qc: gmqcc
 	cd 1vs1 && make QCC=../../../gmqcc/gmqcc SV_PROGNAME=progs.dat CL_PROGNAME=csprogs.dat CFG_NAME=rexuiz-extra.cfg SET_CURL_PACKAGE=no
-	install -m 644 1vs1/progs.dat 1vs1/csprogs.dat 1vs1/menu.dat 1vs1/rexuiz-extra.cfg rexuiz.pk3/
-	install -m 644 1vs1/translations/*.po 1vs1/rexuiz-extra.cfg rexuiz-data.pk3/
+	install -m 644 1vs1/progs.dat 1vs1/csprogs.dat 1vs1/menu.dat 1vs1/rexuiz-extra.cfg 1vs1/translations/*.po rexuiz.pk3/

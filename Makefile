@@ -270,6 +270,13 @@ $(OPUSFILES): $(OPUSTARGZ)
 
 $(LIBVPXFILES): $(LIBVPXTARGZ)
 	tar xzf $(LIBVPXTARGZ)
+ifeq ($(DPTARGET_MAC),y)
+	sed -i.bak s/cstdint/stdint.h/ $(LIBVPXDIR)/vp8/vp8_ratectrl_rtc.h
+	sed -i.bak 's/std::unique_ptr<\([^>]*\)>/\1*/' $(LIBVPXDIR)/vp8/vp8_ratectrl_rtc.h
+	sed -i.bak s/nullptr/NULL/ $(LIBVPXDIR)/vp8/vp8_ratectrl_rtc.h
+	sed -i.bak 's/std::unique_ptr<\([^>]*\)>/\1*/' $(LIBVPXDIR)/vp8/vp8_ratectrl_rtc.cc
+	sed -i.bak s/nullptr/NULL/ $(LIBVPXDIR)/vp8/vp8_ratectrl_rtc.cc
+endif
 ifeq ($(DPTARGET),win32)
 	cd $(LIBVPXDIR) && LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86-win32-gcc && make && make install
 else

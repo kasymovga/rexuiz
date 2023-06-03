@@ -9,12 +9,14 @@ CXX=$(CROSSPREFIX)-g++
 AR=$(CROSSPREFIX)-ar
 RANLIB=$(CROSSPREFIX)-ranlib
 STRIP=$(CROSSPREFIX)-strip
+WINDRES=$(CROSSPREFIX)-windres
 else
 CC=gcc
 CXX=g++
 AR=ar
 RANLIB=ranlib
 STRIP=strip
+WINDRES=windres
 endif
 LD=$(CC)
 

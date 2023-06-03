@@ -137,14 +137,17 @@ endif
 ifeq ($(DPTARGET),mac32)
 ARCHSUFFIX=i686
 DPTARGET_MAC=y
+APPNAME=Rexuiz-i386.app
 endif
 ifeq ($(DPTARGET),mac64)
 ARCHSUFFIX=x86_64
 DPTARGET_MAC=y
+APPNAME=Rexuiz.app
 endif
 ifeq ($(DPTARGET),mac-arm64)
 ARCHSUFFIX=arm64
 DPTARGET_MAC=y
+APPNAME=Rexuiz-arm64.app
 endif
 ifeq ($(DPTARGET),android)
 EXTRALIBS_LINKONLY=$(LIBOGGFILES) $(LIBVORBISFILES)
@@ -289,12 +292,12 @@ $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
 	cd $(LIBTHEORADIR) && sed -i.bak s/cross_compiling=no/cross_compiling=yes/ configure
 	cd $(LIBTHEORADIR) && patch -p1 < ../libtheora.patch config.sub
 ifeq ($(DPTARGET_WIN),y)
-	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --disable-examples --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-examples && make && make install
+	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no RANLIB="$(RANLIB)" AR="$(AR)" CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --disable-examples --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-examples && make && make install
 else
 ifeq ($(ARCHSUFFIX),x86_64)
-	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --build=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) && make && make install
+	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no RANLIB="$(RANLIB)" AR="$(AR)" CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --build=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) && make && make install
 else
-	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --build=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) --disable-asm && make && make install
+	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no RANLIB="$(RANLIB)" AR="$(AR)" CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --build=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) --disable-asm && make && make install
 endif
 endif
 
@@ -423,15 +426,15 @@ ifeq ($(DPTARGET_LINUX),y)
 	install -m755 scripts/update.sh Rexuiz/server/update.sh
 endif
 ifeq ($(DPTARGET_MAC),y)
-	mkdir -m755 -p Rexuiz/Rexuiz.app/Contents/MacOS
-	mkdir -m755 -p Rexuiz/Rexuiz.app/Contents/Resources/English.lproj
-	install -m 755 scripts/Rexuiz.app/Contents/MacOS/rexuiz-dprm-sdl Rexuiz/Rexuiz.app/Contents/MacOS/
-	install -m 755 scripts/Rexuiz.app/Contents/PkgInfo Rexuiz/Rexuiz.app/Contents/
-	install -m 755 scripts/Rexuiz.app/Contents/Resources/English.lproj/InfoPlist.strings Rexuiz/Rexuiz.app/Contents/Resources/English.lproj/
-	install -m 755 scripts/Rexuiz.app/Contents/Resources/Rexuiz.icns Rexuiz/Rexuiz.app/Contents/Resources/
-	install -m 755 scripts/Rexuiz.app/Contents/Info.plist Rexuiz/Rexuiz.app/Contents/
-	install -m 755 $(DPDIR)/rexuiz-sdl Rexuiz/Rexuiz.app/Contents/MacOS/rexuiz-dprm-sdl-bin
-	install -m 755 $(FREETYPEFILES) Rexuiz/Rexuiz.app/Contents/MacOS/
+	mkdir -m755 -p Rexuiz/$(APPNAME)/Contents/MacOS
+	mkdir -m755 -p Rexuiz/$(APPNAME)/Contents/Resources/English.lproj
+	install -m 755 scripts/Rexuiz.app/Contents/MacOS/rexuiz-dprm-sdl Rexuiz/$(APPNAME)/Contents/MacOS/
+	install -m 755 scripts/Rexuiz.app/Contents/PkgInfo Rexuiz/$(APPNAME)/Contents/
+	install -m 755 scripts/Rexuiz.app/Contents/Resources/English.lproj/InfoPlist.strings Rexuiz/$(APPNAME)/Contents/Resources/English.lproj/
+	install -m 755 scripts/Rexuiz.app/Contents/Resources/Rexuiz.icns Rexuiz/$(APPNAME)/Contents/Resources/
+	install -m 755 scripts/Rexuiz.app/Contents/Info.plist Rexuiz/$(APPNAME)/Contents/
+	install -m 755 $(DPDIR)/rexuiz-sdl Rexuiz/$(APPNAME)/Contents/MacOS/rexuiz-dprm-sdl-bin
+	install -m 755 $(FREETYPEFILES) Rexuiz/$(APPNAME)/Contents/MacOS/
 endif
 endif
 

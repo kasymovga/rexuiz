@@ -1,5 +1,5 @@
---- libtheora-1.1.1-orig/config.sub	2009-02-24 08:50:50.000000000 +0500
-+++ libtheora-1.1.1/config.sub	2023-01-13 20:28:12.517139043 +0500
+--- libtheora-1.1.1-patched/config.sub	2023-06-03 22:02:31.899835708 +0500
++++ libtheora-1.1.1/config.sub	2009-02-24 08:50:50.000000000 +0500
 @@ -260,6 +260,7 @@
  	| tahoe | thumb | tic80 | tron \
  	| v850 | v850e \
@@ -8,3 +8,12 @@
  	| x86 | xscale | xstormy16 | xtensa \
  	| z8k)
  		basic_machine=$basic_machine-unknown
+@@ -290,7 +289,7 @@
+ 	| alpha-* | alphaev[4-8]-* | alphaev56-* | alphaev6[78]-* \
+ 	| alpha64-* | alpha64ev[4-8]-* | alpha64ev56-* | alpha64ev6[78]-* \
+ 	| alphapca5[67]-* | alpha64pca5[67]-* | arc-* \
+-	| arm-*  | armbe-* | armle-* | armeb-* | armv*-* \
++	| aarch64-* | arm-*  | armbe-* | armle-* | armeb-* | armv*-* \
+ 	| avr-* \
+ 	| bs2000-* \
+ 	| c[123]* | c30-* | [cjt]90-* | c54x-* \

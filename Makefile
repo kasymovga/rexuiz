@@ -1,4 +1,4 @@
-.PHONY: all clean engine curl freetype stand-alone stand-alone-data stand-alone-engine update-qc gmqcc
+.PHONY: all clean engine curl freetype stand-alone stand-alone-data stand-alone-engine update-qc gmqcc flrexuizlauncher
 PWD=$(shell pwd)
 
 DPDIR=DarkPlacesRM
@@ -62,12 +62,15 @@ LIBSAMPLERATEFILES=$(LIBDIR)/lib/libsamplerate.a
 LIBPNGDIR=libpng-1.6.36
 LIBPNGTARGZ=$(LIBPNGDIR).tar.gz
 LIBPNGFILES=$(LIBDIR)/lib/libpng.a $(LIBDIR)/lib/libpng16.a
+LIBPNGFILES_FLRL=$(LIBDIR_FLRL)/lib/libpng.a $(LIBDIR_FLRL)/lib/libpng16.a
 ZLIBDIR=zlib-1.2.13
 ZLIBTARGZ=$(ZLIBDIR).tar.gz
 ZLIBFILES=$(LIBDIR)/lib/libz.a
+ZLIBFILES_FLRL=$(LIBDIR_FLRL)/lib/libz.a
 JPEGTARGZ=jpegsrc.v9d.tar.gz
 JPEGDIR=jpeg-9d
 JPEGFILES=$(LIBDIR)/lib/libjpeg.a
+JPEGFILES_FLRL=$(LIBDIR_FLRL)/lib/libjpeg.a
 ifeq ($(DPTARGET),android)
 SDLDIR=SDL2-2.0.16
 else
@@ -96,6 +99,12 @@ LIBTHEORATARGZ=$(LIBTHEORADIR).tar.gz
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.a $(LIBDIR)/lib/libtheoraenc.a
 LIBMICROHTTPDDIR=libmicrohttpd-0.9.75
 LIBMICROHTTPDTARGZ=$(LIBMICROHTTPDDIR).tar.gz
+MBEDTLSVERSION=3.4.0
+MBEDTLSDIR=mbedtls-$(MBEDTLSVERSION)
+MBEDTLSTARGZ=$(MBEDTLSDIR).tar.gz
+FLTKVERSION=1.3.8
+FLTKDIR=fltk-$(FLTKVERSION)
+FLTKTARGZ=$(FLTKDIR)-sources.tar.gz
 OPUSDIR=opus-1.3.1
 OPUSTARGZ=$(OPUSDIR).tar.gz
 OPUSFILES=$(LIBDIR)/lib/libopus.a
@@ -180,6 +189,10 @@ EXTRALIBS=$(CURLFILES) $(FREETYPEFILES)
 endif
 endif
 endif
+LIBDIR_FLRL=$(PWD)/libs-flrl/$(DPTARGET)/
+CURLFILES_FLRL=$(LIBDIR_FLRL)/lib/libcurl.a
+FLTKFILES_FLRL=$(LIBDIR_FLRL)/lib/libfltk.a
+MBEDTLSFILES_FLRL=$(LIBDIR_FLRL)/lib/libmbedtls.a
 
 SDLFILES_FORDP=$(SDLFILES)
 
@@ -188,6 +201,14 @@ all: stand-alone
 
 nexuiz-252.zip:
 	wget -O temp_$@ "http://downloads.sourceforge.net/project/nexuiz/NexuizRelease/Nexuiz%202.5.2/$@"
+	mv temp_$@ $@
+
+$(MBEDTLSTARGZ):
+	wget -O temp_$@ "https://github.com/Mbed-TLS/mbedtls/archive/refs/tags/v$(MBEDTLSVERSION).tar.gz"
+	mv temp_$@ $@
+
+$(FLTKTARGZ):
+	wget -O temp_$@ "https://www.fltk.org/pub/fltk/$(FLTKVERSION)/fltk-$(FLTKVERSION)-source.tar.gz"
 	mv temp_$@ $@
 
 $(CURLTARGZ):
@@ -242,6 +263,10 @@ $(LIBPNGFILES): $(LIBPNGTARGZ) $(ZLIBFILES)
 	tar xzf $(LIBPNGTARGZ)
 	cd $(LIBPNGDIR) && CC="$(CC) -I$(LIBDIR)/include -L$(LIBDIR)/lib" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
 
+$(LIBPNGFILES_FLRL): $(LIBPNGTARGZ) $(ZLIBFILES_FLRL)
+	tar xzf $(LIBPNGTARGZ)
+	cd $(LIBPNGDIR) && CC="$(CC) -I$(LIBDIR_FLRL)/include -L$(LIBDIR_FLRL)/lib" CFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib" ./configure --host=$(CROSSPREFIX) --disable-shared --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
+
 $(LIBSAMPLERATEFILES): $(LIBSAMPLERATETARXZ)
 	tar xJf $(LIBSAMPLERATETARXZ)
 	cd $(LIBSAMPLERATEDIR) && CFLAGS="-std=c99" ./configure --host=$(CROSSPREFIX) --disable-sndfile --disable-alsa --disable-fftw --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
@@ -252,9 +277,19 @@ $(ZLIBFILES): $(ZLIBTARGZ)
 	cd $(ZLIBDIR) && make && make install
 	$(RANLIB) $(LIBDIR)/lib/libz.a
 
+$(ZLIBFILES_FLRL): $(ZLIBTARGZ)
+	tar xzf $(ZLIBTARGZ)
+	cd $(ZLIBDIR) && CC="$(CC)" AR="$(AR)" RANLIB="$(RANLIB)" ./configure --static --prefix=$(LIBDIR_FLRL)
+	cd $(ZLIBDIR) && make && make install
+	$(RANLIB) $(LIBDIR_FLRL)/lib/libz.a
+
 $(JPEGFILES): $(JPEGTARGZ)
 	tar xzf $(JPEGTARGZ)
 	cd $(JPEGDIR) && CC="$(CC)" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
+
+$(JPEGFILES_FLRL): $(JPEGTARGZ)
+	tar xzf $(JPEGTARGZ)
+	cd $(JPEGDIR) && CC="$(CC)" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
 
 $(FREETYPEFILES): $(FREETYPETARGZ)
 	tar xzf $(FREETYPETARGZ)
@@ -334,9 +369,40 @@ endif
 endif
 endif
 
+$(FLTKFILES_FLRL): $(FLTKTARGZ) $(LIBPNGFILES_FLRL) $(JPEGFILES_FLRL)
+	rm -rf "$(FLTKDIR)"
+	tar xzf $(FLTKTARGZ)
+	mkdir -p "$(FLTKDIR)/test/editor.app/Contents/"
+	cd $(FLTKDIR) && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" LDFLAGS="-L$(LIBDIR_FLRL)/lib" CC="$(CC)" CFLAGS="-I$(LIBDIR_FLRL)/include" CXXFLAGS="-I$(LIBDIR_FLRL)/include" CXX="$(CXX) -I$(LIBDIR_FLRL)/include -L$(LIBDIR_FLRL)/lib" fltk_cross_compiling=yes ./configure --disable-shared --enable-static --host=$(CROSSPREFIX) --prefix=$(LIBDIR_FLRL) && make && make install
+
+$(MBEDTLSFILES_FLRL): $(MBEDTLSTARGZ)
+	rm -rf "$(MBEDTLSDIR)"
+	tar xzf $(MBEDTLSTARGZ)
+	cd $(MBEDTLSDIR) && make AR="$(AR)" CC="$(CC)" lib
+	cd $(MBEDTLSDIR) && cp -a include "$(LIBDIR_FLRL)/"
+	cd $(MBEDTLSDIR) && cp library/*.a "$(LIBDIR_FLRL)/lib/"
+
+$(CURLFILES_FLRL): $(CURLTARGZ)
+	tar xzf $(CURLTARGZ)
+	sed -i.bak 's/tst_cflags="yes"/tst_clfags="no"/' "$(CURLDIR)/configure"
+	cd $(CURLDIR) && CC="$(CC)" ./configure --with-mbedtls --without-ssl --without-gnutls --without-zlib --disable-ldap --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
+
+flrexuizlauncher: $(FLTKFILES_FLRL) $(MBEDTLSFILES_FLRL) $(CURLFILES_FLRL)
+	cd flrexuizlauncher && make clean
+ifeq ($(DPTARGET_WIN),y)
+	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make TARGET=windows CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib" WINDRES="$(WINDRES)"
+else
+ifeq ($(DPTARGET_MAC),y)
+	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make TARGET=mac CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
+else
+	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make TARGET=linux CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
+endif
+endif
+
 clean:
 	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) $(LIBMICROHTTPDDIR) $(LIBSAMPLERATEDIR) $(OPUSDIR)
 	rm -rf $(LIBDIR)
+	rm -rf $(LIBDIR_FLRL)
 	cd $(DPDIR) && make clean
 
 engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY) $(LIBMICROHTTPDFILES) $(OPUSFILES)

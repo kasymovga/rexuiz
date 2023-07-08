@@ -10,3 +10,6 @@
 [submodule "gmqcc"]
 	path = gmqcc
 	url = https://github.com/kasymovga/gmqcc
+[submodule "flrexuizlauncher"]
+	path = flrexuizlauncher
+	url = https://github.com/kasymovga/flrexuizlauncher

@@ -388,14 +388,26 @@ $(CURLFILES_FLRL): $(CURLTARGZ)
 	cd $(CURLDIR) && CC="$(CC)" ./configure --with-mbedtls --without-ssl --without-gnutls --without-zlib --disable-ldap --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
 
 flrexuizlauncher: $(FLTKFILES_FLRL) $(MBEDTLSFILES_FLRL) $(CURLFILES_FLRL)
-	cd flrexuizlauncher && make clean
 ifeq ($(DPTARGET_WIN),y)
+	cd flrexuizlauncher && make TARGET=windows clean
 	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make TARGET=windows CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib" WINDRES="$(WINDRES)"
+	cp flrexuizlauncher/flrexuizlauncher.exe Rexuiz/RexuizLauncher.Windows-$(ARCHSUFFIX).exe
 else
 ifeq ($(DPTARGET_MAC),y)
+	cd flrexuizlauncher && make TARGET=mac clean
 	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make TARGET=mac CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
+ifneq ($(RCODESIGN),)
+	$(RCODESIGN) sign flrexuizlauncher/RexuizLauncher.app/Contents/MacOS/flrexuizlauncher
+endif
+ifeq ($(DPTARGET),mac-arm64)
+	cp -a flrexuizlauncher/RexuizLauncher.app/ Rexuiz/RexuizLauncher-arm64.app/
 else
+	cp -a flrexuizlauncher/RexuizLauncher.app/ Rexuiz/RexuizLauncher.app/
+endif
+else
+	cd flrexuizlauncher && make TARGET=linux clean
 	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make TARGET=linux CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
+	cp flrexuizlauncher/flrexuizlauncher Rexuiz/RexuizLauncher.Linux-$(ARCHSUFFIX)
 endif
 endif
 

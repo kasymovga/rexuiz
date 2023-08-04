@@ -457,6 +457,7 @@ else
 endif
 
 stand-alone-engine: engine $(EXTRALIBS)
+	mkdir -p Rexuiz/server
 ifeq ($(DPTARGET),android)
 ifeq ($(ANDROID_ARCH),)
 	echo ANDROID_ARCH must be set
@@ -472,7 +473,6 @@ else
 	install -m644 $(SDLDIR)/android-project/app/src/main/java/org/libsdl/app/*.java rexuiz-android/app/src/main/java/org/libsdl/app/
 endif
 else
-	mkdir -m 755 -p Rexuiz/sources
 ifeq ($(DPTARGET_WIN),y)
 	install -m644 $(DPDIR)/rexuiz-sdl-$(ARCHSUFFIX).exe Rexuiz/rexuiz-sdl-$(ARCHSUFFIX).exe
 ifeq ($(ARCHSUFFIX), x86_64)

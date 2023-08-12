@@ -261,10 +261,12 @@ $(OPUSTARGZ):
 	mv temp_$@ $@
 
 $(LIBPNGFILES): $(LIBPNGTARGZ) $(ZLIBFILES)
+	rm -rf $(LIBPNGDIR)
 	tar xzf $(LIBPNGTARGZ)
 	cd $(LIBPNGDIR) && CC="$(CC) -I$(LIBDIR)/include -L$(LIBDIR)/lib" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
 
 $(LIBPNGFILES_FLRL): $(LIBPNGTARGZ) $(ZLIBFILES_FLRL)
+	rm -rf $(LIBPNGDIR)
 	tar xzf $(LIBPNGTARGZ)
 	cd $(LIBPNGDIR) && CC="$(CC) -I$(LIBDIR_FLRL)/include -L$(LIBDIR_FLRL)/lib" CFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib" ./configure --host=$(CROSSPREFIX) --disable-shared --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
 
@@ -285,10 +287,12 @@ $(ZLIBFILES_FLRL): $(ZLIBTARGZ)
 	$(RANLIB) $(LIBDIR_FLRL)/lib/libz.a
 
 $(JPEGFILES): $(JPEGTARGZ)
+	rm -rf $(JPEGDIR)
 	tar xzf $(JPEGTARGZ)
 	cd $(JPEGDIR) && CC="$(CC)" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
 
 $(JPEGFILES_FLRL): $(JPEGTARGZ)
+	rm -rf $(JPEGDIR)
 	tar xzf $(JPEGTARGZ)
 	cd $(JPEGDIR) && CC="$(CC)" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
 
@@ -313,6 +317,7 @@ $(LIBOGGFILES): $(LIBOGGTARGZ)
 	cd $(LIBOGGDIR) && CC="$(CC)" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
 
 $(LIBVORBISFILES): $(LIBVORBISTARGZ) $(LIBOGGFILES)
+	rm -rf $(LIBVORBISDIR)
 	tar xzf $(LIBVORBISTARGZ)
 ifeq ($(DPTARGET),android)
 	sed -i.bak 's/-mno-ieee-fp//' $(LIBVORBISDIR)/configure
@@ -320,6 +325,7 @@ endif
 	cd $(LIBVORBISDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
 
 $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
+	rm -rf $(LIBTHEORADIR)
 	tar xzf $(LIBTHEORATARGZ)
 	tr -d '\015' < $(LIBTHEORADIR)/win32/xmingw32/libtheoradec-all.def > $(LIBTHEORADIR)/win32/xmingw32/libtheoradec-all.def.fixed
 	mv $(LIBTHEORADIR)/win32/xmingw32/libtheoradec-all.def.fixed $(LIBTHEORADIR)/win32/xmingw32/libtheoradec-all.def
@@ -338,10 +344,12 @@ endif
 endif
 
 $(LIBMICROHTTPDFILES): $(LIBMICROHTTPDTARGZ)
+	rm -rf $(LIBMICROHTTPDDIR)
 	tar xzf $(LIBMICROHTTPDTARGZ)
 	cd $(LIBMICROHTTPDDIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --disable-https --prefix=$(LIBDIR) && make && make install
 
 $(SDLFILES): $(SDLTARGZ) $(SDLDEPS)
+	rm -rf $(SDLDIR)
 	tar xzf $(SDLTARGZ)
 	sed -i.bak 's/EXTRA_CFLAGS="$$EXTRA_CFLAGS -Wdeclaration-after-statement -Werror=declaration-after-statement"/EXTRA_CFLAGS="$$EXTRA_CFLAGS -Wdeclaration-after-statement"/' $(SDLDIR)/configure
 ifeq ($(DPTARGET_WIN),y)
@@ -365,7 +373,7 @@ endif
 	cd $(SDLDIR)/src/hidapi/android/ && $(CXX) -O2 -Wall -I$(LIBDIR)/include `$(LIBDIR)/bin/sdl2-config --cflags` -L$(LIBDIR)/lib hid.cpp -static-libstdc++ `$(LIBDIR)/bin/sdl2-config --libs` -llog -shared -o $(HIDAPIFILES)
 else
 	#cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --disable-video-wayland --disable-pulseaudio --disable-video-kmsdrm --disable-pipewire --prefix=$(LIBDIR) && make && make install
-	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR) && make && make install
+	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR) --disable-pipewire --disable-libdecor && make && make install
 endif
 endif
 endif
@@ -421,6 +429,7 @@ clean:
 	cd $(DPDIR) && make clean
 
 engine: $(LIBPNGFILES) $(JPEGFILES) $(ZLIBFILES) $(SDLFILES_FORDP) $(EXTRALIBS_LINKONLY) $(LIBMICROHTTPDFILES) $(OPUSFILES)
+	cd $(DPDIR) && make clean $(DPMAKEOPTS)
 ifeq ($(DPTARGET),android)
 	cd $(DPDIR) && PKG_CONFIG_PATH="$(LIBDIR)/lib/pkgconfig" make android-rexuiz $(DPMAKEOPTS)
 else

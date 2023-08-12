@@ -275,6 +275,7 @@ $(LIBSAMPLERATEFILES): $(LIBSAMPLERATETARXZ)
 	cd $(LIBSAMPLERATEDIR) && CFLAGS="-std=c99" ./configure --host=$(CROSSPREFIX) --disable-sndfile --disable-alsa --disable-fftw --disable-shared --enable-static --prefix=$(LIBDIR) && make && make install
 
 $(ZLIBFILES): $(ZLIBTARGZ)
+	rm -rf $(ZLIBDIR)
 	tar xzf $(ZLIBTARGZ)
 	cd $(ZLIBDIR) && CC="$(CC)" AR="$(AR)" RANLIB="$(RANLIB)" ./configure --static --prefix=$(LIBDIR)
 	cd $(ZLIBDIR) && make && make install
@@ -313,6 +314,7 @@ else
 endif
 
 $(LIBOGGFILES): $(LIBOGGTARGZ)
+	rm -rf $(LIBOGGDIR)
 	tar xzf $(LIBOGGTARGZ)
 	cd $(LIBOGGDIR) && CC="$(CC)" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) && make && make install
 

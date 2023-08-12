@@ -109,7 +109,7 @@ OPUSDIR=opus-1.3.1
 OPUSTARGZ=$(OPUSDIR).tar.gz
 OPUSFILES=$(LIBDIR)/lib/libopus.a
 DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_LINK_PNG=shared SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_LIBMICROHTTPD=static DP_LINK_OGGVORBIS=static DP_LINK_ZLIB=static DP_LINK_JPEG=static DP_LINK_PNG=static DP_LINK_OPUS=static WINDRES=$(WINDRES) $(DPMAKEOPTS_EXTRA)
-FLRL_LINK_FLAGS_EXTRA?=
+FLRL_LINK_FLAGS_EXTRA ?=
 ifneq ($(DPTARGET),android)
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_SDL_STATIC=yes
 endif
@@ -390,13 +390,13 @@ $(CURLFILES_FLRL): $(CURLTARGZ)
 
 flrexuizlauncher: $(FLTKFILES_FLRL) $(MBEDTLSFILES_FLRL) $(CURLFILES_FLRL)
 ifeq ($(DPTARGET_WIN),y)
-	cd flrexuizlauncher && make LINK_FLAGS_EXTRA="$(FLRL_LINK_FLAGS_EXTRA)" TARGET=windows clean
-	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make TARGET=windows CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib" WINDRES="$(WINDRES)"
+	cd flrexuizlauncher && make TARGET=windows clean
+	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make LINK_FLAGS_EXTRA="$(FLRL_LINK_FLAGS_EXTRA)" TARGET=windows CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib" WINDRES="$(WINDRES)"
 	cp flrexuizlauncher/flrexuizlauncher.exe Rexuiz/RexuizLauncher.Windows-$(ARCHSUFFIX).exe
 else
 ifeq ($(DPTARGET_MAC),y)
-	cd flrexuizlauncher && make LINK_FLAGS_EXTRA="$(FLRL_LINK_FLAGS_EXTRA)" TARGET=mac clean
-	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make TARGET=mac CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
+	cd flrexuizlauncher && make TARGET=mac clean
+	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make LINK_FLAGS_EXTRA="$(FLRL_LINK_FLAGS_EXTRA)" TARGET=mac CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
 ifneq ($(RCODESIGN),)
 	$(RCODESIGN) sign flrexuizlauncher/RexuizLauncher.app/Contents/MacOS/flrexuizlauncher
 endif
@@ -406,8 +406,8 @@ else
 	cp -a flrexuizlauncher/RexuizLauncher.app/ Rexuiz/RexuizLauncher.app/
 endif
 else
-	cd flrexuizlauncher && make LINK_FLAGS_EXTRA="$(FLRL_LINK_FLAGS_EXTRA)" TARGET=linux clean
-	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make TARGET=linux CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
+	cd flrexuizlauncher && make TARGET=linux clean
+	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make LINK_FLAGS_EXTRA="$(FLRL_LINK_FLAGS_EXTRA)" TARGET=linux CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
 	cp flrexuizlauncher/flrexuizlauncher Rexuiz/RexuizLauncher.Linux-$(ARCHSUFFIX)
 	type rpmbuild && cd flrexuizlauncher && rpmbuild --target $(ARCHSUFFIX) -bb flrexuizlauncher.spec
 	type dpkg-deb && cd flrexuizlauncher && sh build_deb.sh $(ARCHSUFFIX)

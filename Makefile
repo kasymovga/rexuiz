@@ -411,8 +411,10 @@ ifneq ($(RCODESIGN),)
 	$(RCODESIGN) sign flrexuizlauncher/RexuizLauncher.app/Contents/MacOS/flrexuizlauncher
 endif
 ifeq ($(DPTARGET),mac-arm64)
+	rm -rf Rexuiz/RexuizLauncher-arm64.app/
 	cp -a flrexuizlauncher/RexuizLauncher.app/ Rexuiz/RexuizLauncher-arm64.app/
 else
+	rm -rf Rexuiz/RexuizLauncher.app/
 	cp -a flrexuizlauncher/RexuizLauncher.app/ Rexuiz/RexuizLauncher.app/
 endif
 else

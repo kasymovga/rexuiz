@@ -308,9 +308,9 @@ $(OPUSFILES): $(OPUSTARGZ)
 $(CURLFILES): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)
 ifeq ($(DPTARGET_WIN),y)
-	cd $(CURLDIR) && CC="$(CC) -static-libgcc" ./configure --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) --disable-pthreads && make && make install
+	cd $(CURLDIR) && CC="$(CC) -static-libgcc" ./configure --without-nghttp2 --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) --disable-pthreads && make && make install
 else
-	cd $(CURLDIR) && CC="$(CC)" ./configure --without-ssl --without-gnutls --without-zlib --disable-ldap --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
+	cd $(CURLDIR) && CC="$(CC)" ./configure --without-nghttp2 --without-ssl --without-gnutls --without-zlib --disable-ldap --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 endif
 
 $(LIBOGGFILES): $(LIBOGGTARGZ)
@@ -396,7 +396,7 @@ $(MBEDTLSFILES_FLRL): $(MBEDTLSTARGZ)
 $(CURLFILES_FLRL): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)
 	sed -i.bak 's/tst_cflags="yes"/tst_clfags="no"/' "$(CURLDIR)/configure"
-	cd $(CURLDIR) && CC="$(CC)" ./configure --with-mbedtls --without-ssl --without-gnutls --without-zlib --disable-ldap --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
+	cd $(CURLDIR) && CC="$(CC)" ./configure --without-nghttp2 --with-mbedtls --without-ssl --without-gnutls --without-zlib --disable-ldap --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
 
 flrexuizlauncher: $(FLTKFILES_FLRL) $(MBEDTLSFILES_FLRL) $(CURLFILES_FLRL)
 ifeq ($(DPTARGET_WIN),y)

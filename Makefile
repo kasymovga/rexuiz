@@ -63,7 +63,8 @@ LIBSAMPLERATEVERSION=0.2.2
 LIBSAMPLERATEDIR=libsamplerate-$(LIBSAMPLERATEVERSION)
 LIBSAMPLERATETARXZ=$(LIBSAMPLERATEDIR).tar.xz
 LIBSAMPLERATEFILES=$(LIBDIR)/lib/libsamplerate.a
-LIBPNGDIR=libpng-1.6.36
+LIBPNGVERSION=1.6.36
+LIBPNGDIR=libpng-$(LIBPNGVERSION)
 LIBPNGTARGZ=$(LIBPNGDIR).tar.gz
 LIBPNGFILES=$(LIBDIR)/lib/libpng.a $(LIBDIR)/lib/libpng16.a
 LIBPNGFILES_FLRL=$(LIBDIR_FLRL)/lib/libpng.a $(LIBDIR_FLRL)/lib/libpng16.a
@@ -75,6 +76,9 @@ JPEGTARGZ=jpegsrc.v9d.tar.gz
 JPEGDIR=jpeg-9d
 JPEGFILES=$(LIBDIR)/lib/libjpeg.a
 JPEGFILES_FLRL=$(LIBDIR_FLRL)/lib/libjpeg.a
+ASSIMPVERSION=5.3.1
+ASSIMPDIR=assimp-$(ASSIMPVERSION)
+ASSIMPTARGZ=$(ASSIMPDIR).tar.gz
 ifeq ($(DPTARGET),android)
 SDLDIR=SDL2-2.0.16
 else
@@ -172,14 +176,20 @@ SDLDEPS=$(LIBSAMPLERATEFILES)
 endif
 ifeq ($(DPTARGET_WIN),y)
 FREETYPEFILES=$(LIBDIR)/bin/libfreetype-6.dll
+ifeq ($(ASSIMP_ENABLE),y)
+ASSIMPFILES=$(LIBDIR)/lib/libassimp.dll
+endif
 CURLFILES=$(LIBDIR)/bin/libcurl-4.dll
-EXTRALIBS=$(FREETYPEFILES) $(CURLFILES)
+EXTRALIBS=$(FREETYPEFILES) $(CURLFILES) $(ASSIMPFILES)
 else
 ifeq ($(DPTARGET_MAC),y)
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_MAKE_TARGET=macosx
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.dylib
+ifeq ($(ASSIMP_ENABLE),y)
+ASSIMPFILES=$(LIBDIR)/lib/libassimp.dylib
+endif
 CURLFILES=$(LIBDIR)/lib/libcurl.dylib
-EXTRALIBS=$(FREETYPEFILES)
+EXTRALIBS=$(FREETYPEFILES) $(CURLFILES) $(ASSIMPFILES)
 else
 ifeq ($(DPTARGET),android)
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_FS_BASEDIR=/sdcard/Rexuiz/ DP_MAKE_TARGET=android DP_VIDEO_CAPTURE=disabled
@@ -189,8 +199,11 @@ EXTRALIBS=$(CURLFILES) $(FREETYPEFILES)
 else
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_FS_BASEDIR=/usr/share/rexuiz/
 FREETYPEFILES=$(LIBDIR)/lib/libfreetype.so
+ifeq ($(ASSIMP_ENABLE),y)
+ASSIMPFILES=$(LIBDIR)/lib/libassimp.so
+endif
 CURLFILES=$(LIBDIR)/lib/libcurl.so
-EXTRALIBS=$(CURLFILES) $(FREETYPEFILES)
+EXTRALIBS=$(CURLFILES) $(FREETYPEFILES) $(ASSIMPFILES)
 endif
 endif
 endif
@@ -249,7 +262,7 @@ $(ZLIBTARGZ):
 	mv temp_$@ $@
 
 $(LIBPNGTARGZ):
-	wget -O temp_$@ http://prdownloads.sourceforge.net/libpng/libpng-1.6.36.tar.gz?download
+	wget -O temp_$@ http://prdownloads.sourceforge.net/libpng/libpng-$(LIBPNGVERSION).tar.gz?download
 	mv temp_$@ $@
 
 $(LIBSAMPLERATETARXZ):
@@ -262,6 +275,10 @@ $(LIBMICROHTTPDTARGZ):
 
 $(OPUSTARGZ):
 	wget -O temp_$@ https://archive.mozilla.org/pub/opus/$@
+	mv temp_$@ $@
+
+$(ASSIMPTARGZ):
+	wget -O temp_$@ https://github.com/assimp/assimp/archive/refs/tags/v$(ASSIMPVERSION).tar.gz
 	mv temp_$@ $@
 
 $(LIBPNGFILES): $(LIBPNGTARGZ) $(ZLIBFILES)
@@ -302,12 +319,19 @@ $(JPEGFILES_FLRL): $(JPEGTARGZ)
 	cd $(JPEGDIR) && CC="$(CC)" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
 
 $(FREETYPEFILES): $(FREETYPETARGZ)
+	rm -rf $(FREETYPEDIR)
 	tar xzf $(FREETYPETARGZ)
 	cd $(FREETYPEDIR) && CC="$(CC)" ./configure --with-png=no --with-harfbuzz=no --with-zlib=no --with-bzip2=no --with-brotli=no --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 
 $(OPUSFILES): $(OPUSTARGZ)
 	tar xzf $(OPUSTARGZ)
 	cd $(OPUSDIR) && CC="$(CC)" AR="$(AR)" ./configure --enable-static --disable-shared --host=$(CROSSPREFIX) --prefix=$(LIBDIR) --disable-extra-programs && make && make install
+
+$(ASSIMPFILES): $(ASSIMPTARGZ)
+	rm -rf $(ASSIMPDIR)
+	tar xzf $(ASSIMPTARGZ)
+	cd $(ASSIMPDIR) && find . -iname CMakeLists.txt -exec sed -i.bak s/-Werror//g '{}' ';'
+	cd $(ASSIMPDIR)/ && CC="$(CC) -static-libstdc++" CXX="$(CXX) -static-libstdc++" cmake -DASSIMP_WARNINGS_AS_ERRORS=0 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(LIBDIR) -DCMAKE_CROSSCOMPILING=1 && make && make install
 
 $(CURLFILES): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)
@@ -503,11 +527,19 @@ ifeq ($(ARCHSUFFIX),i686)
 endif
 ifeq ($(DPTARGET),win32)
 	mkdir -m755 -p Rexuiz/bin32
-	install -m644 $(EXTRALIBS) Rexuiz/bin32/
+	install -m644 $(CURLFILES) Rexuiz/bin32/
+	install -m644 $(FREETYPEFILES) Rexuiz/bin32/
+ifeq ($(ASSIMP_ENABLE),y)
+	install -m644 $(ASSIMPFILES) Rexuiz/bin32/libassimp-dprm.dll
+endif
 endif
 ifeq ($(DPTARGET),win64)
 	mkdir -m755 -p Rexuiz/bin64
-	install -m644 $(EXTRALIBS) Rexuiz/bin64/
+	install -m644 $(CURLFILES) Rexuiz/bin64/
+	install -m644 $(FREETYPEFILES) Rexuiz/bin64/
+ifeq ($(ASSIMP_ENABLE),y)
+	install -m644 $(ASSIMPFILES) Rexuiz/bin64/libassimp-dprm.dll
+endif
 endif
 endif
 ifeq ($(DPTARGET_LINUX),y)
@@ -516,6 +548,9 @@ ifeq ($(DPTARGET_LINUX),y)
 	install -m 755 $(DPDIR)/rexuiz-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-sdl
 	install -m644 $(CURLFILES) Rexuiz/linux-bins/$(ARCHSUFFIX)/libcurl-fallback.so
 	install -m644 $(FREETYPEFILES) Rexuiz/linux-bins/$(ARCHSUFFIX)/libfreetype-fallback.so
+ifeq ($(ASSIMP_ENABLE)
+	install -m644 $(ASSIMPFILES) Rexuiz/linux-bins/$(ARCHSUFFIX)/libassimp-dprm.so
+endif
 	install -m 755 $(DPDIR)/rexuiz-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dedicated
 	cat scripts/run_client | sed 's/@@ARCH@@/$(ARCHSUFFIX)/g' | sed 's/@@BINARY_NAME@@/rexuiz-sdl/g' > Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
 	chmod 755 Rexuiz/rexuiz-linux-sdl-$(ARCHSUFFIX)
@@ -532,10 +567,18 @@ ifeq ($(DPTARGET_MAC),y)
 	install -m 755 scripts/Rexuiz.app/Contents/Resources/Rexuiz.icns Rexuiz/$(APPNAME)/Contents/Resources/
 	install -m 755 scripts/Rexuiz.app/Contents/Info.plist Rexuiz/$(APPNAME)/Contents/
 	install -m 755 $(DPDIR)/rexuiz-sdl Rexuiz/$(APPNAME)/Contents/MacOS/rexuiz-dprm-sdl-bin
+	install -m 755 $(CURLFILES) Rexuiz/$(APPNAME)/Contents/MacOS/libcurl-fallback.dylib
 	install -m 755 $(FREETYPEFILES) Rexuiz/$(APPNAME)/Contents/MacOS/
+ifeq ($(ASSIMP_ENABLE)
+	install -m 755 $(ASSIMPFILES) Rexuiz/$(APPNAME)/Contents/MacOS/
+endif
 ifneq ($(RCODESIGN),)
 	$(RCODESIGN) sign Rexuiz/$(APPNAME)/Contents/MacOS/rexuiz-dprm-sdl-bin
 	$(RCODESIGN) sign Rexuiz/$(APPNAME)/Contents/MacOS/libfreetype.dylib
+	$(RCODESIGN) sign Rexuiz/$(APPNAME)/Contents/MacOS/libcurl-fallback.dylib
+ifeq ($(ASSIMP_ENABLE)
+	$(RCODESIGN) sign Rexuiz/$(APPNAME)/Contents/MacOS/assimp-dprm.dylib
+endif
 endif
 endif
 endif

@@ -19,6 +19,7 @@ STRIP=strip
 WINDRES=windres
 endif
 LD=$(CC)
+CMAKE ?= cmake
 
 ifeq ($(shell uname -s),Linux)
 ifeq ($(shell uname -m),x86_64)
@@ -177,7 +178,7 @@ endif
 ifeq ($(DPTARGET_WIN),y)
 FREETYPEFILES=$(LIBDIR)/bin/libfreetype-6.dll
 ifeq ($(ASSIMP_ENABLE),y)
-ASSIMPFILES=$(LIBDIR)/lib/libassimp.dll
+ASSIMPFILES=$(LIBDIR)/bin/libassimp-5.dll
 endif
 CURLFILES=$(LIBDIR)/bin/libcurl-4.dll
 EXTRALIBS=$(FREETYPEFILES) $(CURLFILES) $(ASSIMPFILES)
@@ -331,7 +332,8 @@ $(ASSIMPFILES): $(ASSIMPTARGZ)
 	rm -rf $(ASSIMPDIR)
 	tar xzf $(ASSIMPTARGZ)
 	cd $(ASSIMPDIR) && find . -iname CMakeLists.txt -exec sed -i.bak s/-Werror//g '{}' ';'
-	cd $(ASSIMPDIR)/ && CC="$(CC) -static-libstdc++" CXX="$(CXX) -static-libstdc++" cmake -DASSIMP_WARNINGS_AS_ERRORS=0 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(LIBDIR) -DCMAKE_CROSSCOMPILING=1 && make && make install
+	cd $(ASSIMPDIR)/ && CC="$(CC)" CXX="$(CXX)" $(CMAKE) -DBUILD_SHARED_LIBS=1 -DASSIMP_BUILD_TESTS=0 -DASSIMP_WARNINGS_AS_ERRORS=0 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(LIBDIR) -DCMAKE_CROSSCOMPILING=1
+	cd $(ASSIMPDIR)/ && make && make install
 
 $(CURLFILES): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)

@@ -367,10 +367,10 @@ ifeq ($(DPTARGET),linux32)
 	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86-linux-gcc && make && make install
 endif
 ifeq ($(DPTARGET),mac64)
-	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86_64-darwin14-gcc && make && make install
+	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86_64-darwin10-gcc && make && make install
 endif
 ifeq ($(DPTARGET),mac32)
-	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86-darwin14-gcc && make && make install
+	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86-darwin10-gcc && make && make install
 endif
 ifeq ($(DPTARGET),mac-arm64)
 	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=arm64-darwin20-gcc && make && make install

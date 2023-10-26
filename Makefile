@@ -114,13 +114,18 @@ MBEDTLSTARGZ=$(MBEDTLSDIR).tar.gz
 FLTKVERSION=1.3.8
 FLTKDIR=fltk-$(FLTKVERSION)
 FLTKTARGZ=$(FLTKDIR)-sources.tar.gz
+LIBVPXDIR=libvpx-1.12.0
+LIBVPXTARGZ=$(LIBVPXDIR).tar.gz
+LIBVPXFILES=$(LIBDIR)/lib/libvpx.a
 OPUSDIR=opus-1.3.1
 OPUSTARGZ=$(OPUSDIR).tar.gz
 OPUSFILES=$(LIBDIR)/lib/libopus.a
 DPMAKEOPTS=CC='$(CC) -I$(LIBDIR)/include/SDL2 -I$(LIBDIR)/include -L$(LIBDIR)/lib' LD='$(CC) -L$(LIBDIR)/lib' STRIP=$(STRIP) DP_LINK_ZLIB=shared DP_LINK_JPEG=shared DP_LINK_PNG=shared SDL_CONFIG='$(LIBDIR)/bin/sdl2-config' DP_LIBMICROHTTPD=static DP_LINK_OGGVORBIS=static DP_LINK_ZLIB=static DP_LINK_JPEG=static DP_LINK_PNG=static DP_LINK_OPUS=static WINDRES=$(WINDRES) $(DPMAKEOPTS_EXTRA)
 FLRL_LINK_FLAGS_EXTRA ?=
-ifneq ($(DPTARGET),android)
+ifeq ($(DPTARGET),android)
 DPMAKEOPTS:=$(DPMAKEOPTS) DP_SDL_STATIC=yes
+else
+DPMAKEOPTS:=$(DPMAKEOPTS) DP_LINK_VPX=static
 endif
 
 ifeq ($(DPTARGET),linux32)
@@ -172,7 +177,7 @@ ifeq ($(DPTARGET),android)
 EXTRALIBS_LINKONLY=$(LIBOGGFILES) $(LIBVORBISFILES)
 SDLDEPS=
 else
-EXTRALIBS_LINKONLY=$(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES)
+EXTRALIBS_LINKONLY=$(LIBOGGFILES) $(LIBVORBISFILES) $(LIBTHEORAFILES) $(LIBVPXFILES)
 SDLDEPS=$(LIBSAMPLERATEFILES)
 endif
 ifeq ($(DPTARGET_WIN),y)
@@ -282,6 +287,10 @@ $(ASSIMPTARGZ):
 	wget -O temp_$@ https://github.com/assimp/assimp/archive/refs/tags/v$(ASSIMPVERSION).tar.gz
 	mv temp_$@ $@
 
+$(LIBVPXTARGZ):
+	wget -O temp_$@ https://github.com/webmproject/libvpx/archive/v1.12.0/$@
+	mv temp_$@ $@
+
 $(LIBPNGFILES): $(LIBPNGTARGZ) $(ZLIBFILES)
 	rm -rf $(LIBPNGDIR)
 	tar xzf $(LIBPNGTARGZ)
@@ -334,6 +343,41 @@ $(ASSIMPFILES): $(ASSIMPTARGZ)
 	cd $(ASSIMPDIR) && find . -iname CMakeLists.txt -exec sed -i.bak s/-Werror//g '{}' ';'
 	cd $(ASSIMPDIR)/ && CC="$(CC)" CXX="$(CXX)" $(CROSSCMAKE) -DBUILD_SHARED_LIBS=1 -DASSIMP_BUILD_TESTS=0 -DASSIMP_WARNINGS_AS_ERRORS=0 -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(LIBDIR) -DCMAKE_CROSSCOMPILING=1
 	cd $(ASSIMPDIR)/ && make && make install
+
+$(LIBVPXFILES): $(LIBVPXTARGZ)
+	rm -rf $(LIBVPXDIR)
+	tar xzf $(LIBVPXTARGZ)
+ifeq ($(DPTARGET_MAC),y)
+	sed -i.bak s/cstdint/stdint.h/ $(LIBVPXDIR)/vp8/vp8_ratectrl_rtc.h
+	sed -i.bak 's/std::unique_ptr<\([^>]*\)>/\1*/' $(LIBVPXDIR)/vp8/vp8_ratectrl_rtc.h
+	sed -i.bak s/nullptr/NULL/ $(LIBVPXDIR)/vp8/vp8_ratectrl_rtc.h
+	sed -i.bak 's/std::unique_ptr<\([^>]*\)>/\1*/' $(LIBVPXDIR)/vp8/vp8_ratectrl_rtc.cc
+	sed -i.bak s/nullptr/NULL/ $(LIBVPXDIR)/vp8/vp8_ratectrl_rtc.cc
+endif
+ifeq ($(DPTARGET),win32)
+	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86-win32-gcc && make && make install
+endif
+ifeq ($(DPTARGET),win64)
+	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86_64-win64-gcc && make && make install
+endif
+ifeq ($(DPTARGET),linux64)
+	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86_64-linux-gcc && make && make install
+endif
+ifeq ($(DPTARGET),linux32)
+	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86-linux-gcc && make && make install
+endif
+ifeq ($(DPTARGET),mac64)
+	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86_64-darwin14-gcc && make && make install
+endif
+ifeq ($(DPTARGET),mac32)
+	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=x86-darwin14-gcc && make && make install
+endif
+ifeq ($(DPTARGET),mac-arm64)
+	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=arm64-darwin20-gcc && make && make install
+endif
+ifeq ($(DPTARGET),linux-arm64)
+	cd $(LIBVPXDIR) && RANLIB="$(RANLIB)" STRIP="$(STRIP)" LD="$(CC)" CC="$(CC)" CXX="$(CXX)" AR="$(AR)" ./configure --enable-static --disable-shared --disable-examples --disable-webm-io --disable-vp9 --disable-unit-tests --disable-decode-perf-tests --disable-encode-perf-tests --prefix=$(LIBDIR) --target=arm64-linux-gcc && make && make install
+endif
 
 $(CURLFILES): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)
@@ -457,7 +501,7 @@ endif
 endif
 
 clean:
-	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) $(LIBMICROHTTPDDIR) $(LIBSAMPLERATEDIR) $(OPUSDIR)
+	rm -rf $(ZLIBDIR) $(JPEGDIR) $(LIBPNGDIR) $(SDLDIR) $(LIBDIR) $(LIBOGGDIR) $(LIBVORBISDIR) $(LIBTHEORADIR) $(CURLDIR) $(FREETYPEDIR) $(LIBMICROHTTPDDIR) $(LIBSAMPLERATEDIR) $(OPUSDIR) $(LIBVPXDIR)
 	rm -rf $(LIBDIR)
 	rm -rf $(LIBDIR_FLRL)
 	cd $(DPDIR) && make clean

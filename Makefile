@@ -571,15 +571,15 @@ ifeq ($(DPTARGET_MAC),y)
 	install -m 755 $(DPDIR)/rexuiz-sdl Rexuiz/$(APPNAME)/Contents/MacOS/rexuiz-dprm-sdl-bin
 	install -m 755 $(CURLFILES) Rexuiz/$(APPNAME)/Contents/MacOS/libcurl-fallback.dylib
 	install -m 755 $(FREETYPEFILES) Rexuiz/$(APPNAME)/Contents/MacOS/
-ifeq ($(ASSIMP_ENABLE)
+ifeq ($(ASSIMP_ENABLE),y)
 	install -m 755 $(ASSIMPFILES) Rexuiz/$(APPNAME)/Contents/MacOS/libassimp-dprm.dylib
 endif
 ifneq ($(RCODESIGN),)
 	$(RCODESIGN) sign Rexuiz/$(APPNAME)/Contents/MacOS/rexuiz-dprm-sdl-bin
 	$(RCODESIGN) sign Rexuiz/$(APPNAME)/Contents/MacOS/libfreetype.dylib
 	$(RCODESIGN) sign Rexuiz/$(APPNAME)/Contents/MacOS/libcurl-fallback.dylib
-ifeq ($(ASSIMP_ENABLE)
-	$(RCODESIGN) sign Rexuiz/$(APPNAME)/Contents/MacOS/assimp-dprm.dylib
+ifeq ($(ASSIMP_ENABLE),y)
+	$(RCODESIGN) sign Rexuiz/$(APPNAME)/Contents/MacOS/libassimp-dprm.dylib
 endif
 endif
 endif

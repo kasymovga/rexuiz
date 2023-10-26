@@ -594,7 +594,7 @@ ifeq ($(DPTARGET_LINUX),y)
 	install -m 755 $(DPDIR)/rexuiz-sdl Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-sdl
 	install -m644 $(CURLFILES) Rexuiz/linux-bins/$(ARCHSUFFIX)/libcurl-fallback.so
 	install -m644 $(FREETYPEFILES) Rexuiz/linux-bins/$(ARCHSUFFIX)/libfreetype-fallback.so
-ifeq ($(ASSIMP_ENABLE)
+ifeq ($(ASSIMP_ENABLE),y)
 	install -m644 $(ASSIMPFILES) Rexuiz/linux-bins/$(ARCHSUFFIX)/libassimp-dprm.so
 endif
 	install -m 755 $(DPDIR)/rexuiz-dedicated Rexuiz/linux-bins/$(ARCHSUFFIX)/rexuiz-dedicated

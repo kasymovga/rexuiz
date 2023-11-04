@@ -542,7 +542,8 @@ else
 	cd rexdlc && make base essential
 	cp rexdlc/*.pk3 Rexuiz/data/dlcache/
 	mv Rexuiz/data/dlcache/zzz-rexdlc_base-* Rexuiz/data/
-	for F in Rexuiz/data/zzz-rexdlc_base-* ; do mv "$$F" Rexuiz/data/rexuiz-$${F#Rexuiz/data/zzz-rexdlc_} ; done
+	mv Rexuiz/data/dlcache/zzz-rexdlc_warpzone.pk3 Rexuiz/data/
+	for F in Rexuiz/data/zzz-rexdlc_* ; do mv "$$F" Rexuiz/data/rexuiz-$${F#Rexuiz/data/zzz-rexdlc_} ; done
 	install -m644 scripts/server-example.cfg Rexuiz/data/server-example.cfg
 endif
 

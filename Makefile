@@ -21,7 +21,7 @@ STRIP=strip
 WINDRES=windres
 endif
 LD=$(CC)
-CROSSCMAKE ?= cmake
+CROSSCMAKE=cmake
 
 ifeq ($(shell uname -s),Linux)
 ifeq ($(shell uname -m),x86_64)

@@ -474,12 +474,12 @@ $(CURLFILES_FLRL): $(CURLTARGZ)
 flrexuizlauncher: $(FLTKFILES_FLRL) $(MBEDTLSFILES_FLRL) $(CURLFILES_FLRL)
 ifeq ($(DPTARGET_WIN),y)
 	cd flrexuizlauncher && make TARGET=windows clean
-	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make LINK_FLAGS_EXTRA="$(STATIC_CLIB)" TARGET=windows CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib" WINDRES="$(WINDRES)"
+	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make STRIP=$(STRIP) LINK_FLAGS_EXTRA="$(STATIC_CLIB)" TARGET=windows CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib" WINDRES="$(WINDRES)"
 	cp flrexuizlauncher/flrexuizlauncher.exe Rexuiz/RexuizLauncher.Windows-$(ARCHSUFFIX).exe
 else
 ifeq ($(DPTARGET_MAC),y)
 	cd flrexuizlauncher && make TARGET=mac clean
-	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make LINK_FLAGS_EXTRA="$(STATIC_CLIB)" TARGET=mac CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
+	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make STRIP=$(STRIP) LINK_FLAGS_EXTRA="$(STATIC_CLIB)" TARGET=mac CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
 ifneq ($(RCODESIGN),)
 	$(RCODESIGN) sign flrexuizlauncher/RexuizLauncher.app/Contents/MacOS/flrexuizlauncher
 endif
@@ -492,7 +492,7 @@ else
 endif
 else
 	cd flrexuizlauncher && make TARGET=linux clean
-	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make LINK_FLAGS_EXTRA="$(STATIC_CLIB)" TARGET=linux CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
+	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make STRIP=$(STRIP) LINK_FLAGS_EXTRA="$(STATIC_CLIB)" TARGET=linux CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
 	cp flrexuizlauncher/flrexuizlauncher Rexuiz/RexuizLauncher.Linux-$(ARCHSUFFIX)
 	type rpmbuild && cd flrexuizlauncher && rpmbuild --target $(ARCHSUFFIX) -bb flrexuizlauncher.spec
 	type dpkg-deb && cd flrexuizlauncher && sh build_deb.sh $(ARCHSUFFIX)

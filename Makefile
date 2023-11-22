@@ -2,6 +2,8 @@
 PWD=$(shell pwd)
 
 DPDIR=DarkPlacesRM
+STATIC_CLIB=-static-libgcc
+STATIC_CXXLIB=-static-libstdc++
 
 ifneq ($(CROSSPREFIX),)
 CC=$(CROSSPREFIX)-gcc
@@ -382,9 +384,9 @@ endif
 $(CURLFILES): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)
 ifeq ($(DPTARGET_WIN),y)
-	cd $(CURLDIR) && CC="$(CC) -static-libgcc" ./configure --without-nghttp2 --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) --disable-pthreads && make && make install
+	cd $(CURLDIR) && CC="$(CC) $(STATIC_CLIB)" ./configure --without-nghttp2 --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) --disable-pthreads && make && make install
 else
-	cd $(CURLDIR) && CC="$(CC)" ./configure --without-nghttp2 --without-ssl --without-gnutls --without-zlib --disable-ldap --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
+	cd $(CURLDIR) && CC="$(CC) $(STATIC_CLIB)" ./configure --without-nghttp2 --without-ssl --without-gnutls --without-zlib --disable-ldap --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 endif
 
 $(LIBOGGFILES): $(LIBOGGTARGZ)
@@ -410,12 +412,12 @@ $(LIBTHEORAFILES): $(LIBTHEORATARGZ) $(LIBOGGFILES)
 	cd $(LIBTHEORADIR) && sed -i.bak s/cross_compiling=no/cross_compiling=yes/ configure
 	cd $(LIBTHEORADIR) && patch -p1 < ../libtheora.patch config.sub
 ifeq ($(DPTARGET_WIN),y)
-	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no RANLIB="$(RANLIB)" AR="$(AR)" CC="$(CC) -static-libgcc" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib -static-libgcc" ./configure --disable-examples --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-examples && make && make install
+	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no RANLIB="$(RANLIB)" AR="$(AR)" CC="$(CC) $(STATIC_CLIB)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib $(STATIC_CLIB)" ./configure --disable-examples --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR) --disable-examples && make && make install
 else
 ifeq ($(ARCHSUFFIX),x86_64)
-	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no RANLIB="$(RANLIB)" AR="$(AR)" CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --build=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) && make && make install
+	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no RANLIB="$(RANLIB)" AR="$(AR)" CC="$(CC) $(STATIC_CLIB)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib $(STATIC_CLIB)" ./configure --disable-shared --build=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) && make && make install
 else
-	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no RANLIB="$(RANLIB)" AR="$(AR)" CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --build=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) --disable-asm && make && make install
+	cd $(LIBTHEORADIR) && HAVE_PDFLATEX=no HAVE_DOXYGEN=no HAVE_BIBTEX=no RANLIB="$(RANLIB)" AR="$(AR)" CC="$(CC) $(STATIC_CLIB)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib $(STATIC_CLIB)" ./configure --disable-shared --build=$(CROSSPREFIX) --disable-examples --enable-static --prefix=$(LIBDIR) --disable-asm && make && make install
 endif
 endif
 
@@ -443,12 +445,10 @@ ifeq ($(ANDROID_ABI),)
 endif
 	mkdir -m755 -p $(SDLDIR)/buildtree
 	cd $(SDLDIR) && patch -p1 < ../SDL2.patch
-	cd $(SDLDIR)/buildtree && CC="$(CC) -static-libstdc++" CXX="$(CXX) -static-libstdc++" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" cmake -DANDROID=1 -DCMAKE_LIBRARY_PATH=${ANDROID_NDK_ROOT}/usr/lib/${CROSSPREFIX}/$(ANDROID_ABI)/ -DANDROID_NDK=${ANDROID_NDK_HOME} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(LIBDIR) -DCMAKE_CROSSCOMPILING=1 -DIMPORTED_NO_SONAME=1 -DNO_SONAME=1 .. && make && make install
-	#cd $(SDLDIR) && CC="$(CC) -static-libstdc++" CXX="$(CXX) -static-libstdc++" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --oldincludedir=$(LIBDIR)/include --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --disable-static --enable-shared --prefix=$(LIBDIR) --disable-libsamplerate --disable-pulseaudio --disable-video-x11 --disable-video-wayland --disable-video-kmsdrm --disable-pipewire && make && make install
+	cd $(SDLDIR)/buildtree && CC="$(CC) $(STATIC_CXXLIB)" CXX="$(CXX) $(STATIC_CXXLIB)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" cmake -DANDROID=1 -DCMAKE_LIBRARY_PATH=${ANDROID_NDK_ROOT}/usr/lib/${CROSSPREFIX}/$(ANDROID_ABI)/ -DANDROID_NDK=${ANDROID_NDK_HOME} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(LIBDIR) -DCMAKE_CROSSCOMPILING=1 -DIMPORTED_NO_SONAME=1 -DNO_SONAME=1 .. && make && make install
 	sed -i.bak 's/-I\/usr\/include//' $(LIBDIR)/bin/sdl2-config
-	cd $(SDLDIR)/src/hidapi/android/ && $(CXX) -O2 -Wall -I$(LIBDIR)/include `$(LIBDIR)/bin/sdl2-config --cflags` -L$(LIBDIR)/lib hid.cpp -static-libstdc++ `$(LIBDIR)/bin/sdl2-config --libs` -llog -shared -o $(HIDAPIFILES)
+	cd $(SDLDIR)/src/hidapi/android/ && $(CXX) -O2 -Wall -I$(LIBDIR)/include `$(LIBDIR)/bin/sdl2-config --cflags` -L$(LIBDIR)/lib hid.cpp $(STATIC_CXXLIB) `$(LIBDIR)/bin/sdl2-config --libs` -llog -shared -o $(HIDAPIFILES)
 else
-	#cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --disable-video-wayland --disable-pulseaudio --disable-video-kmsdrm --disable-pipewire --prefix=$(LIBDIR) && make && make install
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --prefix=$(LIBDIR) --disable-pipewire --disable-libdecor && make && make install
 endif
 endif
@@ -475,12 +475,12 @@ $(CURLFILES_FLRL): $(CURLTARGZ)
 flrexuizlauncher: $(FLTKFILES_FLRL) $(MBEDTLSFILES_FLRL) $(CURLFILES_FLRL)
 ifeq ($(DPTARGET_WIN),y)
 	cd flrexuizlauncher && make TARGET=windows clean
-	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make LINK_FLAGS_EXTRA="$(FLRL_LINK_FLAGS_EXTRA)" TARGET=windows CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib" WINDRES="$(WINDRES)"
+	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make LINK_FLAGS_EXTRA="$(STATIC_CLIB)" TARGET=windows CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib" WINDRES="$(WINDRES)"
 	cp flrexuizlauncher/flrexuizlauncher.exe Rexuiz/RexuizLauncher.Windows-$(ARCHSUFFIX).exe
 else
 ifeq ($(DPTARGET_MAC),y)
 	cd flrexuizlauncher && make TARGET=mac clean
-	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make LINK_FLAGS_EXTRA="$(FLRL_LINK_FLAGS_EXTRA)" TARGET=mac CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
+	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make LINK_FLAGS_EXTRA="$(STATIC_CLIB)" TARGET=mac CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
 ifneq ($(RCODESIGN),)
 	$(RCODESIGN) sign flrexuizlauncher/RexuizLauncher.app/Contents/MacOS/flrexuizlauncher
 endif
@@ -493,7 +493,7 @@ else
 endif
 else
 	cd flrexuizlauncher && make TARGET=linux clean
-	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make LINK_FLAGS_EXTRA="$(FLRL_LINK_FLAGS_EXTRA)" TARGET=linux CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
+	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make LINK_FLAGS_EXTRA="$(STATIC_CLIB)" TARGET=linux CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
 	cp flrexuizlauncher/flrexuizlauncher Rexuiz/RexuizLauncher.Linux-$(ARCHSUFFIX)
 	type rpmbuild && cd flrexuizlauncher && rpmbuild --target $(ARCHSUFFIX) -bb flrexuizlauncher.spec
 	type dpkg-deb && cd flrexuizlauncher && sh build_deb.sh $(ARCHSUFFIX)

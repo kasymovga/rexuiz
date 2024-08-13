@@ -3,4 +3,5 @@
 *.sh
 *.dat
 *.po
-rexuiz-extra.cfg
+*.apk
+.*

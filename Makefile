@@ -396,6 +396,7 @@ $(LIBOGGFILES): $(LIBOGGTARGZ)
 $(LIBVORBISFILES): $(LIBVORBISTARGZ) $(LIBOGGFILES)
 	rm -rf $(LIBVORBISDIR)
 	tar xzf $(LIBVORBISTARGZ)
+	sed -i.bak 's/-force_cpusubtype_ALL//' $(LIBVORBISDIR)/configure
 ifeq ($(DPTARGET),android)
 	sed -i.bak 's/-mno-ieee-fp//' $(LIBVORBISDIR)/configure
 endif

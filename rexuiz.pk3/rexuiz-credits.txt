@@ -1,7 +1,10 @@
 **Active Team Members:
 
+Vistaus (https://github.com/Vistaus)
+*Translator
+
 Mark
-*Translator*
+*Translator
 
 802.1ad
 *Programmer
@@ -17,6 +20,26 @@ Claymore
 
 Nico The Badass Choob
 *Translator
+
+Alexandre "Art" William
+*Translator
+
+Alexander L. (Bratwurst)
+*Translator
+
+Alex Zloy (Zoom Zoom)
+*Designer
+
+**RocketMinsta Members:
+
+Andrei Alexeyev
+*Programmer
+
+rtz
+*Designer
+
+David "Artefact" Revoy
+*Designer
 
 **Third party content:
 Intro music
@@ -56,25 +79,7 @@ Arachna model
 *Borrowed from OpenArena
 *License: GPL2
 
-**Old Members:
-
-Alexandre "Art" William
-*Translator
-
-Alexander L. (Bratwurst)
-*Translator
-
-Alex Zloy (Zoom Zoom)
-*Designer
-
-Andrei Alexeyev
-*Programmer
-
-rtz
-*Designer
-
-David "Artefact" Revoy
-*Designer
+**Nexuiz Members:
 
 Lee Vermeulen
 *Project Founder and Co-Designer

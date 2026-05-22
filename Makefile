@@ -469,7 +469,7 @@ $(MBEDTLSFILES_FLRL): $(MBEDTLSTARGZ)
 	cd $(MBEDTLSDIR) && cp -a include "$(LIBDIR_FLRL)/"
 	cd $(MBEDTLSDIR) && cp library/*.a "$(LIBDIR_FLRL)/lib/"
 
-$(CURLFILES_FLRL): $(CURLTARGZ)
+$(CURLFILES_FLRL): $(CURLTARGZ) $(MBEDTLSFILES_FLRL)
 	tar xzf $(CURLTARGZ)
 	sed -i.bak 's/tst_cflags="yes"/tst_clfags="no"/' "$(CURLDIR)/configure"
 	cd $(CURLDIR) && CC="$(CC)" ./configure --without-nghttp2 --with-mbedtls=$(LIBDIR_FLRL) --without-ssl --without-gnutls --without-zlib --disable-ldap --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR_FLRL) && make && make install

@@ -110,7 +110,7 @@ LIBTHEORATARGZ=$(LIBTHEORADIR).tar.gz
 LIBTHEORAFILES=$(LIBDIR)/lib/libtheora.a $(LIBDIR)/lib/libtheoraenc.a
 LIBMICROHTTPDDIR=libmicrohttpd-0.9.75
 LIBMICROHTTPDTARGZ=$(LIBMICROHTTPDDIR).tar.gz
-MBEDTLSVERSION=3.4.0
+MBEDTLSVERSION=2.28.4
 MBEDTLSDIR=mbedtls-$(MBEDTLSVERSION)
 MBEDTLSTARGZ=$(MBEDTLSDIR).tar.gz
 FLTKVERSION=1.3.8
@@ -472,7 +472,7 @@ $(MBEDTLSFILES_FLRL): $(MBEDTLSTARGZ)
 $(CURLFILES_FLRL): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)
 	sed -i.bak 's/tst_cflags="yes"/tst_clfags="no"/' "$(CURLDIR)/configure"
-	cd $(CURLDIR) && CC="$(CC)" ./configure --without-nghttp2 --with-mbedtls --without-ssl --without-gnutls --without-zlib --disable-ldap --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
+	cd $(CURLDIR) && CC="$(CC)" ./configure --without-nghttp2 --with-mbedtls=$(LIBDIR_FLRL) --without-ssl --without-gnutls --without-zlib --disable-ldap --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
 
 flrexuizlauncher: $(FLTKFILES_FLRL) $(MBEDTLSFILES_FLRL) $(CURLFILES_FLRL)
 ifeq ($(DPTARGET_WIN),y)

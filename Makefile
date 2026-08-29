@@ -71,7 +71,7 @@ LIBPNGDIR=libpng-$(LIBPNGVERSION)
 LIBPNGTARGZ=$(LIBPNGDIR).tar.gz
 LIBPNGFILES=$(LIBDIR)/lib/libpng.a $(LIBDIR)/lib/libpng16.a
 LIBPNGFILES_FLRL=$(LIBDIR_FLRL)/lib/libpng.a $(LIBDIR_FLRL)/lib/libpng16.a
-ZLIBDIR=zlib-1.3.1
+ZLIBDIR=zlib-1.3.2
 ZLIBTARGZ=$(ZLIBDIR).tar.gz
 ZLIBFILES=$(LIBDIR)/lib/libz.a
 ZLIBFILES_FLRL=$(LIBDIR_FLRL)/lib/libz.a
@@ -382,7 +382,9 @@ ifeq ($(DPTARGET),linux-arm64)
 endif
 
 $(CURLFILES): $(CURLTARGZ)
+	rm -rf $(CURLDIR)
 	tar xzf $(CURLTARGZ)
+	sed -i 's/if(0 != ioctlsocket(0, FIONBIO, &flags))/if(0 != ioctlsocket(0, FIONBIO, (unsigned long int *)\&flags))/' $(CURLDIR)/configure
 ifeq ($(DPTARGET_WIN),y)
 	cd $(CURLDIR) && CC="$(CC) $(STATIC_CLIB)" ./configure --without-nghttp2 --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) --disable-pthreads && make && make install
 else
@@ -425,11 +427,12 @@ endif
 $(LIBMICROHTTPDFILES): $(LIBMICROHTTPDTARGZ)
 	rm -rf $(LIBMICROHTTPDDIR)
 	tar xzf $(LIBMICROHTTPDTARGZ)
-	cd $(LIBMICROHTTPDDIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --disable-https --prefix=$(LIBDIR) && make && make install
+	cd $(LIBMICROHTTPDDIR) && CC="$(CC)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" CONFIG_SHELL=/bin/bash ./configure --disable-shared --host=$(CROSSPREFIX) --enable-static --disable-https --prefix=$(LIBDIR) && make && make install
 
 $(SDLFILES): $(SDLTARGZ) $(SDLDEPS)
 	rm -rf $(SDLDIR)
 	tar xzf $(SDLTARGZ)
+	cd $(SDLDIR) && patch -p1 < ../SDL2.patch
 	sed -i.bak 's/EXTRA_CFLAGS="$$EXTRA_CFLAGS -Wdeclaration-after-statement -Werror=declaration-after-statement"/EXTRA_CFLAGS="$$EXTRA_CFLAGS -Wdeclaration-after-statement"/' $(SDLDIR)/configure
 ifeq ($(DPTARGET_WIN),y)
 	cd $(SDLDIR) && CC="$(CC)" CXX="$(CXX)" host_os=mingw CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" ./configure --host=$(CROSSPREFIX) --target=$(CROSSPREFIX) --enable-static --disable-shared --enable-libsamplerate --disable-libsamplerate-shared --prefix=$(LIBDIR)
@@ -445,7 +448,6 @@ ifeq ($(ANDROID_ABI),)
 	exit 1
 endif
 	mkdir -m755 -p $(SDLDIR)/buildtree
-	cd $(SDLDIR) && patch -p1 < ../SDL2.patch
 	cd $(SDLDIR)/buildtree && CC="$(CC) $(STATIC_CXXLIB)" CXX="$(CXX) $(STATIC_CXXLIB)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" cmake -DANDROID=1 -DCMAKE_LIBRARY_PATH=${ANDROID_NDK_ROOT}/usr/lib/${CROSSPREFIX}/$(ANDROID_ABI)/ -DANDROID_NDK=${ANDROID_NDK_HOME} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(LIBDIR) -DCMAKE_CROSSCOMPILING=1 -DIMPORTED_NO_SONAME=1 -DNO_SONAME=1 .. && make && make install
 	sed -i.bak 's/-I\/usr\/include//' $(LIBDIR)/bin/sdl2-config
 	sed -i.bak2 's|-l/[^ ]\+/lib\([^ ]\+\)\.so|-l\1|g' $(LIBDIR)/bin/sdl2-config

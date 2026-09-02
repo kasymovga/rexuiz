@@ -2,19 +2,34 @@
 PWD=$(shell pwd)
 
 DPDIR=DarkPlacesRM
+ifeq ($(CLANG),y)
+STATIC_CLIB=
+STATIC_CXXLIB=
+else
 STATIC_CLIB=-static-libgcc
 STATIC_CXXLIB=-static-libstdc++
+endif
 
 ifneq ($(CROSSPREFIX),)
+ifeq ($(CLANG),y)
+CC=$(CROSSPREFIX)-clang
+CXX=$(CROSSPREFIX)-clang++
+else
 CC=$(CROSSPREFIX)-gcc
 CXX=$(CROSSPREFIX)-g++
+endif
 AR=$(CROSSPREFIX)-ar
 RANLIB=$(CROSSPREFIX)-ranlib
 STRIP=$(CROSSPREFIX)-strip
 WINDRES=$(CROSSPREFIX)-windres
 else
+ifeq ($(CLANG),y)
+CC=clang
+CXX=clang++
+else
 CC=gcc
 CXX=g++
+endif
 AR=ar
 RANLIB=ranlib
 STRIP=strip

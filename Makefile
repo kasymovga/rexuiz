@@ -352,8 +352,10 @@ $(FREETYPEFILES): $(FREETYPETARGZ)
 	cd $(FREETYPEDIR) && CC="$(CC)" ./configure --with-png=no --with-harfbuzz=no --with-zlib=no --with-bzip2=no --with-brotli=no --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 
 $(OPUSFILES): $(OPUSTARGZ)
+	rm -rf $(OPUSDIR)
 	tar xzf $(OPUSTARGZ)
-	cd $(OPUSDIR) && CC="$(CC)" AR="$(AR)" ./configure --enable-static --disable-shared --host=$(CROSSPREFIX) --prefix=$(LIBDIR) --disable-extra-programs && make && make install
+	sed -i 's/CFLAGS="\$$CFLAGS -D_FORTIFY_SOURCE=2"//' $(OPUSDIR)/configure
+	cd $(OPUSDIR) && CC="$(CC)" AR="$(AR)" ./configure --enable-static --disable-shared --host=$(CROSSPREFIX) --prefix=$(LIBDIR) --disable-extra-programs --disable-stack-protector && make && make install
 
 $(ASSIMPFILES): $(ASSIMPTARGZ)
 	rm -rf $(ASSIMPDIR)

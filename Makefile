@@ -502,8 +502,12 @@ $(MBEDTLSFILES_FLRL): $(MBEDTLSTARGZ)
 	cd $(MBEDTLSDIR) && cp library/*.a "$(LIBDIR_FLRL)/lib/"
 
 $(CURLFILES_FLRL): $(CURLTARGZ) $(MBEDTLSFILES_FLRL)
+	rm -rf $(CURLDIR)
 	tar xzf $(CURLTARGZ)
 	sed -i.bak 's/tst_cflags="yes"/tst_clfags="no"/' "$(CURLDIR)/configure"
+ifeq ($(DPTARGET_WIN),y)
+	sed -i.bak2 's/LIBS="-lmbedtls -lmbedx509 -lmbedcrypto /LIBS="-lmbedtls -lmbedx509 -lmbedcrypto -lpthread /'  "$(CURLDIR)/configure"
+endif
 	cd $(CURLDIR) && CC="$(CC)" ./configure --without-nghttp2 --with-mbedtls=$(LIBDIR_FLRL) --without-ssl --without-gnutls --without-zlib --disable-ldap --disable-shared --host=$(CROSSPREFIX) --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
 
 flrexuizlauncher: $(FLTKFILES_FLRL) $(MBEDTLSFILES_FLRL) $(CURLFILES_FLRL)

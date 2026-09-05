@@ -529,7 +529,7 @@ else
 	cd flrexuizlauncher && make TARGET=linux clean
 	cd flrexuizlauncher && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" PATH="$(LIBDIR_FLRL)/bin:$$PATH" make STRIP=$(STRIP) LINK_FLAGS_EXTRA="$(STATIC_CLIB)" TARGET=linux CXX="$(CXX)" CXXFLAGS="-I$(LIBDIR_FLRL)/include" LDFLAGS="-L$(LIBDIR_FLRL)/lib"
 	cp flrexuizlauncher/flrexuizlauncher Rexuiz/RexuizLauncher.Linux-$(ARCHSUFFIX)
-	type rpmbuild && cd flrexuizlauncher && rpmbuild --target $(ARCHSUFFIX) -bb flrexuizlauncher.spec
+	type rpmbuild && cd flrexuizlauncher && sh build_rpm.sh $(ARCHSUFFIX)
 	type dpkg-deb && cd flrexuizlauncher && sh build_deb.sh $(ARCHSUFFIX)
 endif
 endif

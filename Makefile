@@ -77,6 +77,7 @@ LIBDIR=$(PWD)/libs/$(DPTARGET)/$(ANDROID_ARCH)/
 else
 LIBDIR=$(PWD)/libs/$(DPTARGET)/
 endif
+LIBDIR_FLRL=$(PWD)/libs-flrl/$(DPTARGET)/
 LIBSAMPLERATEVERSION=0.2.2
 LIBSAMPLERATEDIR=libsamplerate-$(LIBSAMPLERATEVERSION)
 LIBSAMPLERATETARXZ=$(LIBSAMPLERATEDIR).tar.xz
@@ -230,7 +231,6 @@ EXTRALIBS=$(CURLFILES) $(FREETYPEFILES) $(ASSIMPFILES)
 endif
 endif
 endif
-LIBDIR_FLRL=$(PWD)/libs-flrl/$(DPTARGET)/
 CURLFILES_FLRL=$(LIBDIR_FLRL)/lib/libcurl.a
 FLTKFILES_FLRL=$(LIBDIR_FLRL)/lib/libfltk.a
 MBEDTLSFILES_FLRL=$(LIBDIR_FLRL)/lib/libmbedtls.a
@@ -331,6 +331,7 @@ $(ZLIBFILES): $(ZLIBTARGZ)
 	$(RANLIB) $(LIBDIR)/lib/libz.a
 
 $(ZLIBFILES_FLRL): $(ZLIBTARGZ)
+	rm -rf $(ZLIBDIR)
 	tar xzf $(ZLIBTARGZ)
 	cd $(ZLIBDIR) && CC="$(CC)" AR="$(AR)" RANLIB="$(RANLIB)" ./configure --static --prefix=$(LIBDIR_FLRL)
 	cd $(ZLIBDIR) && make && make install
@@ -477,10 +478,21 @@ endif
 endif
 
 $(FLTKFILES_FLRL): $(FLTKTARGZ) $(LIBPNGFILES_FLRL) $(JPEGFILES_FLRL)
+ifneq ($(CROSSPREFIX),)
+	rm -rf $(PWD)/fluid
 	rm -rf "$(FLTKDIR)"
 	tar xzf $(FLTKTARGZ)
 	mkdir -p "$(FLTKDIR)/test/editor.app/Contents/"
-	cd $(FLTKDIR) && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" LDFLAGS="-L$(LIBDIR_FLRL)/lib" CC="$(CC)" CFLAGS="-I$(LIBDIR_FLRL)/include" CXXFLAGS="-I$(LIBDIR_FLRL)/include" CXX="$(CXX) -I$(LIBDIR_FLRL)/include -L$(LIBDIR_FLRL)/lib" fltk_cross_compiling=yes ./configure --disable-shared --enable-static --host=$(CROSSPREFIX) --prefix=$(LIBDIR_FLRL) && make && make install
+	cd $(FLTKDIR) && ./configure --disable-shared --enable-static --prefix=$(PWD)/fluid --disable-xft && make && make install
+endif
+	rm -rf "$(FLTKDIR)"
+	tar xzf $(FLTKTARGZ)
+	mkdir -p "$(FLTKDIR)/test/editor.app/Contents/"
+ifeq ($(CROSSPREFIX),)
+	cd $(FLTKDIR) && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" LDFLAGS="-L$(LIBDIR_FLRL)/lib" CC="$(CC)" CFLAGS="-I$(LIBDIR_FLRL)/include" CXXFLAGS="-I$(LIBDIR_FLRL)/include" CXX="$(CXX) -I$(LIBDIR_FLRL)/include -L$(LIBDIR_FLRL)/lib" ./configure --disable-shared --enable-static --prefix=$(LIBDIR_FLRL) && make && make install
+else
+	cd $(FLTKDIR) && PKG_CONFIG_PATH="$(LIBDIR_FLRL)/lib/pkgconfig" LDFLAGS="-L$(LIBDIR_FLRL)/lib" CC="$(CC)" CFLAGS="-I$(LIBDIR_FLRL)/include" CXXFLAGS="-I$(LIBDIR_FLRL)/include" CXX="$(CXX) -I$(LIBDIR_FLRL)/include -L$(LIBDIR_FLRL)/lib" fltk_cross_compiling=yes ./configure --disable-shared --enable-static --disable-xft --host=$(CROSSPREFIX) --prefix=$(LIBDIR_FLRL) && PATH="$(PWD)/fluid/bin:$$PATH" make && make install
+endif
 
 $(MBEDTLSFILES_FLRL): $(MBEDTLSTARGZ)
 	rm -rf "$(MBEDTLSDIR)"

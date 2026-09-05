@@ -14,6 +14,19 @@ export ANDROID_ABI=21
 export ANDROID_NDK="$ANDROID_NDK_HOME"
 export ANDROID_NDK_ROOT="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/sysroot"
 export PATH="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/:$PATH"
+ANDROID_BUILD_OPTS=""
+if test -x "$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ar"
+then
+	ANDROID_BUILD_OPTS="AR=llvm-ar"
+fi
+if test -x "$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-ranlib"
+then
+	ANDROID_BUILD_OPTS="$ANDROID_BUILD_OPTS RANLIB=llvm-ranlib"
+fi
+if test -x "$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip"
+then
+	ANDROID_BUILD_OPTS="$ANDROID_BUILD_OPTS STRIP=llvm-strip"
+fi
 echo PATH=$PATH
 
 fail() {
@@ -21,7 +34,7 @@ fail() {
 }
 
 build() {
-	make DPTARGET=android STRIP=llvm-strip CROSSPREFIX="$1" CXX="$2-clang++ -fPIC -I$ANDROID_NDK_ROOT/include/" CC="$2-clang -fPIC -I$ANDROID_NDK_ROOT/include/" ANDROID_ARCH="$3" "ANDROID_ABI=$ANDROID_ABI" AR=llvm-ar RANLIB=llvm-ranlib stand-alone-engine || fail
+	make DPTARGET=android $ANDROID_BUILD_OPTS CROSSPREFIX="$1" CXX="$2-clang++ -fPIC -I$ANDROID_NDK_ROOT/include/" CC="$2-clang -fPIC -I$ANDROID_NDK_ROOT/include/" ANDROID_ARCH="$3" "ANDROID_ABI=$ANDROID_ABI" stand-alone-engine || fail
 }
 
 build i686-linux-android    "i686-linux-android$ANDROID_ABI"       x86

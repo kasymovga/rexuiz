@@ -467,7 +467,7 @@ ifeq ($(ANDROID_ABI),)
 	exit 1
 endif
 	mkdir -m755 -p $(SDLDIR)/buildtree
-	cd $(SDLDIR)/buildtree && CC="$(CC) $(STATIC_CXXLIB)" CXX="$(CXX) $(STATIC_CXXLIB)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" cmake -DANDROID=1 -DCMAKE_LIBRARY_PATH=${ANDROID_NDK_ROOT}/usr/lib/${CROSSPREFIX}/$(ANDROID_ABI)/ -DANDROID_NDK=${ANDROID_NDK_HOME} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(LIBDIR) -DCMAKE_CROSSCOMPILING=1 -DIMPORTED_NO_SONAME=1 -DNO_SONAME=1 .. && make && make install
+	cd $(SDLDIR)/buildtree && CC="$(CC) $(STATIC_CXXLIB)" CXX="$(CXX) $(STATIC_CXXLIB)" CFLAGS="-I$(LIBDIR)/include" LDFLAGS="-L$(LIBDIR)/lib" cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DANDROID=1 -DCMAKE_LIBRARY_PATH=${ANDROID_NDK_ROOT}/usr/lib/${CROSSPREFIX}/$(ANDROID_ABI)/ -DANDROID_NDK=${ANDROID_NDK_HOME} -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_PREFIX=$(LIBDIR) -DCMAKE_CROSSCOMPILING=1 -DIMPORTED_NO_SONAME=1 -DNO_SONAME=1 .. && make && make install
 	sed -i.bak 's/-I\/usr\/include//' $(LIBDIR)/bin/sdl2-config
 	sed -i.bak2 's|-l/[^ ]\+/lib\([^ ]\+\)\.so|-l\1|g' $(LIBDIR)/bin/sdl2-config
 	cd $(SDLDIR)/src/hidapi/android/ && $(CXX) -O2 -Wall -I$(LIBDIR)/include `$(LIBDIR)/bin/sdl2-config --cflags` -L$(LIBDIR)/lib hid.cpp $(STATIC_CXXLIB) `$(LIBDIR)/bin/sdl2-config --libs` -llog -shared -o $(HIDAPIFILES)

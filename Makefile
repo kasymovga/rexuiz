@@ -405,7 +405,7 @@ $(CURLFILES): $(CURLTARGZ)
 	tar xzf $(CURLTARGZ)
 	sed -i 's/if(0 != ioctlsocket(0, FIONBIO, &flags))/if(0 != ioctlsocket(0, FIONBIO, (unsigned long int *)\&flags))/' $(CURLDIR)/configure
 ifeq ($(DPTARGET_WIN),y)
-	cd $(CURLDIR) && CC="$(CC) $(STATIC_CLIB)" ./configure --without-nghttp2 --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) --disable-pthreads && make && make install
+	cd $(CURLDIR) && CC="$(CC) $(STATIC_CLIB)" ./configure --without-nghttp2 --without-zlib --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) --disable-pthreads --disable-telnet && make && make install
 else
 	cd $(CURLDIR) && CC="$(CC) $(STATIC_CLIB)" ./configure --without-nghttp2 --without-ssl --without-gnutls --without-zlib --disable-ldap --enable-shared --host=$(CROSSPREFIX) --disable-static --prefix=$(LIBDIR) && make && make install
 endif

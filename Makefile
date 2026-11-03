@@ -1,4 +1,4 @@
-.PHONY: all clean engine curl freetype stand-alone stand-alone-data stand-alone-engine update-qc gmqcc flrexuizlauncher
+.PHONY: all clean engine curl freetype stand-alone stand-alone-data stand-alone-engine update-qc gmqcc flrexuizlauncher install-mac
 PWD=$(shell pwd)
 
 DPDIR=DarkPlacesRM
@@ -686,8 +686,15 @@ endif
 stand-alone: stand-alone-engine stand-alone-data
 
 gmqcc:
-	cd gmqcc && cmake . && make
+	cd gmqcc && cmake . && make gmqcc
 
 update-qc: gmqcc
 	cd 1vs1 && make QCC=../../../gmqcc/gmqcc SV_PROGNAME=progs.dat CL_PROGNAME=csprogs.dat CFG_NAME=rexuiz-extra.cfg SET_CURL_PACKAGE=no
 	install -m 644 1vs1/progs.dat 1vs1/csprogs.dat 1vs1/menu.dat 1vs1/rexuiz-extra.cfg 1vs1/translations/*.po rexuiz.pk3/
+
+INSTALL_MAC_DIR ?= $(HOME)/Applications/Rexuiz
+install-mac: stand-alone
+	mkdir -p "$(INSTALL_MAC_DIR)"
+	rsync -a --delete Rexuiz/ "$(INSTALL_MAC_DIR)/"
+	ln -sf "$(INSTALL_MAC_DIR)/$(APPNAME)" "$(dir $(patsubst %/,%,$(INSTALL_MAC_DIR)))Rexuiz.app"
+	@echo "Rexuiz successfully installed to $(INSTALL_MAC_DIR)"

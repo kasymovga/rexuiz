@@ -2,7 +2,6 @@
 
 REPOS='http://rexuiz.com/maps/RexuizLauncher2
 https://kasymovga.github.io/rexdlc-web/rl
-http://bnse.rexuiz.top/RexuizLauncher2
 http://nexuiz.mooo.com/RexuizLauncher2
 http://108.61.164.188/RexuizLauncher2'
 
@@ -95,7 +94,8 @@ do
 	TARGET_FILE="$REXUIZ_DIR/$FILE"
 	UPDATE_FILE="$UPDATE_DIR/$FILE"
 	case "$FILE" in
-	*.exe | *.dll | *.app/* | *sdl* | *.cmd | *textures-lightmaps* | *textures-extra*)
+	*.exe | *.dll | *.app/* | *sdl* | *.cmd | *textures-lightmaps* | *textures-extra* | *rexdlc_newnex* | *rexdlc_qanrl* | *rexdlc_simpleitems* | \
+	*rexdlc_xon* | *rexdlc_menu* | *rexdlc_music_intro* | *rexdlc_n1* | *rexdlc_n2* | *rexdlc_base-fonts*)
 		echo "$FILE is not for linux dedicated server"
 		continue
 		;;
